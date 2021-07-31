@@ -1,0 +1,33 @@
+﻿<Window x:Class="wpf_playground.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wpf_playground"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="648" Width="570">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="729*"/>
+            <ColumnDefinition Width="67*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="counter" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="398,42,330.5,42"/>
+        <Grid Grid.Row="1" x:Name="gameBoard" Grid.ColumnSpan="2" Margin="0,0,0,0.5"  >
+            <Canvas Background="Gray"></Canvas>
+            <Grid Margin="20">
+                <local:Circle HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="circle1"  />
+
+                <local:Circle HorizontalAlignment="Right" VerticalAlignment="Top" x:Name="circle2"  />
+
+                <local:Circle HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="circle3"  />
+
+                <local:Circle HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="circle4"  />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
