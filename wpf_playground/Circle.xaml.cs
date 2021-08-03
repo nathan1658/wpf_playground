@@ -24,6 +24,7 @@ namespace wpf_playground
         {
             InitializeComponent();
             this.DataContext = this;
+
         }
 
         public override void Trigger(int delayInMS)
