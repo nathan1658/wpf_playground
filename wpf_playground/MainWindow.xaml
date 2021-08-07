@@ -23,6 +23,8 @@
                 <local:Circle HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="circle1"  />
 
                 <local:Circle HorizontalAlignment="Right" VerticalAlignment="Top" x:Name="circle2"  />
+                <local:BouncingBall HorizontalAlignment="Center" VerticalAlignment="Center" />
+
 
                 <local:Circle HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="circle3"  />
 
