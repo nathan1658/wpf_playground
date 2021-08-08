@@ -33,14 +33,14 @@ namespace wpf_playground
         {
             // Get the x and y coordinates of the mouse pointer.
             System.Windows.Point position = e.GetPosition(this);
-            cursorX= position.X;
+            cursorX = position.X;
             cursorY = position.Y;
             //double pY = position.Y;
 
 
             //get ballPosition
             //get top and left of ball
- 
+
             // Sets the position of the image to the mouse coordinates.
             //myMouseImage.SetValue(Canvas.LeftProperty, pX);
             //myMouseImage.SetValue(Canvas.TopProperty, pY);
@@ -63,7 +63,7 @@ namespace wpf_playground
 
                 while (true)
                 {
-            
+
                     move();
                     Thread.Sleep(5);
                 }
@@ -78,6 +78,7 @@ namespace wpf_playground
             yValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Sin(theta);
             currentPointX = (xValue * 50) + xCenter;
             currentPointY = (yValue * 50) + yCenter;
+
 
 
             Dispatcher.Invoke(() =>
@@ -131,9 +132,9 @@ namespace wpf_playground
 
                 //get ball center
                 var ballLeft = left + ball.Width / 2;
-                var ballTop  = top + ball.Height / 2;
+                var ballTop = top + ball.Height / 2;
                 var value = Math.Sqrt(Math.Pow((ballLeft - cursorX), 2) + Math.Pow((ballTop - cursorY), 2));
-                value = Math.Round(value, 2);
+                value = Math.Round(value, 0);
                 cursorValue.Text = $"{value}";
             });
 
