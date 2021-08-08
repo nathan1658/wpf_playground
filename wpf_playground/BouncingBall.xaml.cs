@@ -25,6 +25,27 @@ namespace wpf_playground
         double Xp, Yp, phi;
         double xi, yi, theta, xValue, yValue;
         double currentPointX;
+
+
+        double cursorX, cursorY;
+
+        private void Board_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Get the x and y coordinates of the mouse pointer.
+            System.Windows.Point position = e.GetPosition(this);
+            cursorX= position.X;
+            cursorY = position.Y;
+            //double pY = position.Y;
+
+
+            //get ballPosition
+            //get top and left of ball
+ 
+            // Sets the position of the image to the mouse coordinates.
+            //myMouseImage.SetValue(Canvas.LeftProperty, pX);
+            //myMouseImage.SetValue(Canvas.TopProperty, pY);
+        }
+
         double currentPointY;
         double xCenter;
         double yCenter;
@@ -42,6 +63,7 @@ namespace wpf_playground
 
                 while (true)
                 {
+            
                     move();
                     Thread.Sleep(5);
                 }
@@ -107,9 +129,14 @@ namespace wpf_playground
                     yCenter = top;
                 }
 
-         
+                //get ball center
+                var ballLeft = left + ball.Width / 2;
+                var ballTop  = top + ball.Height / 2;
+                var value = Math.Sqrt(Math.Pow((ballLeft - cursorX), 2) + Math.Pow((ballTop - cursorY), 2));
+                value = Math.Round(value, 2);
+                cursorValue.Text = $"{value}";
             });
-            
+
         }
         private double curve(double x)
         {
