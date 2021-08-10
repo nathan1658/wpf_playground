@@ -6,6 +6,17 @@
              xmlns:local="clr-namespace:wpf_playground"
              mc:Ignorable="d" 
 >
-    <Ellipse Height="50" Width="50" x:Name="control" Fill="White">
+    <Ellipse Height="50" Width="50" x:Name="control" >
+        
+        <Ellipse.Style>
+            <Style TargetType="Ellipse">
+                <Setter Property="Fill" Value="White"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Triggered}" Value="true">
+                        <Setter Property="Fill" Value="Red"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Ellipse.Style>
     </Ellipse>
 </local:MyBaseUserControl>

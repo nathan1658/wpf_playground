@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,13 +22,34 @@ namespace wpf_playground
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
         List<MyBaseUserControl> circleList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void InformPropertyChanged([CallerMemberName] string propName = "")
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+        private int _score;
+
+        public int Score
+        {
+            get { return _score; }
+            set
+            {
+                _score = value;
+                InformPropertyChanged("Score");
+            }
+        }
+
+
+
         public MainWindow()
         {
+            this.DataContext = this;
             InitializeComponent();
             circleList = new List<MyBaseUserControl>
             {
@@ -48,8 +71,43 @@ namespace wpf_playground
                     });
                 }
             });
+            Loaded += MainWindow_Loaded;
+            
         }
 
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.KeyDown += MainWindow_KeyDown;
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool result = false;
+            switch (e.Key)
+            {
+                case Key.NumPad7:
+                    result = circleList[0].Click();
+                    break;
+                case Key.NumPad9:
+                    result = circleList[1].Click();
+                    break;
+                case Key.NumPad1:
+                    result = circleList[2].Click();
+                    break;
+                case Key.NumPad3:
+                    result = circleList[3].Click();
+                    break;
+            }
+            if (result)
+            {
+                Score++;
+            }
+            else
+            {
+                Score--;
+            }
+        }
 
         void triggerControl()
         {
@@ -76,6 +134,6 @@ namespace wpf_playground
                 }
             });
         }
- 
+
     }
 }

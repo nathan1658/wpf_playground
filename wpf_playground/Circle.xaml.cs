@@ -29,18 +29,28 @@ namespace wpf_playground
 
         public override void Trigger(int delayInMS)
         {
+
             //Do nothing if not triggered
             if (this.Triggered) return;
-
-            this.control.Fill = new SolidColorBrush(Colors.Red);
+            this.Triggered = true;
+            //this.control.Fill = new SolidColorBrush(Colors.Red);
             Task.Delay(delayInMS).ContinueWith((obj) =>
             {
                 Dispatcher.Invoke(() =>
                 {
-                    this.control.Fill = new SolidColorBrush(Colors.White);
+                    //this.control.Fill = new SolidColorBrush(Colors.White);
                 });
                 this.Triggered = false;
             });
+        }
+        public override bool Click()
+        {
+            if (this.Triggered)
+            {
+                this.Triggered = false;
+                return true;
+            }
+            return false;
         }
     }
 }
