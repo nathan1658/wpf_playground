@@ -24,25 +24,19 @@ namespace wpf_playground
         {
             InitializeComponent();
             this.DataContext = this;
-
         }
 
         public override void Trigger(int delayInMS)
         {
-
             //Do nothing if not triggered
             if (this.Triggered) return;
             this.Triggered = true;
-            //this.control.Fill = new SolidColorBrush(Colors.Red);
             Task.Delay(delayInMS).ContinueWith((obj) =>
             {
-                Dispatcher.Invoke(() =>
-                {
-                    //this.control.Fill = new SolidColorBrush(Colors.White);
-                });
                 this.Triggered = false;
             });
         }
+
         public override bool Click()
         {
             if (this.Triggered)
@@ -52,5 +46,6 @@ namespace wpf_playground
             }
             return false;
         }
+
     }
 }
