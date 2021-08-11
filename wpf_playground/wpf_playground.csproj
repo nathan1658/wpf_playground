@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="State.cs" />
     <Compile Include="UserInfoPage.xaml.cs">

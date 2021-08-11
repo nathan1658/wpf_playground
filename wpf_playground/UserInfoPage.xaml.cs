@@ -21,19 +21,31 @@ namespace wpf_playground
     /// <summary>
     /// Interaction logic for UserInfoPage.xaml
     /// </summary>
-    public partial class UserInfoPage : Page
+    public partial class UserInfoPage : Window
     {
         public UserInfoPage()
         {
             InitializeComponent();
-            this.DataContext = new UserInfoPageViewModel();
+            var vm = new UserInfoPageViewModel();
+            vm.CloseAction = () =>
+            {
+                this.Close();
+            };
+            this.DataContext = vm;
         }
 
 
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
-       
+
+        public UserInfoPageViewModel()
+        {
+            this.MaleChecked = true;
+            this.L01Checked = true;
+            this.LeftHandChecked = true;
+        }
+
         public UserInfo UserInfo
         {
             get
@@ -52,6 +64,7 @@ namespace wpf_playground
                 if (value)
                     UserInfo.Gender = "Male";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
             }
         }
 
@@ -65,6 +78,8 @@ namespace wpf_playground
                 if (value)
                     UserInfo.Gender = "Female";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
 
             }
         }
@@ -79,6 +94,8 @@ namespace wpf_playground
                 _l01Checked = value;
                 if (value) UserInfo.Group = "L01";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
         private bool _l02Checked;
@@ -91,6 +108,8 @@ namespace wpf_playground
                 _l02Checked = value;
                 if (value) UserInfo.Group = "L02";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
         private bool _l03Checked;
@@ -103,11 +122,12 @@ namespace wpf_playground
                 _l03Checked = value;
                 if (value) UserInfo.Group = "L03";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
 
         private bool _leftHandChecked;
-
         public bool LeftHandChecked
         {
             get { return _leftHandChecked; }
@@ -116,12 +136,13 @@ namespace wpf_playground
                 _leftHandChecked = value;
                 if (value) UserInfo.DominantHand = "Left";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
 
             }
         }
 
         private bool _rightHandChecked;
-
         public bool RightHandChecked
         {
             get { return _rightHandChecked; }
@@ -130,19 +151,21 @@ namespace wpf_playground
                 _rightHandChecked = value;
                 if (value) UserInfo.DominantHand = "Right";
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
-
 
         public bool FormValid
         {
             get
             {
                 var list = new List<String>() {
-                    UserInfo.Name, UserInfo.Age, UserInfo.Age, UserInfo.Gender, UserInfo.Group, UserInfo.DominantHand};
+                    UserInfo.Name, UserInfo.SID, UserInfo.Age, UserInfo.Gender, UserInfo.Group, UserInfo.DominantHand};
                 return !list.Any(x => String.IsNullOrEmpty(x));
             }
         }
+
 
 
         private string _name;
@@ -154,6 +177,8 @@ namespace wpf_playground
                 _name = value;
                 UserInfo.Name = value;
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
         private string _sid;
@@ -165,6 +190,8 @@ namespace wpf_playground
                 _sid = value;
                 UserInfo.SID = value;
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
 
@@ -178,9 +205,22 @@ namespace wpf_playground
                 _age = value;
                 UserInfo.Age = value;
                 InformPropertyChanged("UserInfo");
+                InformPropertyChanged("FormValid");
+
             }
         }
-
+        private ICommand _clickCommand;
+        public ICommand ClickCommand
+        {
+            get
+            {
+                return _clickCommand ?? (_clickCommand = new CommandHandler(() =>
+                {
+                    CloseAction();
+                }, () => true));
+            }
+        }
+        public Action CloseAction { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void InformPropertyChanged([CallerMemberName] String propName = "")

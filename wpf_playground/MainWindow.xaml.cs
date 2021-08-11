@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using wpf_playground.Model;
 
 namespace wpf_playground
 {
@@ -24,7 +25,11 @@ namespace wpf_playground
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
+        public UserInfo UserInfo{ get
+            {
+                return State.UserInfo;
+            }
+        }
         List<MyBaseUserControl> circleList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
 
@@ -49,8 +54,13 @@ namespace wpf_playground
 
         public MainWindow()
         {
+            
+            new UserInfoPage().ShowDialog();
             this.DataContext = this;
+
             InitializeComponent();
+
+
             circleList = new List<MyBaseUserControl>
             {
                 this.circle1,
@@ -67,12 +77,12 @@ namespace wpf_playground
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        counter.Text = sw1.ElapsedMilliseconds.ToString();
+                        counter.Text = sw1.ElapsedMilliseconds.ToString()+"ms";
                     });
                 }
             });
             Loaded += MainWindow_Loaded;
-            
+
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
