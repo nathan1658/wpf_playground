@@ -14,11 +14,10 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    Title="MainWindow"
-    >
+    Title="MainWindow">
     <Grid>
 
-        
+
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="auto" />
@@ -34,71 +33,70 @@
             <TextBlock
                 Text="{Binding UserInfo}"></TextBlock>
         </materialDesign:Card>
-        
-        
-        <Grid
-            Grid.Row="1"
-            x:Name="gameBoard"
-            Grid.ColumnSpan="2"
-            Margin="0,0,0,0.5">
-            
-            <Canvas
-                Background="Gray"></Canvas>
+
+        <materialDesign:Card
+            Margin="16"
+            Grid.Row="1">
             <Grid
-                Margin="20">
-                <Grid
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-                    <local:Circle
-                        x:Name="circle1" />
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">1</TextBlock>
-                </Grid>
+                x:Name="gameBoard">
 
+                <Canvas
+                    Background="Gray"></Canvas>
                 <Grid
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top">
-                    <local:Circle
-                        x:Name="circle2" />
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">2</TextBlock>
-                </Grid>
-                <local:BouncingBall
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center" />
+                    Margin="20">
+                    <Grid
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <local:Circle
+                            x:Name="circle1" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">1</TextBlock>
+                    </Grid>
 
-                <Grid
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom">
-                    <local:Circle
-                        x:Name="circle3" />
-                    <TextBlock
+                    <Grid
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                        <local:Circle
+                            x:Name="circle2" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">2</TextBlock>
+                    </Grid>
+                    <local:BouncingBall
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center">3</TextBlock>
-                </Grid>
-                <Grid
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom">
-                    <local:Circle
-                        x:Name="circle4" />
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">4</TextBlock>
+                        VerticalAlignment="Center" />
 
+                    <Grid
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom">
+                        <local:Circle
+                            x:Name="circle3" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">3</TextBlock>
+                    </Grid>
+                    <Grid
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom">
+                        <local:Circle
+                            x:Name="circle4" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">4</TextBlock>
+
+                    </Grid>
+                    <TextBlock
+                        Background="White"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Center"
+                        Text="{Binding Score}"></TextBlock>
                 </Grid>
                 <TextBlock
-                    Background="White"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
-                    Text="{Binding Score}"></TextBlock>
+                    x:Name="counter"
+                    VerticalAlignment="top"
+                    HorizontalAlignment="Center" />
             </Grid>
-            <TextBlock
-                x:Name="counter"
-                VerticalAlignment="top"
-                HorizontalAlignment="Center" />
-        </Grid>
-
+        </materialDesign:Card>
     </Grid>
 </Window>
