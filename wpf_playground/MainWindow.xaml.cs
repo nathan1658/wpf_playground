@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,14 +27,16 @@ namespace wpf_playground
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public UserInfo UserInfo{ get
+        public UserInfo UserInfo
+        {
+            get
             {
                 return State.UserInfo;
             }
         }
         List<MyBaseUserControl> circleList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
-
+        Stopwatch reactionSw = new Stopwatch();
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
         {
@@ -50,11 +54,11 @@ namespace wpf_playground
             }
         }
 
-
+        private List<ClickHistory> clickHistoryList { get; set; } = new List<ClickHistory>();
 
         public MainWindow()
         {
-            
+
             new UserInfoPage().ShowDialog();
             this.DataContext = this;
 
@@ -68,6 +72,7 @@ namespace wpf_playground
                 this.circle3,
                 this.circle4,
             };
+
             triggerControl();
             Task.Run(() =>
             {
@@ -77,13 +82,16 @@ namespace wpf_playground
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        counter.Text = sw1.ElapsedMilliseconds.ToString()+"ms";
+                        elapsedMs = sw1.ElapsedMilliseconds;
+                        //counter.Text = sw1.ElapsedMilliseconds.ToString() + "ms";
+                        counter.Text = reactionSw.ElapsedMilliseconds.ToString() + "ms";
                     });
                 }
             });
             Loaded += MainWindow_Loaded;
 
         }
+        double elapsedMs = 0;
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -117,7 +125,35 @@ namespace wpf_playground
             {
                 Score--;
             }
+            Debug.WriteLine($"{reactionSw.ElapsedMilliseconds}ms");
+            clickHistoryList.Add(new ClickHistory
+            {
+                ClickDate = DateTime.Now,
+                Distance = bouncingBall.Distance,
+                ReactionTime = reactionSw.ElapsedMilliseconds,
+                ElapsedTime = elapsedMs,
+                IsCorrect = result
+            });
+            //if (Score >= 5)
+            //{
+            //    MessageBox.Show("GG");
+            //    //output file to json
+            //    saveJson();
+            //}
         }
+
+        void saveJson()
+        {
+            var output = new TestResult
+            {
+                UserInfo = UserInfo,
+                ClickHistoryList = clickHistoryList
+            };
+            var payload = JsonConvert.SerializeObject(output);
+            File.WriteAllText("./output.txt", payload);
+            MessageBox.Show("Done");
+        }
+
 
         void triggerControl()
         {
@@ -126,6 +162,7 @@ namespace wpf_playground
                 int lastIndex = -1;
                 while (true)
                 {
+                    //Time 
                     await Task.Delay(1000);
 
                     int index = rnd.Next(circleList.Count);
@@ -137,10 +174,15 @@ namespace wpf_playground
                     lastIndex = index;
                     var targetControl = (circleList[index]);
                     if (!targetControl.Triggered)
-                        Dispatcher.Invoke(() =>
-                        {
-                            targetControl.Trigger(1000);
-                        });
+                    {
+                               reactionSw.Restart();
+                        await Dispatcher.Invoke(async () =>
+                           {
+                               targetControl.Enable();
+                               await Task.Delay(1000);
+                               targetControl.Disable();
+                           });
+                    }
                 }
             });
         }

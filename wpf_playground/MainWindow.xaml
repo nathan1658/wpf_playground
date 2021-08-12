@@ -64,6 +64,7 @@
                             VerticalAlignment="Center">2</TextBlock>
                     </Grid>
                     <local:BouncingBall
+                        x:Name="bouncingBall"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
 

@@ -135,9 +135,25 @@ namespace wpf_playground
                 var ballTop = top + ball.Height / 2;
                 var value = Math.Sqrt(Math.Pow((ballLeft - cursorX), 2) + Math.Pow((ballTop - cursorY), 2));
                 value = Math.Round(value, 0);
-                cursorValue.Text = $"{value}";
+                Distance = value;
             });
 
+        }
+        private double _distance;
+        public double Distance
+        {
+            get
+            {
+                return _distance;
+            }
+            set
+            {
+                _distance = value;
+                Dispatcher.Invoke(() =>
+                {
+                    cursorValue.Text = value.ToString();
+                });
+            }
         }
         private double curve(double x)
         {

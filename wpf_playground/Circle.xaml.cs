@@ -26,16 +26,19 @@ namespace wpf_playground
             this.DataContext = this;
         }
 
-        public override void Trigger(int delayInMS)
+
+        public override void Enable()
         {
             //Do nothing if not triggered
             if (this.Triggered) return;
             this.Triggered = true;
-            Task.Delay(delayInMS).ContinueWith((obj) =>
-            {
-                this.Triggered = false;
-            });
         }
+
+        public override void Disable()
+        {
+            this.Triggered = false;
+        }
+
 
         public override bool Click()
         {

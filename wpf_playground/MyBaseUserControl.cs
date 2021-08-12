@@ -28,7 +28,8 @@ namespace wpf_playground
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-        public abstract void Trigger(int delayInMS);
+        public abstract void Enable();
+        public abstract void Disable();
         public abstract bool Click();
 
     }
