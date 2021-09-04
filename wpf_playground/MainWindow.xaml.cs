@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -83,7 +84,6 @@ namespace wpf_playground
                     Dispatcher.Invoke(() =>
                     {
                         elapsedMs = sw1.ElapsedMilliseconds;
-                        //counter.Text = sw1.ElapsedMilliseconds.ToString() + "ms";
                         counter.Text = reactionSw.ElapsedMilliseconds.ToString() + "ms";
                     });
                 }
@@ -93,10 +93,13 @@ namespace wpf_playground
         }
         double elapsedMs = 0;
 
+ 
+
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
-            window.KeyDown += MainWindow_KeyDown;
+            window.KeyDown += MainWindow_KeyDown;                   
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
@@ -104,16 +107,16 @@ namespace wpf_playground
             bool result = false;
             switch (e.Key)
             {
-                case Key.NumPad7:
+                case System.Windows.Input.Key.NumPad7:
                     result = circleList[0].Click();
                     break;
-                case Key.NumPad9:
+                case System.Windows.Input.Key.NumPad9:
                     result = circleList[1].Click();
                     break;
-                case Key.NumPad1:
+                case System.Windows.Input.Key.NumPad1:
                     result = circleList[2].Click();
                     break;
-                case Key.NumPad3:
+                case System.Windows.Input.Key.NumPad3:
                     result = circleList[3].Click();
                     break;
             }
@@ -150,10 +153,11 @@ namespace wpf_playground
                 ClickHistoryList = clickHistoryList
             };
             var payload = JsonConvert.SerializeObject(output);
-            File.WriteAllText("./output.txt", payload);
+            if (!Directory.Exists("./output"))
+                Directory.CreateDirectory("output");
+            File.WriteAllText($"output/{DateTime.Now.ToString("yyyyMMddHHmmss")}.json", payload);
             MessageBox.Show("Done");
         }
-
 
         void triggerControl()
         {
@@ -175,7 +179,7 @@ namespace wpf_playground
                     var targetControl = (circleList[index]);
                     if (!targetControl.Triggered)
                     {
-                               reactionSw.Restart();
+                        reactionSw.Restart();
                         await Dispatcher.Invoke(async () =>
                            {
                                targetControl.Enable();
@@ -187,5 +191,9 @@ namespace wpf_playground
             });
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            saveJson();
+        }
     }
 }

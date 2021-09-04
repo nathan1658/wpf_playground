@@ -19,6 +19,8 @@
 
     <Grid>
         <materialDesign:Card
+            MaxWidth="500"
+            MaxHeight="400"
             Padding="32"
             Margin="16"
             Grid.Column="0">

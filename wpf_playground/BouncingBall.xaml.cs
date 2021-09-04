@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SharpDX.DirectInput;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,22 +22,58 @@ namespace wpf_playground
     /// <summary>
     /// Interaction logic for BouncingBall.xaml
     /// </summary>
-    public partial class BouncingBall : UserControl
+    public partial class BouncingBall : UserControl, INotifyPropertyChanged
     {
 
         double Xp, Yp, phi;
         double xi, yi, theta, xValue, yValue;
         double currentPointX;
 
+        double _cursorX, _cursorY = 0;
 
-        double cursorX, cursorY;
+        double cursorX
+        {
+            get
+            {
+                return _cursorX;
+            }
+            set
+            {
+                _cursorX = value;
+                Dispatcher.Invoke(() =>
+                {
+                    Canvas.SetLeft(jBall, value - jBall.Width / 2);
+                });
+            }
+        }
+        double cursorY
+        {
+            get
+            {
+                return _cursorY;
+            }
+            set
+            {
+                _cursorY = value;
+                Dispatcher.Invoke(() =>
+                {
+                    Canvas.SetTop(jBall, value - jBall.Height / 2);
+
+                });
+            }
+        }
+
+        bool useJoystick = true;
 
         private void Board_MouseMove(object sender, MouseEventArgs e)
         {
+            if (useJoystick) return;
             // Get the x and y coordinates of the mouse pointer.
             System.Windows.Point position = e.GetPosition(this);
             cursorX = position.X;
             cursorY = position.Y;
+
+
             //double pY = position.Y;
 
 
@@ -52,15 +91,46 @@ namespace wpf_playground
 
 
 
+        private string _xVal;
+
+        public string XVal
+        {
+            get { return _xVal; }
+            set
+            {
+                _xVal = value;
+                InformPropertyChanged("XVal");
+            }
+        }
+
+        void InformPropertyChanged([CallerMemberName] string propName = "")
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
+
+        private string _yVal;
+
+        public string YVal
+        {
+            get { return _yVal; }
+            set
+            {
+                _yVal = value;
+                InformPropertyChanged("YVal");
+            }
+        }
+
         public BouncingBall()
         {
             InitializeComponent();
+            this.DataContext = this;
+
             //Center the ball
             Canvas.SetTop(ball, board.Height / 2 - (ball.Height / 2));
             Canvas.SetLeft(ball, board.Width / 2 - (ball.Width / 2));
             Task.Run(() =>
             {
-
                 while (true)
                 {
 
@@ -68,7 +138,89 @@ namespace wpf_playground
                     Thread.Sleep(5);
                 }
             });
+            this.Loaded += BouncingBall_Loaded;
         }
+
+        private void BouncingBall_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            //Accquire controller
+
+            new Thread(() =>
+            {
+                // Initialize DirectInput
+                var directInput = new DirectInput();
+
+                // Find a Joystick Guid
+                var joystickGuid = Guid.Empty;
+
+                foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad,
+                            DeviceEnumerationFlags.AllDevices))
+                    joystickGuid = deviceInstance.InstanceGuid;
+
+                // If Gamepad not found, look for a Joystick
+                if (joystickGuid == Guid.Empty)
+                    foreach (var deviceInstance in directInput.GetDevices(DeviceType.Joystick,
+                            DeviceEnumerationFlags.AllDevices))
+                        joystickGuid = deviceInstance.InstanceGuid;
+
+                // If Joystick not found, throws an error
+                if (joystickGuid == Guid.Empty)
+                {
+                    MessageBox.Show("No joystick found, will use mouse as fallback.");
+                    useJoystick = false;
+                    return;
+                }
+
+                // Instantiate the joystick
+                var joystick = new Joystick(directInput, joystickGuid);
+
+                System.Diagnostics.Debug.WriteLine("Found Joystick/Gamepad with GUID: {0}", joystickGuid);
+
+                // Query all suported ForceFeedback effects
+                //var allEffects = joystick.GetEffects();
+                //foreach (var effectInfo in allEffects)
+                //    System.Diagnostics.Debug.WriteLine("Effect available {0}", effectInfo.Name);
+
+                // Set BufferSize in order to use buffered data.
+                joystick.Properties.BufferSize = 128;
+
+                // Acquire the joystick
+                joystick.Acquire();
+
+                // Poll events from joystick
+                while (true)
+                {
+                    joystick.Poll();
+                    var datas = joystick.GetBufferedData();
+                    foreach (var state in datas)
+                    {
+
+                        if (state.Offset == JoystickOffset.X)
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                XVal = state.Value.ToString();
+                                this.cursorX = state.Value / 65535.0 * this.board.Width;
+
+                            });
+                        }
+                        if (state.Offset == JoystickOffset.Y)
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                YVal = state.Value.ToString();
+                                this.cursorY = state.Value / 65535.0 * this.board.Height;
+
+                            });
+                        }
+                    }
+                    Thread.Sleep(1);
+                }
+
+            }).Start();
+        }
+
         void move()
         {
             xi = xi + 0.01;
@@ -133,6 +285,10 @@ namespace wpf_playground
                 //get ball center
                 var ballLeft = left + ball.Width / 2;
                 var ballTop = top + ball.Height / 2;
+
+
+
+
                 var value = Math.Sqrt(Math.Pow((ballLeft - cursorX), 2) + Math.Pow((ballTop - cursorY), 2));
                 value = Math.Round(value, 0);
                 Distance = value;
@@ -140,6 +296,9 @@ namespace wpf_playground
 
         }
         private double _distance;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public double Distance
         {
             get

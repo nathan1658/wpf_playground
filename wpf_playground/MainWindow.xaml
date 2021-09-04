@@ -14,7 +14,9 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    Title="MainWindow">
+    Title="MainWindow"
+    d:DesignWidth="761.743"
+    d:DesignHeight="611.652">
     <Grid>
 
 
@@ -97,6 +99,18 @@
                     x:Name="counter"
                     VerticalAlignment="top"
                     HorizontalAlignment="Center" />
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card
+            Grid.Row="2"
+            Margin="16">
+            <Grid>
+              
+            <Button
+                Click="Button_Click" Grid.Column="0">Save</Button>
+
+           
             </Grid>
         </materialDesign:Card>
     </Grid>
