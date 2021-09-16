@@ -28,7 +28,6 @@ namespace wpf_playground
         double Xp, Yp, phi;
         double xi, yi, theta, xValue, yValue;
         double currentPointX;
-
         double _cursorX, _cursorY = 0;
 
         double cursorX
@@ -58,7 +57,6 @@ namespace wpf_playground
                 Dispatcher.Invoke(() =>
                 {
                     Canvas.SetTop(jBall, value - jBall.Height / 2);
-
                 });
             }
         }
@@ -121,6 +119,20 @@ namespace wpf_playground
             }
         }
 
+
+        private String _deviceType;
+
+        public String DeviceType
+        {
+            get { return _deviceType; }
+            set
+            {
+                _deviceType = value;
+                InformPropertyChanged("DeviceType");
+            }
+        }
+
+
         public BouncingBall()
         {
             InitializeComponent();
@@ -154,15 +166,31 @@ namespace wpf_playground
                 // Find a Joystick Guid
                 var joystickGuid = Guid.Empty;
 
-                foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad,
-                            DeviceEnumerationFlags.AllDevices))
+
+
+
+                foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AllDevices))
+                {
                     joystickGuid = deviceInstance.InstanceGuid;
+                    Dispatcher.Invoke(() =>
+                    {
+                        DeviceType = deviceInstance.Type.ToString();
+
+                    });
+                }
 
                 // If Gamepad not found, look for a Joystick
                 if (joystickGuid == Guid.Empty)
-                    foreach (var deviceInstance in directInput.GetDevices(DeviceType.Joystick,
+                    foreach (var deviceInstance in directInput.GetDevices( SharpDX.DirectInput.DeviceType.Joystick,
                             DeviceEnumerationFlags.AllDevices))
+                    {
                         joystickGuid = deviceInstance.InstanceGuid;
+                        Dispatcher.Invoke(() =>
+                        {
+                            DeviceType = deviceInstance.Type.ToString();
+
+                        });
+                    }
 
                 // If Joystick not found, throws an error
                 if (joystickGuid == Guid.Empty)

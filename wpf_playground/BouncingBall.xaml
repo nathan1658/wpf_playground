@@ -46,6 +46,8 @@
                 Text="{Binding XVal}" />
             <TextBlock
                 Text="{Binding YVal}" />
+            <TextBlock
+                Text="{Binding DeviceType}" />
         </StackPanel>
     </Grid>
 </UserControl>
