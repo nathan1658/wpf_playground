@@ -1,0 +1,32 @@
+﻿<local:MyBaseUserControl
+    x:Class="wpf_playground.PQCircle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:wpf_playground"
+    mc:Ignorable="d">
+    <Ellipse
+        Height="50"
+        Width="50"
+        x:Name="control">
+
+        <Ellipse.Style>
+            <Style
+                TargetType="Ellipse">
+                <Setter
+                    Property="Fill"
+                    Value="White" />
+                <Style.Triggers>
+                    <DataTrigger
+                        Binding="{Binding Triggered}"
+                        Value="true">
+                        <Setter
+                            Property="Fill"
+                            Value="Yellow" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Ellipse.Style>
+    </Ellipse>
+</local:MyBaseUserControl>

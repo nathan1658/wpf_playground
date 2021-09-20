@@ -177,11 +177,15 @@ namespace wpf_playground
                     }
                     lastIndex = index;
                     var targetControl = (circleList[index]);
+                    var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
                     if (!targetControl.Triggered)
                     {
                         reactionSw.Restart();
                         await Dispatcher.Invoke(async () =>
                            {
+                               targetPQ.Enable();
+                               await Task.Delay(1000);
+                               targetPQ.Disable();
                                targetControl.Enable();
                                await Task.Delay(1000);
                                targetControl.Disable();

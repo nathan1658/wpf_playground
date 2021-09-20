@@ -15,8 +15,8 @@
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     Title="MainWindow"
-    d:DesignWidth="761.743"
-    d:DesignHeight="611.652">
+    d:DesignWidth="1018.243"
+    d:DesignHeight="686.652">
     <Grid>
 
 
@@ -89,6 +89,30 @@
                             VerticalAlignment="Center">4</TextBlock>
 
                     </Grid>
+
+
+                    <Grid
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                        <local:PQCircle
+                            x:Name="pqCircle1" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">1</TextBlock>
+                    </Grid>
+
+
+                    <Grid
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center">
+                        <local:PQCircle
+                            x:Name="pqCircle2" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">2</TextBlock>
+                    </Grid>
+
+
                     <TextBlock
                         Background="White"
                         VerticalAlignment="Top"
@@ -106,11 +130,12 @@
             Grid.Row="2"
             Margin="16">
             <Grid>
-              
-            <Button
-                Click="Button_Click" Grid.Column="0">Save</Button>
 
-           
+                <Button
+                    Click="Button_Click"
+                    Grid.Column="0">Save</Button>
+
+
             </Grid>
         </materialDesign:Card>
     </Grid>

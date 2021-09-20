@@ -280,11 +280,7 @@
                     VerticalAlignment="Bottom">
                     Submit
                 </Button>
-                <TextBlock
-                    Grid.Row="10"
-                    Text="{Binding LevelEnum}">
-
-                </TextBlock>
+          
             </Grid>
         </materialDesign:Card>
 
