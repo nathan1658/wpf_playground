@@ -11,9 +11,12 @@ namespace wpf_playground.Model
         public string Name { get; set; }
         public string SID { get; set; }
         public string Age { get; set; }
-        public string Gender { get; set; }
-        public string Group { get; set; }
-        public string DominantHand { get; set; }
+        public GenderEnum Gender { get; set; }
+        public GroupEnum Group { get; set; }
+        public DominantHandEnum DominantHand { get; set; }
+        public LevelEnum Level { get; set; }
+        public SignalModeEnum SignalMode { get; set; }
+        public PQModeEnum PQMode { get; set; }
 
         public override string ToString()
         {
@@ -23,6 +26,9 @@ namespace wpf_playground.Model
             result += $"Gender: {Gender}" + "\n";
             result += $"Group: {Group}" + "\n";
             result += $"Dominant Hand : {DominantHand}" + "\n";
+            result += $"Level : {Level}" + "\n";
+            result += $"Signal Mode : {SignalMode}" + "\n";
+            result += $"PQ Mode : {PQMode}" + "\n";
             return result;
         }
     }

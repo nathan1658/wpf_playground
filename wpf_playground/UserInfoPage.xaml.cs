@@ -33,17 +33,13 @@ namespace wpf_playground
             };
             this.DataContext = vm;
         }
-
-
+ 
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
 
         public UserInfoPageViewModel()
         {
-            this.MaleChecked = true;
-            this.L01Checked = true;
-            this.LeftHandChecked = true;
         }
 
         public UserInfo UserInfo
@@ -54,105 +50,42 @@ namespace wpf_playground
             }
         }
 
-        private bool _maleChecked;
-        public bool MaleChecked
+
+        private GenderEnum genderEnum = GenderEnum.Male;
+
+        public GenderEnum GenderEnum
         {
-            get { return _maleChecked; }
+            get { return genderEnum; }
             set
             {
-                _maleChecked = value;
-                if (value)
-                    UserInfo.Gender = "Male";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
+                genderEnum = value;
+                UserInfo.Gender = value;
+                InformPropertyChanged("GenderEnum");
             }
         }
 
-        private bool _femaleChecked;
-        public bool FemaleChecked
+        private GroupEnum groupEnum = GroupEnum.L01;
+        public GroupEnum GroupEnum
         {
-            get { return _femaleChecked; }
+            get { return groupEnum; }
             set
             {
-                _femaleChecked = value;
-                if (value)
-                    UserInfo.Gender = "Female";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
-
-
+                groupEnum = value;
+                UserInfo.Group = value;
+                InformPropertyChanged("GroupEnum");
             }
         }
 
-        private bool _l01Checked;
 
-        public bool L01Checked
+        private DominantHandEnum dominantHandEnum = DominantHandEnum.Left;
+        public DominantHandEnum DominantHandEnum
         {
-            get { return _l01Checked; }
+            get { return dominantHandEnum; }
             set
             {
-                _l01Checked = value;
-                if (value) UserInfo.Group = "L01";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
-
-            }
-        }
-        private bool _l02Checked;
-
-        public bool L02Checked
-        {
-            get { return _l02Checked; }
-            set
-            {
-                _l02Checked = value;
-                if (value) UserInfo.Group = "L02";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
-
-            }
-        }
-        private bool _l03Checked;
-
-        public bool L03Checked
-        {
-            get { return _l03Checked; }
-            set
-            {
-                _l03Checked = value;
-                if (value) UserInfo.Group = "L03";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
-
-            }
-        }
-
-        private bool _leftHandChecked;
-        public bool LeftHandChecked
-        {
-            get { return _leftHandChecked; }
-            set
-            {
-                _leftHandChecked = value;
-                if (value) UserInfo.DominantHand = "Left";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
-
-
-            }
-        }
-
-        private bool _rightHandChecked;
-        public bool RightHandChecked
-        {
-            get { return _rightHandChecked; }
-            set
-            {
-                _rightHandChecked = value;
-                if (value) UserInfo.DominantHand = "Right";
-                InformPropertyChanged("UserInfo");
-                InformPropertyChanged("FormValid");
-
+                dominantHandEnum = value;
+                UserInfo.DominantHand = value;
+                InformPropertyChanged("DominantHandEnum");
             }
         }
 
@@ -160,9 +93,8 @@ namespace wpf_playground
         {
             get
             {
-                var list = new List<String>() {
-                    UserInfo.Name, UserInfo.SID, UserInfo.Age, UserInfo.Gender, UserInfo.Group, UserInfo.DominantHand};
-                return !list.Any(x => String.IsNullOrEmpty(x));
+                var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, };
+                return !list.Any(x => string.IsNullOrEmpty(x));
             }
         }
 
@@ -176,7 +108,6 @@ namespace wpf_playground
             {
                 _name = value;
                 UserInfo.Name = value;
-                InformPropertyChanged("UserInfo");
                 InformPropertyChanged("FormValid");
 
             }
@@ -189,7 +120,6 @@ namespace wpf_playground
             {
                 _sid = value;
                 UserInfo.SID = value;
-                InformPropertyChanged("UserInfo");
                 InformPropertyChanged("FormValid");
 
             }
@@ -204,11 +134,56 @@ namespace wpf_playground
             {
                 _age = value;
                 UserInfo.Age = value;
-                InformPropertyChanged("UserInfo");
                 InformPropertyChanged("FormValid");
-
             }
         }
+
+
+        private LevelEnum _levelEnum = LevelEnum.L50;
+
+        public LevelEnum LevelEnum
+        {
+            get { return _levelEnum; }
+            set
+            {
+                _levelEnum = value;
+                UserInfo.Level = value;
+                InformPropertyChanged("LevelEnum");
+            }
+        }
+
+        private SignalModeEnum signalModeEnum = SignalModeEnum.Visual;
+
+        public SignalModeEnum SignalModeEnum
+        {
+            get { return signalModeEnum; }
+            set
+            {
+                signalModeEnum = value;
+                UserInfo.SignalMode = value;
+                InformPropertyChanged("SignalModeEnum");
+            }
+        }
+
+
+
+        private PQModeEnum pQModeEnum = PQModeEnum.Visual;
+
+        public PQModeEnum PQModeEnum
+        {
+            get { return pQModeEnum; }
+            set
+            {
+                pQModeEnum = value;
+                UserInfo.PQMode = value;
+                InformPropertyChanged("PQModeEnum");
+            }
+        }
+
+
+
+
+
         private ICommand _clickCommand;
         public ICommand ClickCommand
         {

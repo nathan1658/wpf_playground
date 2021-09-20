@@ -82,7 +82,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="Converter\ComparisonConverter.cs" />
     <Compile Include="Model\ClickHistory.cs" />
+    <Compile Include="Model\enums.cs" />
     <Compile Include="Model\TestResult.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="State.cs" />

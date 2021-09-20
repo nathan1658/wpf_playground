@@ -5,6 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:local="clr-namespace:wpf_playground.Converter"
+    xmlns:enums="clr-namespace:wpf_playground.Model"
     mc:Ignorable="d"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     TextElement.FontWeight="Regular"
@@ -13,10 +15,13 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    d:DesignHeight="324.58"
-    d:DesignWidth="670.443"
+    d:DesignHeight="458.669"
+    d:DesignWidth="667.372"
     Title="UserInfoPage">
-
+    <Window.Resources>
+        <local:ComparisonConverter
+            x:Key="ComparisonConverter" />
+    </Window.Resources>
     <Grid>
         <materialDesign:Card
             MaxWidth="500"
@@ -68,6 +73,14 @@
                     <RowDefinition
                         Height="auto" />
                     <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
                         Height="*" />
 
                 </Grid.RowDefinitions>
@@ -81,7 +94,7 @@
                 <TextBlock
                     Text="Name"
                     Grid.Row="0"
-                    Grid.Column="0"></TextBlock>
+                    Grid.Column="0" />
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="1"
@@ -110,21 +123,24 @@
                     Text="Gender"
                     Grid.Row="3"
                     Grid.Column="0"></TextBlock>
+                
                 <StackPanel
                     Grid.Row="3"
                     Grid.Column="1"
                     Orientation="Horizontal">
-
+                    
                     <RadioButton
                         GroupName="genderGroup"
-                        IsChecked="{Binding MaleChecked}"
+                        IsChecked="{Binding GenderEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GenderEnum.Male}}"
                         Content="Male">
                     </RadioButton>
+                    
                     <RadioButton
                         GroupName="genderGroup"
-                        IsChecked="{Binding FemaleChecked}"
+                        IsChecked="{Binding GenderEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GenderEnum.Female}}"
                         Content="Female">
                     </RadioButton>
+
                 </StackPanel>
 
 
@@ -139,19 +155,20 @@
 
                     <RadioButton
                         GroupName="testGroup"
-                        IsChecked="{Binding L01Checked}"
+                        IsChecked="{Binding GroupEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GroupEnum.L01}}"
                         Content="L01">
                     </RadioButton>
                     <RadioButton
                         GroupName="testGroup"
-                        IsChecked="{Binding L02Checked}"
+                        IsChecked="{Binding GroupEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GroupEnum.L02}}"
                         Content="L02">
                     </RadioButton>
                     <RadioButton
                         GroupName="testGroup"
-                        IsChecked="{Binding L03Checked}"
+                        IsChecked="{Binding GroupEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GroupEnum.L03}}"
                         Content="L03">
                     </RadioButton>
+
 
                 </StackPanel>
 
@@ -166,26 +183,108 @@
 
                     <RadioButton
                         GroupName="dominantGroup"
-                        IsChecked="{Binding LeftHandChecked}"
+                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Left}}"
                         Content="Left">
                     </RadioButton>
 
                     <RadioButton
                         GroupName="dominantGroup"
-                        IsChecked="{Binding RightHandChecked}"
+                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Right}}"
                         Content="Right">
                     </RadioButton>
 
                 </StackPanel>
+
+                <TextBlock
+                    Text="Level"
+                    Grid.Row="7"
+                    Grid.Column="0" />
+                <StackPanel
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <RadioButton
+                        GroupName="levelGroup"
+                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L50}}"
+                        Content="L50">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="levelGroup"
+                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L100}}"
+                        Content="L100">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="levelGroup"
+                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L150}}"
+                        Content="L150">
+                    </RadioButton>
+                </StackPanel>
+
+                <TextBlock
+                    Text="Signal Mode"
+                    Grid.Row="8"
+                    Grid.Column="0"></TextBlock>
+                <StackPanel
+                    Grid.Row="8"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <RadioButton
+                        GroupName="signalModeGroup"
+                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Visual}}"
+                        Content="Visual">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="signalModeGroup"
+                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Auditory}}"
+                        Content="Auditory">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="signalModeGroup"
+                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Tactile}}"
+                        Content="Tactile">
+                    </RadioButton>
+
+                </StackPanel>
+
+                <TextBlock
+                    Text="PQ Mode"
+                    Grid.Row="9"
+                    Grid.Column="0"></TextBlock>
+                <StackPanel
+                    Grid.Row="9"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <RadioButton
+                        GroupName="pqModeGroup"
+                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Visual}}"
+                        Content="Visual">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="pqModeGroup"
+                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Auditory}}"
+                        Content="Auditory">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="pqModeGroup"
+                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Tactile}}"
+                        Content="Tactile">
+                    </RadioButton>
+                </StackPanel>
+
                 <Button
                     IsEnabled="{Binding FormValid}"
-                    Grid.Row="7"
+                    Grid.Row="10"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom">
                     Submit
                 </Button>
+                <TextBlock
+                    Grid.Row="10"
+                    Text="{Binding LevelEnum}">
+
+                </TextBlock>
             </Grid>
         </materialDesign:Card>
 
