@@ -256,8 +256,27 @@ namespace wpf_playground
             theta = Math.Atan(yi / xi) + phi;
             xValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Cos(theta);
             yValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Sin(theta);
-            currentPointX = (xValue * 50) + xCenter;
-            currentPointY = (yValue * 50) + yCenter;
+
+            var movingLevel = 0;
+            var diffLevel = State.UserInfo.Level;
+            if ( diffLevel== Model.LevelEnum.L50)
+            {
+                movingLevel = 50;
+            }
+
+            if (diffLevel == Model.LevelEnum.L100)
+            {
+                movingLevel = 100;
+            }
+
+            if(diffLevel == Model.LevelEnum.L150)
+            {
+                movingLevel = 150;
+            }
+
+
+            currentPointX = (xValue * movingLevel) + xCenter;
+            currentPointY = (yValue * movingLevel) + yCenter;
 
 
 

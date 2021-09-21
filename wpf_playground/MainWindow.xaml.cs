@@ -1,24 +1,15 @@
 ﻿using Newtonsoft.Json;
-using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using wpf_playground.Model;
 
 namespace wpf_playground
@@ -57,6 +48,19 @@ namespace wpf_playground
 
         private List<ClickHistory> clickHistoryList { get; set; } = new List<ClickHistory>();
 
+
+        private ObservableCollection<int> _sequenceList = new ObservableCollection<int>();
+
+        public ObservableCollection<int> SequenceList
+        {
+            get { return _sequenceList; }
+            set
+            {
+                _sequenceList = value;
+                InformPropertyChanged("SequenceList");
+            }
+        }
+
         public MainWindow()
         {
 
@@ -90,39 +94,66 @@ namespace wpf_playground
             });
             Loaded += MainWindow_Loaded;
 
+            //Each button need to be press five times
+            var pressCount = 5;
+            for (int i = 0; i < pressCount; i++)
+            {
+                for (int j = 0; j < circleList.Count; j++)
+                {
+                    SequenceList.Add(j);
+                }
+            }
+            //sequenceList = 0 1 2 3 0 1 2 3 0 1 2 3...... each button need to be press 5 times
+
+            //shuffle it
+            SequenceList = new ObservableCollection<int>(SequenceList.OrderBy(a => Guid.NewGuid()).ToList());
+
         }
         double elapsedMs = 0;
 
- 
+
 
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
-            window.KeyDown += MainWindow_KeyDown;                   
+            window.KeyDown += MainWindow_KeyDown;
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             bool result = false;
+            //TODO switch by mapping
+
+            int btnIndex = -1;
             switch (e.Key)
             {
                 case System.Windows.Input.Key.NumPad7:
-                    result = circleList[0].Click();
+                    btnIndex = 0;
                     break;
                 case System.Windows.Input.Key.NumPad9:
-                    result = circleList[1].Click();
+                    btnIndex = 1;
                     break;
                 case System.Windows.Input.Key.NumPad1:
-                    result = circleList[2].Click();
+                    btnIndex = 2;
                     break;
                 case System.Windows.Input.Key.NumPad3:
-                    result = circleList[3].Click();
+                    btnIndex = 3;
                     break;
             }
+
+            if (btnIndex == -1)//Do nothing
+                return;
+
+            result = circleList[btnIndex].Click();
+
+            //If its a hit
             if (result)
             {
                 Score++;
+                //remove the button from the sequence
+                var itemToRemove = SequenceList.FirstOrDefault(r => r == btnIndex);
+                SequenceList.Remove(itemToRemove);
             }
             else
             {
@@ -145,7 +176,7 @@ namespace wpf_playground
             //}
         }
 
-        void saveJson()
+        void saveResult()
         {
             var output = new TestResult
             {
@@ -159,45 +190,43 @@ namespace wpf_playground
             MessageBox.Show("Done");
         }
 
+        //Randomly pick one and trigger it.
         void triggerControl()
         {
             Task.Run(async () =>
             {
-                int lastIndex = -1;
+                var random = new Random();
+
                 while (true)
                 {
                     //Time 
                     await Task.Delay(1000);
 
-                    int index = rnd.Next(circleList.Count);
-                    //Prevent same index show continusly
-                    while (lastIndex == index)
-                    {
-                        index = rnd.Next(circleList.Count);
-                    }
-                    lastIndex = index;
-                    var targetControl = (circleList[index]);
+                    int index = random.Next(SequenceList.Count);
+                    index = SequenceList[index];
+                    var targetControl = circleList[index];
                     var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
-                    if (!targetControl.Triggered)
-                    {
-                        reactionSw.Restart();
-                        await Dispatcher.Invoke(async () =>
-                           {
-                               targetPQ.Enable();
-                               await Task.Delay(1000);
-                               targetPQ.Disable();
-                               targetControl.Enable();
-                               await Task.Delay(1000);
-                               targetControl.Disable();
-                           });
-                    }
+
+
+                    reactionSw.Restart();
+                    await Dispatcher.Invoke(async () =>
+                       {
+                           targetPQ.Enable();
+                           await Task.Delay(1000);
+                           targetPQ.Disable();
+                           targetControl.Enable();
+                           await Task.Delay(1000);
+                           targetControl.Disable();
+                       });
+
+
                 }
             });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            saveJson();
+            saveResult();
         }
     }
 }

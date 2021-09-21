@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:wpf_playground"
+    xmlns:converter="clr-namespace:wpf_playground.Converter"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -17,6 +18,11 @@
     Title="MainWindow"
     d:DesignWidth="1018.243"
     d:DesignHeight="686.652">
+
+    <Window.Resources>
+        <converter:ListToStringConverter
+            x:Key="listToStringConverter" />
+    </Window.Resources>
     <Grid>
 
 
@@ -32,8 +38,12 @@
             Padding="32"
             Margin="16"
             Grid.Column="0">
-            <TextBlock
-                Text="{Binding UserInfo}"></TextBlock>
+            <StackPanel>
+                <TextBlock
+                    Text="{Binding UserInfo}"></TextBlock>
+                <TextBlock
+                    Text="{Binding SequenceList, Converter={StaticResource listToStringConverter}}"></TextBlock>
+            </StackPanel>
         </materialDesign:Card>
 
         <materialDesign:Card

@@ -83,6 +83,7 @@
     </ApplicationDefinition>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Converter\ComparisonConverter.cs" />
+    <Compile Include="Converter\ListToStringConverter.cs" />
     <Compile Include="Model\ClickHistory.cs" />
     <Compile Include="Model\enums.cs" />
     <Compile Include="Model\TestResult.cs" />
