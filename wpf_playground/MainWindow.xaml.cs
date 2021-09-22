@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using wpf_playground.Model;
@@ -29,22 +30,14 @@ namespace wpf_playground
         List<MyBaseUserControl> circleList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
         Stopwatch reactionSw = new Stopwatch();
+        Random random = new Random();
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-        private int _score;
-
-        public int Score
-        {
-            get { return _score; }
-            set
-            {
-                _score = value;
-                InformPropertyChanged("Score");
-            }
-        }
+  
 
         private List<ClickHistory> clickHistoryList { get; set; } = new List<ClickHistory>();
 
@@ -117,12 +110,12 @@ namespace wpf_playground
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
-            window.KeyDown += MainWindow_KeyDown;
+            window.KeyDown += MainWindow_KeyDown;        
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            bool result = false;
+            bool isCorrect = false;
             //TODO switch by mapping
 
             int btnIndex = -1;
@@ -145,35 +138,29 @@ namespace wpf_playground
             if (btnIndex == -1)//Do nothing
                 return;
 
-            result = circleList[btnIndex].Click();
+            isCorrect = circleList[btnIndex].Click();
 
             //If its a hit
-            if (result)
+            if (isCorrect)
             {
-                Score++;
                 //remove the button from the sequence
                 var itemToRemove = SequenceList.FirstOrDefault(r => r == btnIndex);
                 SequenceList.Remove(itemToRemove);
+                SequenceList = new ObservableCollection<int>(SequenceList);
             }
-            else
-            {
-                Score--;
-            }
+          
             Debug.WriteLine($"{reactionSw.ElapsedMilliseconds}ms");
+
+            //TODO add current config (i.e. difficulty/ dominant hand)
             clickHistoryList.Add(new ClickHistory
             {
                 ClickDate = DateTime.Now,
                 Distance = bouncingBall.Distance,
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = elapsedMs,
-                IsCorrect = result
+                IsCorrect = isCorrect
             });
-            //if (Score >= 5)
-            //{
-            //    MessageBox.Show("GG");
-            //    //output file to json
-            //    saveJson();
-            //}
+
         }
 
         void saveResult()
