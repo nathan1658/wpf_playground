@@ -18,7 +18,7 @@ namespace wpf_playground.Model
         public SignalModeEnum SignalMode { get; set; }
         public PQModeEnum PQMode { get; set; }
         public SOAEnum SOA { get; set; }
-
+        public MappingEnum Mapping { get; set; }
 
         public override string ToString()
         {

@@ -61,5 +61,11 @@ namespace wpf_playground.Model
         Soa600,
         Soa1000
     }
+
+    public enum MappingEnum
+    {
+        BC,TC,LC,BI
+    }
+
 }
 

@@ -71,6 +71,10 @@ namespace wpf_playground
         {
 
             new UserInfoPage().ShowDialog();
+            new MappingSelection().ShowDialog();
+
+
+
             this.DataContext = this;
 
             InitializeComponent();
@@ -108,7 +112,6 @@ namespace wpf_playground
                 {
                     if (SequenceList.Count <= 0)
                     {
-                        MessageBox.Show("GG");
                         saveResult();
                         Dispatcher.Invoke(() =>
                         {
@@ -167,19 +170,67 @@ namespace wpf_playground
             //TODO switch by mapping
 
             int btnIndex = -1;
+            var mapping = UserInfo.Mapping;
             switch (e.Key)
             {
-                case System.Windows.Input.Key.NumPad7:
-                    btnIndex = 0;
+                case Key.NumPad7:
+                    if (mapping == MappingEnum.BC)
+                        btnIndex = 0;
+
+                    if (mapping == MappingEnum.TC)
+                        btnIndex = 2;
+
+                    if (mapping == MappingEnum.LC)
+                        btnIndex = 1;
+
+                    if (mapping == MappingEnum.BI)
+                        btnIndex = 3;
+
                     break;
-                case System.Windows.Input.Key.NumPad9:
-                    btnIndex = 1;
+                case Key.NumPad9:
+                    if (mapping == MappingEnum.BC)
+                        btnIndex = 1;
+
+                    if (mapping == MappingEnum.TC)
+                        btnIndex = 3;
+
+                    if (mapping == MappingEnum.LC)
+                        btnIndex = 0;
+
+                    if (mapping == MappingEnum.BI)
+                        btnIndex = 2;
+
+
                     break;
-                case System.Windows.Input.Key.NumPad1:
-                    btnIndex = 2;
+                case Key.NumPad1:
+                    if (mapping == MappingEnum.BC)
+                        btnIndex = 2;
+
+                    if (mapping == MappingEnum.TC)
+                        btnIndex = 0;
+
+                    if (mapping == MappingEnum.LC)
+                        btnIndex = 3;
+
+                    if (mapping == MappingEnum.BI)
+                        btnIndex = 1;
+
+
                     break;
-                case System.Windows.Input.Key.NumPad3:
-                    btnIndex = 3;
+                case Key.NumPad3:
+                    if (mapping == MappingEnum.BC)
+                        btnIndex = 3;
+
+                    if (mapping == MappingEnum.TC)
+                        btnIndex = 1;
+
+                    if (mapping == MappingEnum.LC)
+                        btnIndex = 2;
+
+                    if (mapping == MappingEnum.BI)
+                        btnIndex = 0;
+
+
                     break;
             }
 
@@ -213,8 +264,10 @@ namespace wpf_playground
         {
             int ms = -1;
             if (UserInfo.SOA == SOAEnum.Soa200)
-                ms = 200; if (UserInfo.SOA == SOAEnum.Soa600)
-                ms = 600; if (UserInfo.SOA == SOAEnum.Soa1000)
+                ms = 200;
+            if (UserInfo.SOA == SOAEnum.Soa600)
+                ms = 600;
+            if (UserInfo.SOA == SOAEnum.Soa1000)
                 ms = 1000;
             return ms;
         }
@@ -229,7 +282,7 @@ namespace wpf_playground
 
             //Write to CSV
 
-            var header = new List<String> { "Name", "SID", "Age", "Gender", "Group", "DominantHand", "Level", "SignalMode", "PQMode", "SOA", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState","Delay" };
+            var header = new List<String> { "Name", "SID", "Age", "Gender", "Group", "DominantHand", "Level", "SignalMode", "PQMode", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
             var csvOutput = String.Join(",", header) + "\n";
             for (int i = 0; i < clickHistoryList.Count; i++)
             {
@@ -246,6 +299,7 @@ namespace wpf_playground
                     UserInfo.SignalMode.ToString(),
                     UserInfo.PQMode.ToString(),
                     UserInfo.SOA.ToString(),
+                    UserInfo.Mapping.ToString(),
                     element.ClickDate.ToString(),
                     element.ElapsedTime.ToString(),
                     element.ReactionTime.ToString(),
@@ -270,7 +324,7 @@ namespace wpf_playground
                 triggerSw.Start();
 
                 var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
-                var delayIndex = random.Next(0, delayIntervalList.Count );
+                var delayIndex = random.Next(0, delayIntervalList.Count);
                 delayMS = delayIntervalList[delayIndex];
                 int delayPQMS = -1;
                 //Time 

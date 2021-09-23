@@ -1,0 +1,159 @@
+﻿<Window
+    x:Class="wpf_playground.MappingSelection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:local="clr-namespace:wpf_playground.Converter"
+    xmlns:enums="clr-namespace:wpf_playground.Model"
+    mc:Ignorable="d"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextElement.FontWeight="Regular"
+    TextElement.FontSize="13"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    d:DesignHeight="539.669"
+    d:DesignWidth="667.372"
+    Title="Mapping Selection Page">
+    <Window.Resources>
+        <local:ComparisonConverter
+            x:Key="ComparisonConverter" />
+    </Window.Resources>
+    <Grid>
+        <materialDesign:Card
+            MaxWidth="500"
+            MaxHeight="400"
+            Padding="32"
+            Margin="16"
+            Grid.Column="0">
+            <Grid>
+                <Grid.Resources>
+                    <Style
+                        TargetType="TextBlock">
+                        <Setter
+                            Property="Margin"
+                            Value="5" />
+                        <Setter
+                            Property="VerticalAlignment"
+                            Value="Center" />
+                    </Style>
+                    <Style
+                        TargetType="StackPanel">
+                        <Setter
+                            Property="Margin"
+                            Value="5" />
+                    </Style>
+                    <Style
+                        TargetType="RadioButton">
+                        <Setter
+                            Property="Margin"
+                            Value="5" />
+                    </Style>
+                    <Style
+                        TargetType="TextBox">
+                        <Setter
+                            Property="Margin"
+                            Value="5" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="auto" />
+
+                    <RowDefinition
+                        Height="*" />
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+
+                    <StackPanel.Resources>
+                        <Style
+                            TargetType="Image">
+                            <Setter
+                                Property="Height"
+                                Value="200" />
+                        </Style>
+                        <Style
+                            TargetType="RadioButton">
+                            <Setter
+                                Property="GroupName"
+                                Value="mappingGroup" />
+                            <Setter
+                                Property="HorizontalAlignment"
+                                Value="Center">
+                            </Setter>
+                        </Style>
+                    </StackPanel.Resources>
+                    <StackPanel
+                        Width="100">
+                        <Image
+                            Source="/Resources/BCBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton
+                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BC}}">
+                            BC
+                        </RadioButton>
+                    </StackPanel>
+
+                    <StackPanel
+                        Width="100">
+                        <Image
+                            Source="/Resources/TCBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton
+                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.TC}}">
+                            TC
+                        </RadioButton>
+                    </StackPanel>
+                    <StackPanel
+                        Width="100">
+                        <Image
+                            Source="/Resources/LCBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton
+                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.LC}}">
+                            LC
+                        </RadioButton>
+                    </StackPanel>
+
+                    <StackPanel
+                        Width="100">
+                        <Image
+                            Source="/Resources/BIBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton
+                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BI}}">
+                            BI
+                        </RadioButton>
+                    </StackPanel>
+                 
+
+                </StackPanel>
+
+                <Button
+                    IsEnabled="{Binding FormValid}"
+                    Grid.Row="11"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Command="{Binding ClickCommand}"
+                    VerticalAlignment="Bottom"
+                    Click="Button_Click">
+                    Submit
+                </Button>
+
+            </Grid>
+        </materialDesign:Card>
+
+    </Grid>
+</Window>

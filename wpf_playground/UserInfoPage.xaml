@@ -17,7 +17,7 @@
     FontFamily="{DynamicResource MaterialDesignFont}"
     d:DesignHeight="539.669"
     d:DesignWidth="667.372"
-    Title="UserInfoPage">
+    Title="User Info Page">
     <Window.Resources>
         <local:ComparisonConverter
             x:Key="ComparisonConverter" />
@@ -25,7 +25,7 @@
     <Grid>
         <materialDesign:Card
             MaxWidth="500"
-            MaxHeight="400"
+            MaxHeight="600"
             Padding="32"
             Margin="16"
             Grid.Column="0">
@@ -281,17 +281,17 @@
                     Grid.Column="1"
                     Orientation="Horizontal">
                     <RadioButton
-                        GroupName="pqModeGroup"
+                        GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
                         Content="200">
                     </RadioButton>
                     <RadioButton
-                        GroupName="pqModeGroup"
+                        GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
                         Content="600">
                     </RadioButton>
                     <RadioButton
-                        GroupName="pqModeGroup"
+                        GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa1000}}"
                         Content="1000">
                     </RadioButton>
