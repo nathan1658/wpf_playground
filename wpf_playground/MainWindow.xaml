@@ -129,10 +129,18 @@
                         HorizontalAlignment="Center"
                         Text="{Binding Score}"></TextBlock>
                 </Grid>
-                <TextBlock
-                    x:Name="counter"
+                <StackPanel
                     VerticalAlignment="top"
-                    HorizontalAlignment="Center" />
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+
+                    <TextBlock>
+                        Game time:
+                    </TextBlock>
+                <TextBlock
+                    x:Name="gameCounter"
+                     />
+                </StackPanel>
             </Grid>
         </materialDesign:Card>
 

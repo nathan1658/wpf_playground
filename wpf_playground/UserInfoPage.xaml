@@ -15,7 +15,7 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    d:DesignHeight="458.669"
+    d:DesignHeight="539.669"
     d:DesignWidth="667.372"
     Title="UserInfoPage">
     <Window.Resources>
@@ -60,6 +60,8 @@
                     </Style>
                 </Grid.Resources>
                 <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="auto" />
                     <RowDefinition
                         Height="auto" />
                     <RowDefinition
@@ -270,10 +272,34 @@
                         Content="Tactile">
                     </RadioButton>
                 </StackPanel>
+                <TextBlock
+                    Text="SOA"
+                    Grid.Row="10"
+                    Grid.Column="0"></TextBlock>
+                <StackPanel
+                    Grid.Row="10"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <RadioButton
+                        GroupName="pqModeGroup"
+                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
+                        Content="200">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="pqModeGroup"
+                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
+                        Content="600">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="pqModeGroup"
+                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa1000}}"
+                        Content="1000">
+                    </RadioButton>
+                </StackPanel>
 
                 <Button
                     IsEnabled="{Binding FormValid}"
-                    Grid.Row="10"
+                    Grid.Row="11"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Command="{Binding ClickCommand}"

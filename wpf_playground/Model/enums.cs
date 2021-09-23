@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace wpf_playground.Model
 {
+
+    public enum ClickState
+    {
+        Correct,
+        Incorrect,
+        Miss
+    }
+
+
     public enum GenderEnum
     {
         Male,
@@ -44,6 +53,13 @@ namespace wpf_playground.Model
         Visual,
         Auditory,
         Tactile
+    }
+
+    public enum SOAEnum
+    {
+        Soa200,
+        Soa600,
+        Soa1000
     }
 }
 

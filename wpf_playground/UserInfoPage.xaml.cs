@@ -33,7 +33,7 @@ namespace wpf_playground
             };
             this.DataContext = vm;
         }
- 
+
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
@@ -177,6 +177,19 @@ namespace wpf_playground
                 pQModeEnum = value;
                 UserInfo.PQMode = value;
                 InformPropertyChanged("PQModeEnum");
+            }
+        }
+
+        private SOAEnum soaEnum = SOAEnum.Soa200;
+
+        public SOAEnum SOAEnum
+        {
+            get { return soaEnum; }
+            set
+            {
+                soaEnum = value;
+                UserInfo.SOA = value;
+                InformPropertyChanged("SOAEnum");
             }
         }
 

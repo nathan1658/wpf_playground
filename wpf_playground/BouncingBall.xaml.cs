@@ -195,7 +195,9 @@ namespace wpf_playground
                 // If Joystick not found, throws an error
                 if (joystickGuid == Guid.Empty)
                 {
-                    MessageBox.Show("No joystick found, will use mouse as fallback.");
+                    //MessageBox.Show("No joystick found, will use mouse as fallback.");
+
+                    System.Diagnostics.Debug.WriteLine("No joystick found, will use mouse as fallback.");
                     useJoystick = false;
                     return;
                 }

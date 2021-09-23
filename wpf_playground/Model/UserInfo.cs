@@ -17,6 +17,8 @@ namespace wpf_playground.Model
         public LevelEnum Level { get; set; }
         public SignalModeEnum SignalMode { get; set; }
         public PQModeEnum PQMode { get; set; }
+        public SOAEnum SOA { get; set; }
+
 
         public override string ToString()
         {
