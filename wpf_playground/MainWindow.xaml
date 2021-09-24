@@ -16,8 +16,8 @@
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     Title="MainWindow"
-    d:DesignWidth="1018.243"
-    d:DesignHeight="686.652">
+    d:DesignWidth="774.363"
+    d:DesignHeight="828.718">
 
     <Window.Resources>
         <converter:ListToStringConverter
@@ -31,8 +31,7 @@
                 Height="auto" />
             <RowDefinition
                 Height="*" />
-            <RowDefinition
-                Height="100" />
+
         </Grid.RowDefinitions>
         <materialDesign:Card
             Padding="32"
@@ -51,7 +50,6 @@
             Grid.Row="1">
             <Grid
                 x:Name="gameBoard">
-
                 <Canvas
                     Background="Gray"></Canvas>
                 <Grid
@@ -137,24 +135,12 @@
                     <TextBlock>
                         Game time:
                     </TextBlock>
-                <TextBlock
+                    <TextBlock
                     x:Name="gameCounter"
                      />
                 </StackPanel>
             </Grid>
         </materialDesign:Card>
 
-        <materialDesign:Card
-            Grid.Row="2"
-            Margin="16">
-            <Grid>
-
-                <Button
-                    Click="Button_Click"
-                    Grid.Column="0">Save</Button>
-
-
-            </Grid>
-        </materialDesign:Card>
     </Grid>
 </Window>

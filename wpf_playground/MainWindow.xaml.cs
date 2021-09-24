@@ -253,7 +253,7 @@ namespace wpf_playground
                 wrong();
             }
 
-            Debug.WriteLine($"{reactionSw.ElapsedMilliseconds}ms");
+            Debug.WriteLine($"Clicked: {reactionSw.ElapsedMilliseconds}ms");
 
             tokenSource.Cancel();
 
@@ -336,20 +336,17 @@ namespace wpf_playground
                 var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
 
 
-                await Dispatcher.Invoke(async () =>
-                 {
-                     targetPQ.Enable();
-                     delayPQMS = getSoa();
-                     await Task.Delay(delayPQMS);
-                     targetPQ.Disable();
-                     System.Diagnostics.Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
+                Dispatcher.Invoke(() =>
+             {
+                 targetPQ.Enable();
+             });
 
-                     targetControl.Enable();
-                     reactionSw.Restart();
-                 });
+                delayPQMS = getSoa();
 
+                var pqEnded = false;
                 while (true)
                 {
+
                     if (tokenSource.Token.IsCancellationRequested)
                     {
                         //clicked
@@ -364,12 +361,25 @@ namespace wpf_playground
                         Dispatcher.Invoke(() =>
                         {
                             targetControl.Disable();
-
                         });
                         //miss
                         miss();
                         return;
                     }
+
+                    if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayMS))
+                    {
+                        pqEnded = true;
+                        Dispatcher.Invoke(() =>
+                        {
+                            targetPQ.Disable();
+                            System.Diagnostics.Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
+                            targetControl.Enable();
+                            reactionSw.Restart();
+                        });
+                    }
+
+
                 }
             });
         }
