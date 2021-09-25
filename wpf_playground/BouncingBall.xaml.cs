@@ -122,6 +122,12 @@ namespace wpf_playground
         }
 
 
+        public bool IsDebugMode { get
+            {
+                return State.DebugMode;
+            }
+        }
+
         private string _yVal;
 
         public string YVal

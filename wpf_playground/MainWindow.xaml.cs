@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -66,9 +67,9 @@ namespace wpf_playground
 
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-        private String _mappingImageSrc  ;
+        private string _mappingImageSrc;
 
-        public String MappingImageSrc
+        public string MappingImageSrc
         {
             get { return _mappingImageSrc; }
             set
@@ -79,10 +80,25 @@ namespace wpf_playground
             }
         }
 
+        public bool IsDebugMode
+        {
+            get
+            {
+                return State.DebugMode;
+            }
+        }
+
 
 
         public MainWindow()
         {
+            //Init settings from app config
+            string isDebugString = ConfigurationManager.AppSettings["DebugMode"];
+            State.DebugMode = isDebugString.ToLower() == "true";
+
+            string numOfClickString = ConfigurationManager.AppSettings["ClickForEachButton"];
+            State.ClickCountForEachButton = int.Parse(numOfClickString);
+
 
             new UserInfoPage().ShowDialog();
             new MappingSelection().ShowDialog();
@@ -98,10 +114,10 @@ namespace wpf_playground
             //Init the control list here
             circleList = new List<MyBaseUserControl>
             {
+                this.circle0,
                 this.circle1,
                 this.circle2,
                 this.circle3,
-                this.circle4,
             };
 
             gameSw.Start();
@@ -162,8 +178,8 @@ namespace wpf_playground
 
         void initSequenceList()
         {
-            //Each button need to be press five times
-            var pressCount = 1;
+            //The number of each button required to be pressed
+            var pressCount = State.ClickCountForEachButton;
             for (int i = 0; i < pressCount; i++)
             {
                 for (int j = 0; j < circleList.Count; j++)

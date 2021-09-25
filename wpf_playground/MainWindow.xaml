@@ -28,7 +28,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition
-                Width="auto" />
+                Width="400" />
             <ColumnDefinition
                 Width="*" />
 
@@ -41,14 +41,27 @@
           >
                 <StackPanel>
                     <TextBlock
-                    Text="{Binding UserInfo}"></TextBlock>
+                    Text="{Binding UserInfo}"/>
                     <TextBlock
-                    Text="{Binding SequenceList, Converter={StaticResource listToStringConverter}}"></TextBlock>
+                    Text="{Binding SequenceList, Converter={StaticResource listToStringConverter}}">
+                        <TextBlock.Resources>
+                            <Style TargetType="TextBlock"
+                                       >
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Resources>
+                    </TextBlock>
                 </StackPanel>
             </materialDesign:Card>
 
 
             <materialDesign:Card
+                Height="400"
             Padding="32"
             Margin="16"
           >
@@ -65,6 +78,17 @@
             Width="600"
             Height="600"
             Grid.Column="1">
+            <materialDesign:Card.Resources>
+                <Style TargetType="TextBlock"
+                                       >
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </materialDesign:Card.Resources>
             <Grid
                 x:Name="gameBoard">
                 <Canvas
@@ -75,20 +99,23 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top">
                         <local:Circle
-                            x:Name="circle1" />
+                            x:Name="circle0" />
                         <TextBlock
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center">1</TextBlock>
+                            VerticalAlignment="Center">
+                        
+                            
+                            0</TextBlock>
                     </Grid>
 
                     <Grid
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top">
                         <local:Circle
-                            x:Name="circle2" />
+                            x:Name="circle1" />
                         <TextBlock
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center">2</TextBlock>
+                            VerticalAlignment="Center">1</TextBlock>
                     </Grid>
                     <local:BouncingBall
                         x:Name="bouncingBall"
@@ -99,19 +126,19 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom">
                         <local:Circle
-                            x:Name="circle3" />
+                            x:Name="circle2" />
                         <TextBlock
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center">3</TextBlock>
+                            VerticalAlignment="Center">2</TextBlock>
                     </Grid>
                     <Grid
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom">
                         <local:Circle
-                            x:Name="circle4" />
+                            x:Name="circle3" />
                         <TextBlock
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center">4</TextBlock>
+                            VerticalAlignment="Center">3</TextBlock>
 
                     </Grid>
 
