@@ -66,6 +66,20 @@ namespace wpf_playground
 
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
+        private String _mappingImageSrc  ;
+
+        public String MappingImageSrc
+        {
+            get { return _mappingImageSrc; }
+            set
+            {
+                _mappingImageSrc = value;
+
+                InformPropertyChanged("MappingImageSrc");
+            }
+        }
+
+
 
         public MainWindow()
         {
@@ -76,6 +90,8 @@ namespace wpf_playground
 
 
             this.DataContext = this;
+
+
 
             InitializeComponent();
 
@@ -136,6 +152,10 @@ namespace wpf_playground
             });
 
             Loaded += MainWindow_Loaded;
+
+
+            //update Mapping Image Src
+            MappingImageSrc = $"/Resources/{UserInfo.Mapping}Box.Image.bmp";
 
         }
 
@@ -326,7 +346,6 @@ namespace wpf_playground
                 var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
                 var delayIndex = random.Next(0, delayIntervalList.Count);
                 delayMS = delayIntervalList[delayIndex];
-                int delayPQMS = -1;
                 //Time 
                 await Task.Delay(delayMS);
                 System.Diagnostics.Debug.WriteLine("After delay: " + triggerSw.ElapsedMilliseconds);
@@ -341,12 +360,12 @@ namespace wpf_playground
                  targetPQ.Enable();
              });
 
+                int delayPQMS = -1;
                 delayPQMS = getSoa();
 
                 var pqEnded = false;
                 while (true)
                 {
-
                     if (tokenSource.Token.IsCancellationRequested)
                     {
                         //clicked

@@ -26,28 +26,45 @@
     <Grid>
 
 
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="auto" />
-            <RowDefinition
-                Height="*" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="auto" />
+            <ColumnDefinition
+                Width="*" />
 
-        </Grid.RowDefinitions>
-        <materialDesign:Card
+        </Grid.ColumnDefinitions>
+        <StackPanel   Grid.Column="0">
+
+            <materialDesign:Card
             Padding="32"
             Margin="16"
-            Grid.Column="0">
-            <StackPanel>
-                <TextBlock
+          >
+                <StackPanel>
+                    <TextBlock
                     Text="{Binding UserInfo}"></TextBlock>
-                <TextBlock
+                    <TextBlock
                     Text="{Binding SequenceList, Converter={StaticResource listToStringConverter}}"></TextBlock>
-            </StackPanel>
-        </materialDesign:Card>
+                </StackPanel>
+            </materialDesign:Card>
+
+
+            <materialDesign:Card
+            Padding="32"
+            Margin="16"
+          >
+                <Image
+                            Source="{Binding MappingImageSrc}"
+                            Stretch="Uniform" />
+            </materialDesign:Card>
+
+
+        </StackPanel>
 
         <materialDesign:Card
             Margin="16"
-            Grid.Row="1">
+            Width="600"
+            Height="600"
+            Grid.Column="1">
             <Grid
                 x:Name="gameBoard">
                 <Canvas

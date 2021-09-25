@@ -31,6 +31,8 @@ namespace wpf_playground.Model
             result += $"Level : {Level}" + "\n";
             result += $"Signal Mode : {SignalMode}" + "\n";
             result += $"PQ Mode : {PQMode}" + "\n";
+            result += $"SOA : {SOA}" + "\n";
+            result += $"Mapping : {Mapping}" + "\n";
             return result;
         }
     }

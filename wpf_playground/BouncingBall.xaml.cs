@@ -38,6 +38,13 @@ namespace wpf_playground
             }
             set
             {
+                //prevent the blue ball go out of bound
+                if (value < jBall.Width / 2)
+                    value = jBall.Width/2;
+
+                if (value> board.Width - jBall.Width/2)
+                    value = board.Width - jBall.Width / 2;
+
                 _cursorX = value;
                 Dispatcher.Invoke(() =>
                 {
@@ -53,6 +60,14 @@ namespace wpf_playground
             }
             set
             {
+
+                //prevent the blue ball go out of bound
+                if (value < jBall.Height / 2)
+                    value = jBall.Height/2;
+
+                if (value > board.Height - jBall.Height / 2)
+                    value = board.Height - jBall.Height / 2;
+
                 _cursorY = value;
                 Dispatcher.Invoke(() =>
                 {
@@ -120,9 +135,9 @@ namespace wpf_playground
         }
 
 
-        private String _deviceType;
+        private string _deviceType;
 
-        public String DeviceType
+        public string DeviceType
         {
             get { return _deviceType; }
             set
