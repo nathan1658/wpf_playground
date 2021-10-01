@@ -24,7 +24,7 @@
     </Window.Resources>
     <Grid>
         <StackPanel>
-            <Button Click="Button_Click">Play</Button>
+            <!--<Button Click="Button_Click">Play</Button>-->
         <materialDesign:Card
             MaxWidth="500"
             MaxHeight="600"

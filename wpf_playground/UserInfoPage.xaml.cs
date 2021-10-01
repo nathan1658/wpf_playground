@@ -1,4 +1,5 @@
-﻿using AudioPlayerApp;
+﻿using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using SharpDX.IO;
 using SharpDX.MediaFoundation;
 using SharpDX.XAudio2;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,18 +39,14 @@ namespace wpf_playground
                 this.Close();
             };
             this.DataContext = vm;
+
+
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-            {
-                var a = new MediaHelper();
-                a.Play();
-              
-                
-
-            });
+            //AudioHelper.Instance.play();
         }
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged

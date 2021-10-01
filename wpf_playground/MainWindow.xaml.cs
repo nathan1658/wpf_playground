@@ -370,6 +370,7 @@ namespace wpf_playground
                 var targetControl = circleList[index];
                 var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
 
+                AudioHelper.Instance.play(500, index == 0 || index == 2);
 
                 Dispatcher.Invoke(() =>
              {
