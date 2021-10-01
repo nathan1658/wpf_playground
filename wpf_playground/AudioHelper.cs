@@ -30,27 +30,37 @@ namespace wpf_playground
         /// <param name="duration">Specify the sound duration in ms</param>
         /// <param name="isLeft">play the sound in left</param>
         public void play(int duration, bool isLeft)
-        {
-            if (_task != null)
-                _task = null;
+        {            
             _task = Task.Run(() =>
             {
                 player.Position = 0;
-                using (var output = new WaveOutEvent())                
+                using (var output = new WaveOutEvent())
                 {
                     // convert our mono ISampleProvider to stereo
                     var stereo = new MonoToStereoSampleProvider(player);
                     stereo.LeftVolume = isLeft ? 1.0f : 0f; // silence in left channel
                     stereo.RightVolume = isLeft ? 0f : 1.0f; // full volume in right channel
 
+
+                    var semitone = Math.Pow(2, 1.0 / 12);
+                    var upOneTone = semitone * semitone;
+                    var downOneTone = 1.0 / upOneTone;
+
+                    var pitch = new SmbPitchShiftingSampleProvider(stereo);
+                    pitch.PitchFactor = (float)downOneTone;
+
+
+
+                    //output.Init(pitch);
                     output.Init(stereo);
                     output.Play();
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
                     while (output.PlaybackState == PlaybackState.Playing && timer.ElapsedMilliseconds < duration)
                     {
-                        Thread.Sleep(100);
+                        Thread.Sleep(10);
                     }
+                    output.Stop();
                 }
             });
         }

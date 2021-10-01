@@ -203,7 +203,6 @@ namespace wpf_playground
         {
             bool isCorrect = false;
             reactionSw.Stop();
-            //TODO switch by mapping
 
             int btnIndex = -1;
             var mapping = UserInfo.Mapping;
@@ -368,17 +367,16 @@ namespace wpf_playground
                 int index = random.Next(SequenceList.Count);
                 index = SequenceList[index];
                 var targetControl = circleList[index];
-                var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
 
-                AudioHelper.Instance.play(500, index == 0 || index == 2);
+                var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
+                int delayPQMS = -1;
+                delayPQMS = getSoa();
+                AudioHelper.Instance.play(delayPQMS, index == 0 || index == 2);
 
                 Dispatcher.Invoke(() =>
              {
                  targetPQ.Enable();
              });
-
-                int delayPQMS = -1;
-                delayPQMS = getSoa();
 
                 var pqEnded = false;
                 while (true)
@@ -414,8 +412,6 @@ namespace wpf_playground
                             reactionSw.Restart();
                         });
                     }
-
-
                 }
             });
         }

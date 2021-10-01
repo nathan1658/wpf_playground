@@ -16,8 +16,8 @@
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     Title="MainWindow"
-    d:DesignWidth="774.363"
-    d:DesignHeight="828.718">
+    d:DesignWidth="1429.863"
+    d:DesignHeight="989.218">
 
     <Window.Resources>
         <converter:ListToStringConverter
@@ -74,9 +74,9 @@
         </StackPanel>
 
         <materialDesign:Card
-            Margin="16"
-            Width="600"
-            Height="600"
+            Margin="16"     
+            Height="22cm"
+                Width="22cm"
             Grid.Column="1">
             <materialDesign:Card.Resources>
                 <Style TargetType="TextBlock"
@@ -90,11 +90,13 @@
                 </Style>
             </materialDesign:Card.Resources>
             <Grid
+                
                 x:Name="gameBoard">
                 <Canvas
+                   
                     Background="Gray"></Canvas>
                 <Grid
-                    Margin="20">
+                    >
                     <Grid
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top">

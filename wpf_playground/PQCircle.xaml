@@ -7,8 +7,8 @@
     xmlns:local="clr-namespace:wpf_playground"
     mc:Ignorable="d">
     <Ellipse
-        Height="50"
-        Width="50"
+        Height="3cm"
+        Width="3cm"
         x:Name="control">
 
         <Ellipse.Style>

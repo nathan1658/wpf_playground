@@ -43,10 +43,11 @@ namespace wpf_playground
 
 
         }
-
+        bool testAudio = false;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //AudioHelper.Instance.play();
+            testAudio = !testAudio;
+            AudioHelper.Instance.play(4000,testAudio);
         }
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
@@ -64,6 +65,14 @@ namespace wpf_playground
             }
         }
 
+
+        public bool IsDebugMode
+        {
+            get
+            {
+                return State.DebugMode;
+            }
+        }
 
         private GenderEnum genderEnum = GenderEnum.Male;
 

@@ -8,23 +8,23 @@
     mc:Ignorable="d">
     <Grid>
         <Canvas
-            Height="400"
-            Width="400"
+            Height="13cm"
+            Width="13cm"
             Background="AliceBlue"
             x:Name="board"
             MouseMove="Board_MouseMove">
             <Ellipse
                 x:Name="ball"
-                Height="50"
-                Width="50"
+                Height="0.5cm"
+                Width="0.5cm"
                 Fill="Red"
                 Canvas.Left="0"
                 Canvas.Top="0">
             </Ellipse>
             <Ellipse                
                 x:Name="jBall"
-                Height="30"
-                Width="30"
+                Height="0.5cm"
+                Width="0.5cm"
                 Fill="blue"
                 Canvas.Left="0"
                 Canvas.Top="0">

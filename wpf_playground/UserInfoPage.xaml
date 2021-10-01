@@ -24,7 +24,23 @@
     </Window.Resources>
     <Grid>
         <StackPanel>
-            <!--<Button Click="Button_Click">Play</Button>-->
+            <Button Click="Button_Click"
+                    
+                    
+                    >
+                <Button.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"/>
+
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Resources>
+                
+                Play</Button>
         <materialDesign:Card
             MaxWidth="500"
             MaxHeight="600"
