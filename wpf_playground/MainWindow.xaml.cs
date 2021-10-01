@@ -388,10 +388,10 @@ namespace wpf_playground
                         return;
                     }
 
-                    //TODO pq time (0.2,0.6,0.8) + 1000 (redball visible time) + delay (1-4s)
+                    //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
                     if (triggerSw.ElapsedMilliseconds >= (1000 + delayPQMS + delayMS))
                     {
-                        System.Diagnostics.Debug.WriteLine("Missed: " + triggerSw.ElapsedMilliseconds);
+                        Debug.WriteLine("Missed: " + triggerSw.ElapsedMilliseconds);
 
                         Dispatcher.Invoke(() =>
                         {
