@@ -1,6 +1,11 @@
-﻿using System;
+﻿using AudioPlayerApp;
+using SharpDX.IO;
+using SharpDX.MediaFoundation;
+using SharpDX.XAudio2;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -34,6 +39,17 @@ namespace wpf_playground
             this.DataContext = vm;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                var a = new MediaHelper();
+                a.Play();
+              
+                
+
+            });
+        }
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {

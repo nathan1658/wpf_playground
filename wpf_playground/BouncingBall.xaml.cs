@@ -25,7 +25,7 @@ namespace wpf_playground
     public partial class BouncingBall : UserControl, INotifyPropertyChanged
     {
 
-        double Xp, Yp, phi;
+        double phi;
         double xi, yi, theta, xValue, yValue;
         double currentPointX;
         double _cursorX, _cursorY = 0;
