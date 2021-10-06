@@ -19,7 +19,7 @@ namespace wpf_playground.Model
         public PQModeEnum PQMode { get; set; }
         public SOAEnum SOA { get; set; }
         public MappingEnum Mapping { get; set; }
-
+        public int Hz { get; set; } = 1000;
         public override string ToString()
         {
             string result = $"Name : {Name}" + "\n";

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,6 +31,7 @@ namespace wpf_playground
     /// </summary>
     public partial class UserInfoPage : Window
     {
+        private WaveOut waveOut;
         public UserInfoPage()
         {
             InitializeComponent();
@@ -46,8 +48,19 @@ namespace wpf_playground
         bool testAudio = false;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
             testAudio = !testAudio;
-            AudioHelper.Instance.play(4000,testAudio);
+            AudioHelper.Instance.play(1000, testAudio);
+        }
+
+        private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
+        private static bool IsTextAllowed(string text)
+        {
+            return !_regex.IsMatch(text);
+        }
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
         }
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
@@ -159,6 +172,20 @@ namespace wpf_playground
                 UserInfo.Age = value;
                 InformPropertyChanged("FormValid");
             }
+        }
+
+        private string _hz = State.UserInfo.Hz.ToString();
+        public string Hz
+        {
+            get { return _hz; }
+            set
+            {
+                
+                _hz = value;
+                UserInfo.Hz = string.IsNullOrEmpty(value)?0: int.Parse(value);
+                InformPropertyChanged("Hz");
+            }
+
         }
 
 
