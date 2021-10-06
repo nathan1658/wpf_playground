@@ -450,6 +450,7 @@ namespace wpf_playground
                             reactionSw.Restart();
                         });
                     }
+                    await Task.Delay(10);
                 }
             });
         }

@@ -33,6 +33,7 @@ namespace wpf_playground.Model
             result += $"PQ Mode : {PQMode}" + "\n";
             result += $"SOA : {SOA}" + "\n";
             result += $"Mapping : {Mapping}" + "\n";
+            result += $"Hz : {Hz}" + "\n";
             return result;
         }
     }

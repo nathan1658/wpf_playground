@@ -168,7 +168,7 @@ namespace wpf_playground
                 {
 
                     move();
-                    Thread.Sleep(5);
+                    Thread.Sleep(10);
                 }
             });
             this.Loaded += BouncingBall_Loaded;
@@ -266,7 +266,7 @@ namespace wpf_playground
                             });
                         }
                     }
-                    Thread.Sleep(1);
+                    Thread.Sleep(10);
                 }
 
             }).Start();
