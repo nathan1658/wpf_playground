@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using wpf_playground.Model;
 
@@ -64,7 +65,7 @@ namespace wpf_playground
             }
         }
 
-
+        private MyBaseUserControl leftPQ, rightPQ;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         private string _mappingImageSrc;
@@ -119,7 +120,10 @@ namespace wpf_playground
                 this.circle2,
                 this.circle3,
             };
-
+            if (UserInfo.PQMode == PQModeEnum.Visual)
+            {
+                initPqCircle();
+            }
             gameSw.Start();
 
 
@@ -133,7 +137,7 @@ namespace wpf_playground
                     {
                         gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
                     });
-
+                    Thread.Sleep(10);
                 }
             });
             initSequenceList();
@@ -175,6 +179,30 @@ namespace wpf_playground
 
         }
 
+        void initPqCircle()
+        {
+            Func<HorizontalAlignment, String, PQCircle> genCircleAndAddtoBoard = (alignment, val) =>
+              {
+                  var grid1 = new Grid();
+                  grid1.HorizontalAlignment = alignment;
+                  grid1.VerticalAlignment = VerticalAlignment.Center;
+
+                  PQCircle circle1 = new PQCircle();
+                  TextBlock tb1 = new TextBlock();
+                  tb1.HorizontalAlignment = HorizontalAlignment.Center;
+                  tb1.VerticalAlignment = VerticalAlignment.Center;
+                  tb1.Text = val;
+                  grid1.Children.Add(circle1);
+                  grid1.Children.Add(tb1);
+
+                  gameBoard.Children.Add(grid1);
+                  return circle1;
+              };
+            var leftCircle = genCircleAndAddtoBoard(HorizontalAlignment.Left, "1");
+            var rightCircle = genCircleAndAddtoBoard(HorizontalAlignment.Right, "2");
+            leftPQ = leftCircle;
+            rightPQ = rightCircle;
+        }
 
         void initSequenceList()
         {
@@ -368,15 +396,22 @@ namespace wpf_playground
                 index = SequenceList[index];
                 var targetControl = circleList[index];
 
-                var targetPQ = index == 0 || index == 2 ? pqCircle1 : pqCircle2;
                 int delayPQMS = -1;
                 delayPQMS = getSoa();
-                AudioHelper.Instance.play(delayPQMS, index == 0 || index == 2);
 
-                Dispatcher.Invoke(() =>
-             {
-                 targetPQ.Enable();
-             });
+                if (this.UserInfo.PQMode == PQModeEnum.Auditory)
+                {
+                    AudioHelper.Instance.play(delayPQMS, index == 0 || index == 2);
+                }
+
+                var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
+                if (this.UserInfo.PQMode == PQModeEnum.Visual)
+                {
+                    Dispatcher.Invoke(() =>
+                 {
+                     targetPQ.Enable();
+                 });
+                }
 
                 var pqEnded = false;
                 while (true)
@@ -406,8 +441,11 @@ namespace wpf_playground
                         pqEnded = true;
                         Dispatcher.Invoke(() =>
                         {
-                            targetPQ.Disable();
-                            System.Diagnostics.Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
+                            if (this.UserInfo.PQMode == PQModeEnum.Visual)
+                            {
+                                targetPQ.Disable();
+                            }
+                            Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
                             targetControl.Enable();
                             reactionSw.Restart();
                         });
@@ -467,8 +505,11 @@ namespace wpf_playground
                 {
                     x.Disable();
                 });
-                pqCircle1.Disable();
-                pqCircle2.Disable();
+                if (this.UserInfo.PQMode == PQModeEnum.Visual)
+                {
+                    leftPQ.Disable();
+                    rightPQ.Disable();
+                }
             });
         }
 

@@ -90,12 +90,10 @@
                 </Style>
             </materialDesign:Card.Resources>
             <Grid
-                
-                x:Name="gameBoard">
-                <Canvas
-                   
-                    Background="Gray"></Canvas>
+              >
                 <Grid
+                      x:Name="gameBoard"
+                    Background="Gray"
                     >
                     <Grid
                         HorizontalAlignment="Left"
@@ -105,8 +103,6 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                        
-                            
                             0</TextBlock>
                     </Grid>
 
@@ -143,29 +139,6 @@
                             VerticalAlignment="Center">3</TextBlock>
 
                     </Grid>
-
-
-                    <Grid
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center">
-                        <local:PQCircle
-                            x:Name="pqCircle1" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">1</TextBlock>
-                    </Grid>
-
-
-                    <Grid
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center">
-                        <local:PQCircle
-                            x:Name="pqCircle2" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">2</TextBlock>
-                    </Grid>
-
 
                     <TextBlock
                         Background="White"
