@@ -128,6 +128,7 @@
     <Compile Include="AudioHelper.cs" />
     <Compile Include="AudioPlaybackEngine.cs" />
     <Compile Include="AuditoryPQ.cs" />
+    <Compile Include="AuditoryTarget.cs" />
     <Compile Include="AudoDisposeFileReader.cs" />
     <Compile Include="CachedSound.cs" />
     <Compile Include="CachedSoundSampleProvider.cs" />

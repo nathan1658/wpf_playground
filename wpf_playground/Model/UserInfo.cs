@@ -20,6 +20,8 @@ namespace wpf_playground.Model
         public SOAEnum SOA { get; set; }
         public MappingEnum Mapping { get; set; }
         public int PQHz { get; set; } = 1000;
+        public int TopSpeakerHz { get; set; } = 1000;
+        public int BottomSpeakerHz { get; set; } = 1000;
         public override string ToString()
         {
             string result = $"Name : {Name}" + "\n";
@@ -34,6 +36,8 @@ namespace wpf_playground.Model
             result += $"SOA : {SOA}" + "\n";
             result += $"Mapping : {Mapping}" + "\n";
             result += $"PQ Hz : {PQHz}" + "\n";
+            result += $"Top Speaker Hz : {TopSpeakerHz}" + "\n";
+            result += $"Bottom Speaker Hz : {BottomSpeakerHz}" + "\n";
             return result;
         }
     }

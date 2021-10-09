@@ -36,8 +36,23 @@ namespace wpf_playground
         {
 
             testAudio = !testAudio;
-            AudioHelper.Instance.play(State.PQSpeaker.Guid,  1000, testAudio);
+            AudioHelper.Instance.play(State.PQSpeaker.Guid, 1000, testAudio);
         }
+
+        private void TopSpeakerButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            testAudio = !testAudio;
+            AudioHelper.Instance.play(State.TopSpeaker.Guid, 1000, testAudio);
+        }
+
+        private void BottomSpeakerButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            testAudio = !testAudio;
+            AudioHelper.Instance.play(State.BottomSpeaker.Guid, 1000, testAudio);
+        }
+
 
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
         private static bool IsTextAllowed(string text)
@@ -174,6 +189,34 @@ namespace wpf_playground
 
         }
 
+        private string _topSpeakerHz = State.UserInfo.TopSpeakerHz.ToString();
+        public string TopSpeakerHz
+        {
+            get { return _topSpeakerHz; }
+            set
+            {
+
+                _topSpeakerHz = value;
+                UserInfo.TopSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TopSpeakerHz");
+            }
+
+        }
+
+        private string _bottomSpeakerHz = State.UserInfo.BottomSpeakerHz.ToString();
+        public string BottomSpeakerHz
+        {
+            get { return _bottomSpeakerHz; }
+            set
+            {
+
+                _bottomSpeakerHz = value;
+                UserInfo.BottomSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("BottomSpeakerHz");
+            }
+
+        }
+
         public List<DirectSoundDeviceInfo> SoundDeviceList { get; set; } = DirectSoundOut.Devices.ToList();
         private DirectSoundDeviceInfo _selectedPQSoundDevice;
 
@@ -185,6 +228,32 @@ namespace wpf_playground
                 _selectedPQSoundDevice = value;
                 State.PQSpeaker = value;
                 InformPropertyChanged("SelectedPQSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedTopSpeakerSoundDevice;
+
+        public DirectSoundDeviceInfo SelectedTopSpeakerSoundDevice
+        {
+            get { return _selectedTopSpeakerSoundDevice; }
+            set
+            {
+                _selectedTopSpeakerSoundDevice = value;
+                State.TopSpeaker = value;
+                InformPropertyChanged("SelectedTopSpeakerSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedBottomSpeakerSoundDevice;
+
+        public DirectSoundDeviceInfo SelectedBottomSpeakerSoundDevice
+        {
+            get { return _selectedBottomSpeakerSoundDevice; }
+            set
+            {
+                _selectedBottomSpeakerSoundDevice = value;
+                State.BottomSpeaker = value;
+                InformPropertyChanged("SelectedBottomSpeakerSoundDevice");
             }
         }
 

@@ -95,50 +95,15 @@
                       x:Name="gameBoard"
                     Background="Gray"
                     >
-                    <Grid
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-                        <local:Circle
-                            x:Name="circle0" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            0</TextBlock>
-                    </Grid>
 
-                    <Grid
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top">
-                        <local:Circle
-                            x:Name="circle1" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">1</TextBlock>
-                    </Grid>
+
                     <local:BouncingBall
                         x:Name="bouncingBall"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
 
-                    <Grid
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom">
-                        <local:Circle
-                            x:Name="circle2" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">2</TextBlock>
-                    </Grid>
-                    <Grid
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom">
-                        <local:Circle
-                            x:Name="circle3" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">3</TextBlock>
 
-                    </Grid>
+
 
                     <TextBlock
                         Background="White"
