@@ -28,7 +28,7 @@
 
         <materialDesign:Card
             MaxWidth="500"
-            MaxHeight="600"
+            MaxHeight="700"
             Padding="32"
             Margin="16"
             Grid.Column="0">
