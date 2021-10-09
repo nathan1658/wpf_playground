@@ -89,16 +89,44 @@ namespace wpf_playground
             }
         }
 
+        //Init settings from app config
+        void initSettingsFromConfig()
+        {
+            //set debug Mode
+            string isDebugString = ConfigurationManager.AppSettings["DebugMode"];
+            State.DebugMode = isDebugString.ToLower() == "true";
+
+            //set number of click required for each button
+            string numOfClickString = ConfigurationManager.AppSettings["ClickForEachButton"];
+            State.ClickCountForEachButton = int.Parse(numOfClickString);
+
+            //set key mapping for each button
+            List<String> keyButtonList = new List<string> { "TopLeftKey", "TopRightKey", "BottomLeftKey", "BottomRightKey" };
+            try
+            {
+                State.TopLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopLeftKey"]);
+                State.TopRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopRightKey"]);
+                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomLeftKey"]);
+                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
+            }
+            catch (Exception ex)
+            {
+                //in case any of them is empty/ exception, throw and set with default mapping
+
+                ///[7]  [9]
+                ///
+                ///[1]  [3]
+                State.TopLeftKey = Key.NumPad7;
+                State.TopRightKey = Key.NumPad9;
+                State.BottomLeftKey = Key.NumPad1;
+                State.BottomRightKey = Key.NumPad3;
+            }
+        }
 
 
         public MainWindow()
         {
-            //Init settings from app config
-            string isDebugString = ConfigurationManager.AppSettings["DebugMode"];
-            State.DebugMode = isDebugString.ToLower() == "true";
-
-            string numOfClickString = ConfigurationManager.AppSettings["ClickForEachButton"];
-            State.ClickCountForEachButton = int.Parse(numOfClickString);
+            initSettingsFromConfig();
 
 
             new UserInfoPage().ShowDialog();
@@ -234,67 +262,65 @@ namespace wpf_playground
 
             int btnIndex = -1;
             var mapping = UserInfo.Mapping;
-            switch (e.Key)
+
+            if (e.Key == State.TopLeftKey)
             {
-                case Key.NumPad7:
-                    if (mapping == MappingEnum.BC)
-                        btnIndex = 0;
+                if (mapping == MappingEnum.BC)
+                    btnIndex = 0;
 
-                    if (mapping == MappingEnum.TC)
-                        btnIndex = 2;
+                if (mapping == MappingEnum.TC)
+                    btnIndex = 2;
 
-                    if (mapping == MappingEnum.LC)
-                        btnIndex = 1;
+                if (mapping == MappingEnum.LC)
+                    btnIndex = 1;
 
-                    if (mapping == MappingEnum.BI)
-                        btnIndex = 3;
+                if (mapping == MappingEnum.BI)
+                    btnIndex = 3;
+            }
 
-                    break;
-                case Key.NumPad9:
-                    if (mapping == MappingEnum.BC)
-                        btnIndex = 1;
+            if (e.Key == State.TopRightKey)
+            {
+                if (mapping == MappingEnum.BC)
+                    btnIndex = 1;
 
-                    if (mapping == MappingEnum.TC)
-                        btnIndex = 3;
+                if (mapping == MappingEnum.TC)
+                    btnIndex = 3;
 
-                    if (mapping == MappingEnum.LC)
-                        btnIndex = 0;
+                if (mapping == MappingEnum.LC)
+                    btnIndex = 0;
 
-                    if (mapping == MappingEnum.BI)
-                        btnIndex = 2;
+                if (mapping == MappingEnum.BI)
+                    btnIndex = 2;
+            }
 
+            if (e.Key == State.BottomLeftKey)
+            {
+                if (mapping == MappingEnum.BC)
+                    btnIndex = 2;
 
-                    break;
-                case Key.NumPad1:
-                    if (mapping == MappingEnum.BC)
-                        btnIndex = 2;
+                if (mapping == MappingEnum.TC)
+                    btnIndex = 0;
 
-                    if (mapping == MappingEnum.TC)
-                        btnIndex = 0;
+                if (mapping == MappingEnum.LC)
+                    btnIndex = 3;
 
-                    if (mapping == MappingEnum.LC)
-                        btnIndex = 3;
+                if (mapping == MappingEnum.BI)
+                    btnIndex = 1;
+            }
 
-                    if (mapping == MappingEnum.BI)
-                        btnIndex = 1;
+            if (e.Key == State.BottomRightKey)
+            {
+                if (mapping == MappingEnum.BC)
+                    btnIndex = 3;
 
+                if (mapping == MappingEnum.TC)
+                    btnIndex = 1;
 
-                    break;
-                case Key.NumPad3:
-                    if (mapping == MappingEnum.BC)
-                        btnIndex = 3;
+                if (mapping == MappingEnum.LC)
+                    btnIndex = 2;
 
-                    if (mapping == MappingEnum.TC)
-                        btnIndex = 1;
-
-                    if (mapping == MappingEnum.LC)
-                        btnIndex = 2;
-
-                    if (mapping == MappingEnum.BI)
-                        btnIndex = 0;
-
-
-                    break;
+                if (mapping == MappingEnum.BI)
+                    btnIndex = 0;
             }
 
             if (btnIndex == -1)//Do nothing
@@ -316,7 +342,8 @@ namespace wpf_playground
                 wrong();
             }
 
-            Debug.WriteLine($"Clicked: {reactionSw.ElapsedMilliseconds}ms");
+            Debug.WriteLine($"***Clicked***");
+            Debug.WriteLine($"***{reactionSw.ElapsedMilliseconds}ms");
 
             tokenSource.Cancel();
 
@@ -425,13 +452,14 @@ namespace wpf_playground
                     //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
                     if (triggerSw.ElapsedMilliseconds >= (1000 + delayPQMS + delayMS))
                     {
-                        Debug.WriteLine("Missed: " + triggerSw.ElapsedMilliseconds);
+                        //miss
+                        Debug.WriteLine("***Missed***");
+                        Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
 
                         Dispatcher.Invoke(() =>
                         {
                             targetControl.Disable();
                         });
-                        //miss
                         miss();
                         return;
                     }
