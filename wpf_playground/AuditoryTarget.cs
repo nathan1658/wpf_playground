@@ -13,25 +13,49 @@ namespace wpf_playground
         public bool IsLeft { get; set; }
         private SineWaveProvider32 sineWaveProvider;
         private DirectSoundOut outputDevice;
-
-        public AuditoryTarget(DirectSoundDeviceInfo deviceInfo,  bool isLeft)
+        private DirectSoundDeviceInfo deviceInfo;
+        private float _frequency;
+        private bool initialized = false;
+        public float Frequency
         {
-            this.IsLeft = isLeft;
+            get
+            {
+                return _frequency;
+            }
+            set
+            {
+                _frequency = value;
+                if (initialized)
+                    setOutputDevice();
+
+            }
+        }
+
+        void setOutputDevice()
+        {
             sineWaveProvider = new SineWaveProvider32();
             sineWaveProvider.SetWaveFormat(16000, 1); // 16kHz mono
-            sineWaveProvider.Frequency = State.UserInfo.PQHz;
+            sineWaveProvider.Frequency = _frequency;
             sineWaveProvider.Amplitude = 0.55f;
             var sampleProvider = sineWaveProvider.ToSampleProvider();
 
             var stereo = new MonoToStereoSampleProvider(sampleProvider);
-            stereo.LeftVolume = isLeft ? 1.0f : 0f; // silence in left channel
-            stereo.RightVolume = isLeft ? 0f : 1.0f; // full volume in right channel
+            stereo.LeftVolume = IsLeft ? 1.0f : 0f; // silence in left channel
+            stereo.RightVolume = IsLeft ? 0f : 1.0f; // full volume in right channel
 
 
 
             outputDevice = new DirectSoundOut(deviceInfo.Guid);
             outputDevice.Init(stereo);
+        }
 
+        public AuditoryTarget(DirectSoundDeviceInfo deviceInfo, float frequency, bool isLeft)
+        {
+            this.IsLeft = isLeft;
+            this.deviceInfo = deviceInfo;
+            this.Frequency = frequency;
+            setOutputDevice();
+            initialized = true;
         }
 
         public override bool Triggered
@@ -43,10 +67,11 @@ namespace wpf_playground
             set
             {
                 _triggered = value;
-                if(_triggered)
+                if (_triggered)
                 {
                     outputDevice.Play();
-                }else
+                }
+                else
                 {
                     outputDevice.Stop();
                 }
@@ -72,6 +97,7 @@ namespace wpf_playground
         public override void Disable()
         {
             outputDevice.Stop();
+            this.Triggered = false;
         }
 
         public override void Enable()

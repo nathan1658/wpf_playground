@@ -222,10 +222,10 @@ namespace wpf_playground
             //Init the control list here
             targetList = new List<MyBaseUserControl>
             {
-                new AuditoryTarget(State.TopSpeaker, true),
-                new AuditoryTarget(State.TopSpeaker, false),
-                new AuditoryTarget(State.BottomSpeaker, true),
-                new AuditoryTarget(State.BottomSpeaker, false),
+                new AuditoryTarget(State.TopSpeaker, State.UserInfo.TopSpeakerHz, true),
+                new AuditoryTarget(State.TopSpeaker, State.UserInfo.TopSpeakerHz, false),
+                new AuditoryTarget(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, true),
+                new AuditoryTarget(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, false),
             };
         }
 

@@ -6,8 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using wpf_playground.Model;
 
 namespace wpf_playground
@@ -66,9 +68,28 @@ namespace wpf_playground
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
-
+        List<AuditoryTarget> aa;
         public UserInfoPageViewModel()
         {
+
+            TestCommand = new DelegateCommand((val) =>
+            {
+                try
+                {
+                    MyBaseUserControl ctrl;
+                    ctrl = aa[int.Parse(val.ToString())];
+                    Dispatcher.CurrentDispatcher.Invoke(async () =>
+                    {
+                        ctrl.Enable();
+                        await Task.Delay(1000);
+                        ctrl.Disable();
+                    });
+                }
+                catch (Exception)
+                {
+
+                }
+            });
         }
 
         public UserInfo UserInfo
@@ -79,6 +100,14 @@ namespace wpf_playground
             }
         }
 
+        AuditoryTarget TopLeftTarget { get; set; }
+        AuditoryTarget TopRightTarget { get; set; }
+        AuditoryTarget MiddleLeftTarget { get; set; }
+        AuditoryTarget MiddleRightTarget { get; set; }
+        AuditoryTarget BottomLeftTarget { get; set; }
+        AuditoryTarget BottomRightTarget { get; set; }
+
+        public ICommand TestCommand { get; set; }
 
         public bool IsDebugMode
         {
@@ -184,6 +213,7 @@ namespace wpf_playground
 
                 _pqHz = value;
                 UserInfo.PQHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                updateHz();
                 InformPropertyChanged("PQHz");
             }
 
@@ -198,6 +228,7 @@ namespace wpf_playground
 
                 _topSpeakerHz = value;
                 UserInfo.TopSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                updateHz();
                 InformPropertyChanged("TopSpeakerHz");
             }
 
@@ -212,9 +243,43 @@ namespace wpf_playground
 
                 _bottomSpeakerHz = value;
                 UserInfo.BottomSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                updateHz();
                 InformPropertyChanged("BottomSpeakerHz");
             }
 
+        }
+
+        void updateSpeakerList()
+        {
+            aa = new List<AuditoryTarget>
+            {
+             TopLeftTarget,
+             TopRightTarget,
+             BottomLeftTarget,
+             BottomRightTarget,
+             MiddleLeftTarget,
+             MiddleRightTarget
+            };
+        }
+
+        void updateHz()
+        {
+            for (int i = 0; i < aa.Count; i++)
+            {
+                if (aa[i] == null) continue;
+                if(i==0||i==1)
+                {
+                    aa[i].Frequency = float.Parse(TopSpeakerHz);
+                }
+                if (i == 2 || i == 3)
+                {
+                    aa[i].Frequency = float.Parse(BottomSpeakerHz);
+                }
+                if (i == 4 || i ==5)
+                {
+                    aa[i].Frequency = float.Parse(PQHz);
+                }
+            }
         }
 
         public List<DirectSoundDeviceInfo> SoundDeviceList { get; set; } = DirectSoundOut.Devices.ToList();
@@ -227,6 +292,9 @@ namespace wpf_playground
             {
                 _selectedPQSoundDevice = value;
                 State.PQSpeaker = value;
+                MiddleLeftTarget = new AuditoryTarget(value, State.UserInfo.PQHz, true);
+                MiddleRightTarget = new AuditoryTarget(value, State.UserInfo.PQHz, false);
+                updateSpeakerList();
                 InformPropertyChanged("SelectedPQSoundDevice");
             }
         }
@@ -240,6 +308,10 @@ namespace wpf_playground
             {
                 _selectedTopSpeakerSoundDevice = value;
                 State.TopSpeaker = value;
+
+                TopLeftTarget = new AuditoryTarget(value, State.UserInfo.TopSpeakerHz, true);
+                TopRightTarget = new AuditoryTarget(value, State.UserInfo.TopSpeakerHz, false);
+                updateSpeakerList();
                 InformPropertyChanged("SelectedTopSpeakerSoundDevice");
             }
         }
@@ -253,6 +325,10 @@ namespace wpf_playground
             {
                 _selectedBottomSpeakerSoundDevice = value;
                 State.BottomSpeaker = value;
+
+                BottomLeftTarget = new AuditoryTarget(value, State.UserInfo.BottomSpeakerHz, true);
+                BottomRightTarget = new AuditoryTarget(value, State.UserInfo.BottomSpeakerHz, false);
+                updateSpeakerList();
                 InformPropertyChanged("SelectedBottomSpeakerSoundDevice");
             }
         }

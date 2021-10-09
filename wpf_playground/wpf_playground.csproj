@@ -135,6 +135,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Converter\ComparisonConverter.cs" />
     <Compile Include="Converter\ListToStringConverter.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="MappingSelection.xaml.cs">
       <DependentUpon>MappingSelection.xaml</DependentUpon>
     </Compile>
