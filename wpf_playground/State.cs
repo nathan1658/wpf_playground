@@ -22,6 +22,6 @@ namespace wpf_playground
         public static Key BottomLeftKey;
         public static Key BottomRightKey;
 
-        public static DirectSoundDeviceInfo Speaker;
+        public static DirectSoundDeviceInfo PQSpeaker;
     }
 }

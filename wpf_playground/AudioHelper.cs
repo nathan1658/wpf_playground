@@ -19,18 +19,16 @@ namespace wpf_playground
         private AudioHelper()
         {
         }
-      
 
 
-        public void play(int duration, bool isLeft)
+
+        public void play(Guid speakerGuid, int duration, bool isLeft)
         {
             Task.Run(async () =>
             {
-                WaveOut waveOut;
-
                 var sineWaveProvider = new SineWaveProvider32();
                 sineWaveProvider.SetWaveFormat(16000, 1); // 16kHz mono
-                sineWaveProvider.Frequency = State.UserInfo.Hz;
+                sineWaveProvider.Frequency = State.UserInfo.PQHz;
                 sineWaveProvider.Amplitude = 0.55f;
                 var sampleProvider = sineWaveProvider.ToSampleProvider();
 
@@ -39,8 +37,8 @@ namespace wpf_playground
                 stereo.RightVolume = isLeft ? 0f : 1.0f; // full volume in right channel
 
 
-               
-                var outputDevice = new DirectSoundOut(State.Speaker.Guid);
+
+                var outputDevice = new DirectSoundOut(speakerGuid);
                 outputDevice.Init(stereo);
                 outputDevice.Play();
                 await Task.Delay(duration);

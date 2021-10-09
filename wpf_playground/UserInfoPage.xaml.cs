@@ -32,11 +32,11 @@ namespace wpf_playground
 
         }
         bool testAudio = false;
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void PQButton_Click(object sender, RoutedEventArgs e)
         {
 
             testAudio = !testAudio;
-            AudioHelper.Instance.play(1000, testAudio);
+            AudioHelper.Instance.play(State.PQSpeaker.Guid,  1000, testAudio);
         }
 
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
@@ -160,32 +160,31 @@ namespace wpf_playground
             }
         }
 
-        private string _hz = State.UserInfo.Hz.ToString();
-        public string Hz
+        private string _pqHz = State.UserInfo.PQHz.ToString();
+        public string PQHz
         {
-            get { return _hz; }
+            get { return _pqHz; }
             set
             {
 
-                _hz = value;
-                UserInfo.Hz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
-                InformPropertyChanged("Hz");
+                _pqHz = value;
+                UserInfo.PQHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("PQHz");
             }
 
         }
 
         public List<DirectSoundDeviceInfo> SoundDeviceList { get; set; } = DirectSoundOut.Devices.ToList();
-        private DirectSoundDeviceInfo _selectedSoundDevice;
+        private DirectSoundDeviceInfo _selectedPQSoundDevice;
 
-        public DirectSoundDeviceInfo SelectedSoundDevice
+        public DirectSoundDeviceInfo SelectedPQSoundDevice
         {
-            get { return _selectedSoundDevice; }
+            get { return _selectedPQSoundDevice; }
             set
             {
-                _selectedSoundDevice = value;
-                State.Speaker = value;
-                InformPropertyChanged("SelectedSoundDevice");
-
+                _selectedPQSoundDevice = value;
+                State.PQSpeaker = value;
+                InformPropertyChanged("SelectedPQSoundDevice");
             }
         }
 

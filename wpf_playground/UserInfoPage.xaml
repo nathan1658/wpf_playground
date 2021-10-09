@@ -24,13 +24,7 @@
     </Window.Resources>
     <Grid>
         <StackPanel>
-            <ListBox
-                
-                ItemsSource="{Binding SoundDeviceList}"
-                DisplayMemberPath="Description"
-                SelectedItem="{Binding SelectedSoundDevice}"
-                ></ListBox>
-            <TextBlock Text="{Binding SelectedSoundDevice}"></TextBlock>
+
             <materialDesign:Card
             MaxWidth="500"
             MaxHeight="600"
@@ -309,7 +303,7 @@
 
 
                     <TextBlock
-                    Text="Hz"
+                    Text="PQ Hz"
                     Grid.Row="11"
                     Grid.Column="0"></TextBlock>
                     <Grid
@@ -320,16 +314,32 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
                         <TextBox
+                            Grid.Row="0"
                             Grid.Column="0"
                             HorizontalContentAlignment="Stretch"
                         PreviewTextInput="TextBox_PreviewTextInput"
-                        Text="{Binding Hz, UpdateSourceTrigger=PropertyChanged}"
+                        Text="{Binding PQHz, UpdateSourceTrigger=PropertyChanged}"
                     >
-
                         </TextBox>
-                        <Button Click="Button_Click" Grid.Column="1" Width="100">
+
+
+                        <ComboBox
+                            Grid.Row="1"
+                 Grid.Column="0"
+                ItemsSource="{Binding SoundDeviceList}"
+                DisplayMemberPath="Description"
+                SelectedItem="{Binding SelectedPQSoundDevice}"
+                ></ComboBox>
+
+                        <Button 
+                            Grid.Row="1"
+                            Grid.Column="2" 
+                            Click="PQButton_Click" Width="100">
                             Play
                         </Button>
                     </Grid>
@@ -351,7 +361,7 @@
         </StackPanel>
 
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" x:Name="versionText">
-            
+
         </TextBlock>
     </Grid>
 </Window>

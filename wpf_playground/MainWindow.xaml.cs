@@ -107,7 +107,7 @@ namespace wpf_playground
                 State.TopLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopLeftKey"]);
                 State.TopRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopRightKey"]);
                 State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomLeftKey"]);
-                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
+                State.BottomRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
             }
             catch (Exception ex)
             {
@@ -152,6 +152,11 @@ namespace wpf_playground
             {
                 initPqCircle();
             }
+            if(UserInfo.PQMode == PQModeEnum.Auditory)
+            {
+                initAuditoryCircle();
+            }
+
             gameSw.Start();
 
 
@@ -231,6 +236,13 @@ namespace wpf_playground
             leftPQ = leftCircle;
             rightPQ = rightCircle;
         }
+
+        void initAuditoryCircle()
+        {
+            leftPQ = new AuditoryPQ(true);
+            rightPQ = new AuditoryPQ(false);
+        }
+
 
         void initSequenceList()
         {
@@ -426,19 +438,13 @@ namespace wpf_playground
                 int delayPQMS = -1;
                 delayPQMS = getSoa();
 
-                if (this.UserInfo.PQMode == PQModeEnum.Auditory)
-                {
-                    AudioHelper.Instance.play(delayPQMS, index == 0 || index == 2);
-                }
-
                 var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
-                if (this.UserInfo.PQMode == PQModeEnum.Visual)
-                {
+             
                     Dispatcher.Invoke(() =>
                  {
                      targetPQ.Enable();
                  });
-                }
+        
 
                 var pqEnded = false;
                 while (true)
@@ -469,10 +475,9 @@ namespace wpf_playground
                         pqEnded = true;
                         Dispatcher.Invoke(() =>
                         {
-                            if (this.UserInfo.PQMode == PQModeEnum.Visual)
-                            {
+                            
                                 targetPQ.Disable();
-                            }
+                            
                             Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
                             targetControl.Enable();
                             reactionSw.Restart();
@@ -534,11 +539,10 @@ namespace wpf_playground
                 {
                     x.Disable();
                 });
-                if (this.UserInfo.PQMode == PQModeEnum.Visual)
-                {
+                
                     leftPQ.Disable();
                     rightPQ.Disable();
-                }
+                
             });
         }
 
