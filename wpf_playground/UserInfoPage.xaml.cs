@@ -1,27 +1,13 @@
 ﻿using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-using SharpDX.IO;
-using SharpDX.MediaFoundation;
-using SharpDX.XAudio2;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using wpf_playground.Model;
 
 namespace wpf_playground
@@ -41,7 +27,7 @@ namespace wpf_playground
                 this.Close();
             };
             this.DataContext = vm;
-
+            versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 
         }
@@ -180,9 +166,9 @@ namespace wpf_playground
             get { return _hz; }
             set
             {
-                
+
                 _hz = value;
-                UserInfo.Hz = string.IsNullOrEmpty(value)?0: int.Parse(value);
+                UserInfo.Hz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
                 InformPropertyChanged("Hz");
             }
 

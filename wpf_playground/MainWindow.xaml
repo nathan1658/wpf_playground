@@ -75,8 +75,8 @@
 
         <materialDesign:Card
             Margin="16"     
-            Height="22cm"
-                Width="22cm"
+            Height="19cm"
+                Width="19cm"
             Grid.Column="1">
             <materialDesign:Card.Resources>
                 <Style TargetType="TextBlock"

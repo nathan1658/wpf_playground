@@ -217,13 +217,13 @@
                         </RadioButton>
                         <RadioButton
                         GroupName="levelGroup"
-                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L100}}"
-                        Content="L100">
+                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L75}}"
+                        Content="L75">
                         </RadioButton>
                         <RadioButton
                         GroupName="levelGroup"
-                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L150}}"
-                        Content="L150">
+                        IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L100}}"
+                        Content="L100">
                         </RadioButton>
                     </StackPanel>
 
@@ -345,5 +345,8 @@
             </materialDesign:Card>
         </StackPanel>
 
+        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" x:Name="versionText">
+            
+        </TextBlock>
     </Grid>
 </Window>

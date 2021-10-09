@@ -2,20 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace wpf_playground
 {
@@ -77,6 +69,8 @@ namespace wpf_playground
         }
 
         bool useJoystick = true;
+        private Random r = new Random();
+        private List<double> phiArr = new List<double> { 3.14, 0, -2, 1.5 };
 
         private void Board_MouseMove(object sender, MouseEventArgs e)
         {
@@ -287,14 +281,14 @@ namespace wpf_playground
                 movingLevel = 50;
             }
 
-            if (diffLevel == Model.LevelEnum.L100)
+            if (diffLevel == Model.LevelEnum.L75)
             {
-                movingLevel = 100;
+                movingLevel = 75;
             }
 
-            if(diffLevel == Model.LevelEnum.L150)
+            if(diffLevel == Model.LevelEnum.L100)
             {
-                movingLevel = 150;
+                movingLevel = 100;
             }
 
 
@@ -316,11 +310,13 @@ namespace wpf_playground
                 var top = currentPointY;
                 var left = currentPointX;
 
+
+                bool hitEdge = false;
                 //hit right edge
                 if (left >= (board.Width - ball.Width))
                 {
                     xi = 0;
-                    phi = 3.14;
+                    hitEdge = true;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -329,7 +325,7 @@ namespace wpf_playground
                 if (left <= 0)
                 {
                     xi = 0;
-                    phi = 0;
+                    hitEdge = true;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -338,7 +334,7 @@ namespace wpf_playground
                 if (top >= (board.Height - ball.Height))
                 {
                     xi = 0;
-                    phi = -2;
+                    hitEdge = true;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -347,10 +343,17 @@ namespace wpf_playground
                 if (top <= 0)
                 {
                     xi = 0;
-                    phi = 1.5;
+                    hitEdge = true;
                     xCenter = left;
                     yCenter = top;
                 }
+
+                if(hitEdge)
+                {
+                    int rr = r.Next(0, phiArr.Count);
+                    phi = phiArr[rr];
+                }
+
 
                 //get ball center
                 var ballLeft = left + ball.Width / 2;

@@ -37,8 +37,8 @@ namespace wpf_playground.Model
     public enum LevelEnum
     {
         L50,
-        L100,
-        L150
+        L75,
+        L100
     }
 
     public enum SignalModeEnum
