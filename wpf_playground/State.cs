@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,7 @@ namespace wpf_playground
         public static Key TopRightKey;
         public static Key BottomLeftKey;
         public static Key BottomRightKey;
+
+        public static DirectSoundDeviceInfo Speaker;
     }
 }

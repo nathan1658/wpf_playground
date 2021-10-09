@@ -222,11 +222,6 @@
     <Resource Include="Resources\LCBox.Image.bmp" />
     <Resource Include="Resources\TCBox.Image.bmp" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\error.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

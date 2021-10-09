@@ -174,6 +174,22 @@ namespace wpf_playground
 
         }
 
+        public List<DirectSoundDeviceInfo> SoundDeviceList { get; set; } = DirectSoundOut.Devices.ToList();
+        private DirectSoundDeviceInfo _selectedSoundDevice;
+
+        public DirectSoundDeviceInfo SelectedSoundDevice
+        {
+            get { return _selectedSoundDevice; }
+            set
+            {
+                _selectedSoundDevice = value;
+                State.Speaker = value;
+                InformPropertyChanged("SelectedSoundDevice");
+
+            }
+        }
+
+
 
         private LevelEnum _levelEnum = LevelEnum.L50;
 

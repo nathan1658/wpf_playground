@@ -24,8 +24,13 @@
     </Window.Resources>
     <Grid>
         <StackPanel>
-
-
+            <ListBox
+                
+                ItemsSource="{Binding SoundDeviceList}"
+                DisplayMemberPath="Description"
+                SelectedItem="{Binding SelectedSoundDevice}"
+                ></ListBox>
+            <TextBlock Text="{Binding SelectedSoundDevice}"></TextBlock>
             <materialDesign:Card
             MaxWidth="500"
             MaxHeight="600"
