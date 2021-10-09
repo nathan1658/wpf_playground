@@ -69,8 +69,6 @@ namespace wpf_playground
         }
 
         bool useJoystick = true;
-        private Random r = new Random();
-        private List<double> phiArr = new List<double> { 3.14, 0, -2, 1.5 };
 
         private void Board_MouseMove(object sender, MouseEventArgs e)
         {
@@ -311,12 +309,11 @@ namespace wpf_playground
                 var left = currentPointX;
 
 
-                bool hitEdge = false;
                 //hit right edge
                 if (left >= (board.Width - ball.Width))
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = 3.14;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -325,7 +322,7 @@ namespace wpf_playground
                 if (left <= 0)
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = 0;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -334,7 +331,7 @@ namespace wpf_playground
                 if (top >= (board.Height - ball.Height))
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = -2;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -343,15 +340,9 @@ namespace wpf_playground
                 if (top <= 0)
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = 1.5;
                     xCenter = left;
                     yCenter = top;
-                }
-
-                if(hitEdge)
-                {
-                    int rr = r.Next(0, phiArr.Count);
-                    phi = phiArr[rr];
                 }
 
 
