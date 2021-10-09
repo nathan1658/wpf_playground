@@ -19,7 +19,6 @@ namespace wpf_playground
     /// </summary>
     public partial class UserInfoPage : Window
     {
-        private WaveOut waveOut;
         public UserInfoPage()
         {
             InitializeComponent();
