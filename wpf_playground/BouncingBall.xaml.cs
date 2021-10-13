@@ -32,9 +32,9 @@ namespace wpf_playground
             {
                 //prevent the blue ball go out of bound
                 if (value < jBall.Width / 2)
-                    value = jBall.Width/2;
+                    value = jBall.Width / 2;
 
-                if (value> board.Width - jBall.Width/2)
+                if (value > board.Width - jBall.Width / 2)
                     value = board.Width - jBall.Width / 2;
 
                 _cursorX = value;
@@ -55,7 +55,7 @@ namespace wpf_playground
 
                 //prevent the blue ball go out of bound
                 if (value < jBall.Height / 2)
-                    value = jBall.Height/2;
+                    value = jBall.Height / 2;
 
                 if (value > board.Height - jBall.Height / 2)
                     value = board.Height - jBall.Height / 2;
@@ -93,8 +93,8 @@ namespace wpf_playground
         double currentPointY;
         double xCenter;
         double yCenter;
-
-
+        bool started = false;
+        int movingLevel;
 
         private string _xVal;
 
@@ -114,7 +114,9 @@ namespace wpf_playground
         }
 
 
-        public bool IsDebugMode { get
+        public bool IsDebugMode
+        {
+            get
             {
                 return State.DebugMode;
             }
@@ -151,19 +153,50 @@ namespace wpf_playground
             InitializeComponent();
             this.DataContext = this;
 
-            //Center the ball
-            Canvas.SetTop(ball, board.Height / 2 - (ball.Height / 2));
-            Canvas.SetLeft(ball, board.Width / 2 - (ball.Width / 2));
-            Task.Run(() =>
-            {
-                while (true)
-                {
 
-                    move();
-                    Thread.Sleep(10);
-                }
-            });
+
+            xCenter = board.Width / 2 - (ball.Width / 2);
+            yCenter = board.Height / 2 - (ball.Height / 2);
+
+            //Center the ball
+            Canvas.SetTop(ball, yCenter);
+            Canvas.SetLeft(ball, xCenter);
+
+
+            var diffLevel = State.UserInfo.Level;
+            if (diffLevel == Model.LevelEnum.L50)
+            {
+                movingLevel = 50;
+            }
+
+            if (diffLevel == Model.LevelEnum.L75)
+            {
+                movingLevel = 75;
+            }
+
+            if (diffLevel == Model.LevelEnum.L100)
+            {
+                movingLevel = 100;
+            }
+
             this.Loaded += BouncingBall_Loaded;
+        }
+
+        public void start()
+        {
+            if (!started)
+            {
+                started = true;
+                Task.Run(() =>
+                {
+                    while (true)
+                    {
+
+                        move();
+                        Thread.Sleep(10);
+                    }
+                });
+            }
         }
 
         private void BouncingBall_Loaded(object sender, RoutedEventArgs e)
@@ -194,7 +227,7 @@ namespace wpf_playground
 
                 // If Gamepad not found, look for a Joystick
                 if (joystickGuid == Guid.Empty)
-                    foreach (var deviceInstance in directInput.GetDevices( SharpDX.DirectInput.DeviceType.Joystick,
+                    foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Joystick,
                             DeviceEnumerationFlags.AllDevices))
                     {
                         joystickGuid = deviceInstance.InstanceGuid;
@@ -272,28 +305,9 @@ namespace wpf_playground
             xValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Cos(theta);
             yValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Sin(theta);
 
-            var movingLevel = 0;
-            var diffLevel = State.UserInfo.Level;
-            if ( diffLevel== Model.LevelEnum.L50)
-            {
-                movingLevel = 50;
-            }
-
-            if (diffLevel == Model.LevelEnum.L75)
-            {
-                movingLevel = 75;
-            }
-
-            if(diffLevel == Model.LevelEnum.L100)
-            {
-                movingLevel = 100;
-            }
-
 
             currentPointX = (xValue * movingLevel) + xCenter;
             currentPointY = (yValue * movingLevel) + yCenter;
-
-
 
             Dispatcher.Invoke(() =>
             {

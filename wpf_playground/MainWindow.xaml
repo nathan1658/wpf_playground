@@ -115,7 +115,17 @@
                     VerticalAlignment="top"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
 
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock>
                         Game time:
                     </TextBlock>

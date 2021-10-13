@@ -240,12 +240,17 @@ namespace wpf_playground
                    };
                    var circle = new Circle();
                    grid.Children.Add(circle);
-                   grid.Children.Add(new TextBlock
+
+                   //If its debug mode, add a text letter at center of circle
+                   if (IsDebugMode)
                    {
-                       HorizontalAlignment = HorizontalAlignment.Center,
-                       VerticalAlignment = VerticalAlignment.Center,
-                       Text = text
-                   });
+                       grid.Children.Add(new TextBlock
+                       {
+                           HorizontalAlignment = HorizontalAlignment.Center,
+                           VerticalAlignment = VerticalAlignment.Center,
+                           Text = text
+                       });
+                   }
                    gameBoard.Children.Add(grid);
                    return circle;
                };
@@ -270,12 +275,17 @@ namespace wpf_playground
                   grid1.VerticalAlignment = VerticalAlignment.Center;
 
                   PQCircle circle1 = new PQCircle();
-                  TextBlock tb1 = new TextBlock();
-                  tb1.HorizontalAlignment = HorizontalAlignment.Center;
-                  tb1.VerticalAlignment = VerticalAlignment.Center;
-                  tb1.Text = val;
+
                   grid1.Children.Add(circle1);
-                  grid1.Children.Add(tb1);
+
+                  if (IsDebugMode)
+                  {
+                      TextBlock tb1 = new TextBlock();
+                      tb1.HorizontalAlignment = HorizontalAlignment.Center;
+                      tb1.VerticalAlignment = VerticalAlignment.Center;
+                      tb1.Text = val;
+                      grid1.Children.Add(tb1);
+                  }
 
                   gameBoard.Children.Add(grid1);
                   return circle1;
@@ -318,6 +328,9 @@ namespace wpf_playground
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
+
+            bouncingBall.start();
+
             bool isCorrect = false;
             reactionSw.Stop();
 
