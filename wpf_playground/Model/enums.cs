@@ -21,13 +21,6 @@ namespace wpf_playground.Model
         Female
     }
 
-    public enum GroupEnum
-    {
-        L01,
-        L02,
-        L03,
-    }
-
     public enum DominantHandEnum
     {
         Left,

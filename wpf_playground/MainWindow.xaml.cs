@@ -372,7 +372,7 @@ namespace wpf_playground
 
             //Write to CSV
 
-            var header = new List<String> { "Name", "SID", "Age", "Gender", "Group", "DominantHand", "Level", "SignalMode", "PQMode", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
+            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "SignalMode", "PQMode", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
             var csvOutput = String.Join(",", header) + "\n";
             for (int i = 0; i < clickHistoryList.Count; i++)
             {
@@ -383,7 +383,6 @@ namespace wpf_playground
                     UserInfo.SID,
                     UserInfo.Age,
                     UserInfo.Gender.ToString(),
-                    UserInfo.Group.ToString(),
                     UserInfo.DominantHand.ToString(),
                     UserInfo.Level.ToString(),
                     UserInfo.SignalMode.ToString(),

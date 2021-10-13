@@ -150,35 +150,6 @@
 
                     </StackPanel>
 
-
-                    <TextBlock
-                    Text="Group"
-                    Grid.Row="4"
-                    Grid.Column="0"></TextBlock>
-                    <StackPanel
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    Orientation="Horizontal">
-
-                        <RadioButton
-                        GroupName="testGroup"
-                        IsChecked="{Binding GroupEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GroupEnum.L01}}"
-                        Content="L01">
-                        </RadioButton>
-                        <RadioButton
-                        GroupName="testGroup"
-                        IsChecked="{Binding GroupEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GroupEnum.L02}}"
-                        Content="L02">
-                        </RadioButton>
-                        <RadioButton
-                        GroupName="testGroup"
-                        IsChecked="{Binding GroupEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GroupEnum.L03}}"
-                        Content="L03">
-                        </RadioButton>
-
-
-                    </StackPanel>
-
                     <TextBlock
                     Text="Dominant Hand"
                     Grid.Row="5"

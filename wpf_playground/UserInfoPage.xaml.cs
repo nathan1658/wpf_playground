@@ -86,20 +86,8 @@ namespace wpf_playground
             }
         }
 
-        private GroupEnum groupEnum = GroupEnum.L01;
-        public GroupEnum GroupEnum
-        {
-            get { return groupEnum; }
-            set
-            {
-                groupEnum = value;
-                UserInfo.Group = value;
-                InformPropertyChanged("GroupEnum");
-            }
-        }
 
-
-        private DominantHandEnum dominantHandEnum = DominantHandEnum.Left;
+        private DominantHandEnum dominantHandEnum = DominantHandEnum.Right;
         public DominantHandEnum DominantHandEnum
         {
             get { return dominantHandEnum; }
