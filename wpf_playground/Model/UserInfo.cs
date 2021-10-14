@@ -17,7 +17,6 @@ namespace wpf_playground.Model
         public SignalModeEnum SignalMode { get; set; }
         public PQModeEnum PQMode { get; set; }
         public SOAEnum SOA { get; set; }
-        public MappingEnum Mapping { get; set; }
         public int PQHz { get; set; } = 1000;
         public int TopSpeakerHz { get; set; } = 1000;
         public int BottomSpeakerHz { get; set; } = 1000;
@@ -36,7 +35,6 @@ namespace wpf_playground.Model
             result += $"Signal Mode : {SignalMode}" + "\n";
             result += $"PQ Mode : {PQMode}" + "\n";
             result += $"SOA : {SOA}" + "\n";
-            result += $"Mapping : {Mapping}" + "\n";
             result += $"PQ Hz : {PQHz}" + "\n";
             result += $"Top Speaker Hz : {TopSpeakerHz}" + "\n";
             result += $"Bottom Speaker Hz : {BottomSpeakerHz}" + "\n";

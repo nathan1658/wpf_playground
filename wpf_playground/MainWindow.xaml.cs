@@ -102,14 +102,14 @@ namespace wpf_playground
             }
         }
 
-     
+        bool gameEnd = false;
 
         void start()
         {
             gameSw.Start();
-            Task.Run(() =>
+         Task.Run(() =>
             {
-                while (true)
+                while (!gameEnd)
                 {
                     try
                     {
@@ -126,9 +126,9 @@ namespace wpf_playground
                 }
             });
 
-            Task.Run(async () =>
+         Task.Run(async () =>
             {
-                while (true)
+                while (!gameEnd)
                 {
                     if (SequenceList.Count <= 0)
                     {
@@ -149,13 +149,17 @@ namespace wpf_playground
                     }
                 }
             });
+            
         }
         bool practiceMode = false;
-        public MainWindow(bool isPracticeMode)
+        MappingEnum mapping = MappingEnum.NONE;
+        public MainWindow(bool isPracticeMode, MappingEnum mapping)
         {
-
             this.practiceMode = isPracticeMode;
+            this.mapping = mapping;
+            initSequenceList();
 
+        
             this.WindowState = WindowState.Maximized;
             this.DataContext = this;
             InitializeComponent();
@@ -181,12 +185,11 @@ namespace wpf_playground
                 initAuditoryCircle();
             }
 
-            initSequenceList();
 
             Loaded += MainWindow_Loaded;
 
             //update Mapping Image Src
-            MappingImageSrc = $"/Resources/{UserInfo.Mapping}Box.Image.bmp";
+            MappingImageSrc = $"/Resources/{mapping}Box.Image.bmp";
 
         }
         void initAuditoryTarget()
@@ -286,7 +289,7 @@ namespace wpf_playground
 
             for (int i = 0; i < pressCount; i++)
             {
-                for (int j = 0; j < targetList.Count; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     SequenceList.Add(j);
                 }
@@ -305,17 +308,17 @@ namespace wpf_playground
                 if (practiceMode)
                 {
                     MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
-                    new MappingSelection().Show();
-                    this.Close();
+               
                 }
                 else
                 {
                     //Add current mapping to finished state
-                    State.FinishedMappingList.Add(UserInfo.Mapping);
+                    State.FinishedMappingList.Add(mapping);
                     saveResult();
-                    new MappingSelection().Show();
-                    this.Close();
                 }
+                gameEnd = true;
+                new MappingSelection().Show();
+                this.Close();
             });
         }
 
@@ -344,7 +347,7 @@ namespace wpf_playground
             reactionSw.Stop();
 
             int btnIndex = -1;
-            var mapping = UserInfo.Mapping;
+            var mapping = this.mapping;
 
             if (e.Key == State.TopLeftKey)
             {
@@ -470,7 +473,7 @@ namespace wpf_playground
                     UserInfo.SignalMode.ToString(),
                     UserInfo.PQMode.ToString(),
                     UserInfo.SOA.ToString(),
-                    UserInfo.Mapping.ToString(),
+                    this.mapping.ToString(),
                     element.ClickDate.ToString(),
                     element.ElapsedTime.ToString(),
                     element.ReactionTime.ToString(),

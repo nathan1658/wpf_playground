@@ -32,8 +32,7 @@ namespace wpf_playground
             set
             {
                 _mappingEnum = value;
-                FormValid = value != MappingEnum.NONE;
-                State.UserInfo.Mapping = value;
+                FormValid = value != MappingEnum.NONE;                
             }
         }
 
@@ -42,11 +41,41 @@ namespace wpf_playground
         {
             InitializeComponent();
             this.DataContext = this;
-            BCRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.BC);
-            TCRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.TC);
-            LCRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.LC);
-            BIRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.BI);
 
+            genPanelButtons(ref bcPanel, MappingEnum.BC);
+            genPanelButtons(ref tcPanel, MappingEnum.TC);
+            genPanelButtons(ref lcPanel, MappingEnum.LC);
+            genPanelButtons(ref biPanel, MappingEnum.BI);
+
+        }
+
+        void genPanelButtons(ref StackPanel panel, MappingEnum mapping)
+        {
+            var practiceButton = new Button();
+            practiceButton.Click += (s, e) =>
+            {
+                openWindowAndCloseThis(true, mapping);
+            };
+            practiceButton.Content = "Practice " + mapping.ToString();
+            practiceButton.Margin = new Thickness(0, 0, 0, 10);
+
+            var testButton = new Button();
+            testButton.Click += (s, e) =>
+            {
+                openWindowAndCloseThis(false, mapping);
+            };
+            testButton.Content = "Test " + mapping.ToString();
+
+            testButton.IsEnabled = !State.FinishedMappingList.Contains(mapping);
+            panel.Children.Add(practiceButton);
+            panel.Children.Add(testButton);
+
+        }
+
+        void openWindowAndCloseThis(bool practiceMode, MappingEnum mapping)
+        {
+            new MainWindow(practiceMode, mapping).Show();
+            this.Close();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -72,7 +101,7 @@ namespace wpf_playground
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new MainWindow(false).Show();
+            MessageBox.Show("Program will exit now.", "Alert");
             this.Close();
         }
     }

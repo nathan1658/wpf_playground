@@ -15,8 +15,8 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    d:DesignHeight="539.669"
-    d:DesignWidth="667.372"
+    d:DesignHeight="800.59"
+    d:DesignWidth="1336.691"
     Title="Mapping Selection Page">
     <Window.Resources>
         <local:ComparisonConverter
@@ -83,9 +83,9 @@
                             <Setter
                                 Property="Height"
                                 Value="400" />
-                            
+
                         </Style>
-                    
+
                         <Style
                             TargetType="RadioButton">
                             <Setter
@@ -102,13 +102,10 @@
                         <Image
                             Source="/Resources/BCBox.Image.bmp"
                             Stretch="Uniform" />
-                        <Viewbox Height="40">
-                        <RadioButton
-                            x:Name="BCRadioButton"
-                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BC}}">
-                            BC
-                        </RadioButton>
-                        </Viewbox>
+                        <StackPanel x:Name="bcPanel">
+                            
+                        </StackPanel>
+                        
                     </StackPanel>
 
                     <StackPanel
@@ -116,28 +113,18 @@
                         <Image
                             Source="/Resources/TCBox.Image.bmp"
                             Stretch="Uniform" />
-                        <Viewbox Height="40">
-                            <RadioButton
-                            x:Name="TCRadioButton"
+                        <StackPanel x:Name="tcPanel">
 
-                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.TC}}">
-                                TC
-                            </RadioButton>
-                        </Viewbox>
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel
                       >
                         <Image
                             Source="/Resources/LCBox.Image.bmp"
                             Stretch="Uniform" />
-                        <Viewbox Height="40">
-                            <RadioButton
-                            x:Name="LCRadioButton"
-                                
-                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.LC}}">
-                                LC
-                            </RadioButton>
-                        </Viewbox>
+                        <StackPanel x:Name="lcPanel">
+
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel
@@ -145,27 +132,24 @@
                         <Image
                             Source="/Resources/BIBox.Image.bmp"
                             Stretch="Uniform" />
-                        <Viewbox Height="40">
-                            <RadioButton
-                            x:Name="BIRadioButton"
-                            IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BI}}">
-                                BI
-                            </RadioButton>
-                        </Viewbox>
+                        <StackPanel x:Name="biPanel">
+
+                        </StackPanel>
                     </StackPanel>
-                 
+
 
                 </StackPanel>
 
                 <Button
-                    IsEnabled="{Binding FormValid}"
                     Grid.Row="11"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
+                    Background="Orange"
+                    BorderBrush="Orange"
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom"
                     Click="Button_Click">
-                    Submit
+                    Finish Test
                 </Button>
 
             </Grid>
