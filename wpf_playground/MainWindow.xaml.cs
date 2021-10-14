@@ -631,11 +631,6 @@ namespace wpf_playground
 
             });
         }
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            saveResult();
-        }
+ 
     }
 }
