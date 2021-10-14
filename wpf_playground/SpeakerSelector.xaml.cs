@@ -143,7 +143,7 @@ namespace wpf_playground
                         if (control != null)
                         {
                             control.Enable();
-                            await Task.Delay(1000);
+                            await Task.Delay(200);
                             control.Disable();
                             control = null;
                         }

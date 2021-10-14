@@ -168,14 +168,14 @@
 
                     <RadioButton
                         GroupName="dominantGroup"
-                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Left}}"
-                        Content="Left">
+                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Right}}"
+                        Content="Right">
                     </RadioButton>
 
                     <RadioButton
                         GroupName="dominantGroup"
-                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Right}}"
-                        Content="Right">
+                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Left}}"
+                        Content="Left">
                     </RadioButton>
 
                 </StackPanel>

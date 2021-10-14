@@ -102,8 +102,6 @@ namespace wpf_playground
             }
         }
 
-
-
         //Init settings from app config
         void initSettingsFromConfig()
         {
