@@ -32,7 +32,7 @@ namespace wpf_playground
             set
             {
                 _mappingEnum = value;
-                FormValid = value != null && value != MappingEnum.NONE;
+                FormValid = value != MappingEnum.NONE;
                 State.UserInfo.Mapping = value;
             }
         }
@@ -72,6 +72,7 @@ namespace wpf_playground
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            new MainWindow(false).Show();
             this.Close();
         }
     }

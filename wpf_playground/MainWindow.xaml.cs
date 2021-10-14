@@ -102,39 +102,7 @@ namespace wpf_playground
             }
         }
 
-        //Init settings from app config
-        void initSettingsFromConfig()
-        {
-            //set debug Mode
-            string isDebugString = ConfigurationManager.AppSettings["DebugMode"];
-            State.DebugMode = isDebugString.ToLower() == "true";
-
-            //set number of click required for each button
-            string numOfClickString = ConfigurationManager.AppSettings["ClickForEachButton"];
-            State.ClickCountForEachButton = int.Parse(numOfClickString);
-
-            //set key mapping for each button
-            List<String> keyButtonList = new List<string> { "TopLeftKey", "TopRightKey", "BottomLeftKey", "BottomRightKey" };
-            try
-            {
-                State.TopLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopLeftKey"]);
-                State.TopRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopRightKey"]);
-                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomLeftKey"]);
-                State.BottomRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
-            }
-            catch
-            {
-                //in case any of them is empty/ exception, throw and set with default mapping
-
-                ///[7]  [9]
-                ///
-                ///[1]  [3]
-                State.TopLeftKey = Key.NumPad7;
-                State.TopRightKey = Key.NumPad9;
-                State.BottomLeftKey = Key.NumPad1;
-                State.BottomRightKey = Key.NumPad3;
-            }
-        }
+     
 
         void start()
         {
@@ -164,11 +132,7 @@ namespace wpf_playground
                 {
                     if (SequenceList.Count <= 0)
                     {
-                        saveResult();
-                        Dispatcher.Invoke(() =>
-                        {
-                            Application.Current.Shutdown();
-                        });
+                        finishedAllSequence();
                     }
 
                     //start the red ball logic here
@@ -186,19 +150,14 @@ namespace wpf_playground
                 }
             });
         }
-
-        public MainWindow()
+        bool practiceMode = false;
+        public MainWindow(bool isPracticeMode)
         {
+
+            this.practiceMode = isPracticeMode;
+
             this.WindowState = WindowState.Maximized;
-
-            initSettingsFromConfig();
-
-            new UserInfoPage().ShowDialog();
-            new MappingSelection().ShowDialog();
-
             this.DataContext = this;
-
-
             InitializeComponent();
 
 
@@ -320,6 +279,11 @@ namespace wpf_playground
         {
             //The number of each button required to be pressed
             var pressCount = State.ClickCountForEachButton;
+
+            //If is practice mode, press count = 1;
+            if (practiceMode)
+                pressCount = 1;
+
             for (int i = 0; i < pressCount; i++)
             {
                 for (int j = 0; j < targetList.Count; j++)
@@ -333,11 +297,36 @@ namespace wpf_playground
             SequenceList = new ObservableCollection<int>(SequenceList.OrderBy(a => Guid.NewGuid()).ToList());
         }
 
+        void finishedAllSequence()
+        {
+            Dispatcher.Invoke(() =>
+            {
+
+                if (practiceMode)
+                {
+                    MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
+                    new MappingSelection().Show();
+                    this.Close();
+                }
+                else
+                {
+                    //Add current mapping to finished state
+                    State.FinishedMappingList.Add(UserInfo.Mapping);
+                    saveResult();
+                    new MappingSelection().Show();
+                    this.Close();
+                }
+            });
+        }
+
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
             window.KeyDown += MainWindow_KeyDown;
         }
+
+        bool canClick = false;
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
@@ -349,6 +338,8 @@ namespace wpf_playground
                 IsGameStarted = true;
                 return;
             }
+            if (!canClick)
+                return;
             bool isCorrect = false;
             reactionSw.Stop();
 
@@ -418,6 +409,10 @@ namespace wpf_playground
             if (btnIndex == -1)//Do nothing
                 return;
 
+            Debug.WriteLine($"***Clicked***");
+            Debug.WriteLine($"***{reactionSw.ElapsedMilliseconds}ms");
+
+            tokenSource.Cancel();
             isCorrect = targetList[btnIndex].Click();
 
             //If its a hit
@@ -433,11 +428,6 @@ namespace wpf_playground
             {
                 wrong();
             }
-
-            Debug.WriteLine($"***Clicked***");
-            Debug.WriteLine($"***{reactionSw.ElapsedMilliseconds}ms");
-
-            tokenSource.Cancel();
 
         }
 
@@ -492,8 +482,9 @@ namespace wpf_playground
             }
             if (!Directory.Exists("./output"))
                 Directory.CreateDirectory("output");
-            File.WriteAllText($"output/{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv", csvOutput);
-            MessageBox.Show("Done");
+            var fileName = $"output/{ DateTime.Now.ToString("yyyyMMddHHmmss") }.csv";
+            File.WriteAllText(fileName, csvOutput);
+            MessageBox.Show($"Saved test result to {fileName}");
         }
 
         int getDelayInterval()
@@ -563,6 +554,7 @@ namespace wpf_playground
                                 targetPQ.Disable();
                                 Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
                                 targetControl.Enable();
+                                canClick = true;
                                 reactionSw.Restart();
                             });
                         }
@@ -620,7 +612,7 @@ namespace wpf_playground
         {
             Dispatcher.Invoke(() =>
             {
-
+                canClick = false;
                 targetList.ForEach((x) =>
                 {
                     x.Disable();

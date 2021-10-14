@@ -25,6 +25,7 @@ namespace wpf_playground
             var vm = new UserInfoPageViewModel();
             vm.CloseAction = () =>
             {
+                new MappingSelection().Show();
                 this.Close();
             };
             this.DataContext = vm;
