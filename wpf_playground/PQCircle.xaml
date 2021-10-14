@@ -23,7 +23,7 @@
                         Value="true">
                         <Setter
                             Property="Fill"
-                            Value="Yellow" />
+                            Value="Green" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

@@ -32,9 +32,9 @@ namespace wpf_playground
             {
                 //prevent the blue ball go out of bound
                 if (value < jBall.Width / 2)
-                    value = jBall.Width/2;
+                    value = jBall.Width / 2;
 
-                if (value> board.Width - jBall.Width/2)
+                if (value > board.Width - jBall.Width / 2)
                     value = board.Width - jBall.Width / 2;
 
                 _cursorX = value;
@@ -55,7 +55,7 @@ namespace wpf_playground
 
                 //prevent the blue ball go out of bound
                 if (value < jBall.Height / 2)
-                    value = jBall.Height/2;
+                    value = jBall.Height / 2;
 
                 if (value > board.Height - jBall.Height / 2)
                     value = board.Height - jBall.Height / 2;
@@ -69,8 +69,6 @@ namespace wpf_playground
         }
 
         bool useJoystick = true;
-        private Random r = new Random();
-        private List<double> phiArr = new List<double> { 3.14, 0, -2, 1.5 };
 
         private void Board_MouseMove(object sender, MouseEventArgs e)
         {
@@ -79,24 +77,13 @@ namespace wpf_playground
             System.Windows.Point position = e.GetPosition(this);
             cursorX = position.X;
             cursorY = position.Y;
-
-
-            //double pY = position.Y;
-
-
-            //get ballPosition
-            //get top and left of ball
-
-            // Sets the position of the image to the mouse coordinates.
-            //myMouseImage.SetValue(Canvas.LeftProperty, pX);
-            //myMouseImage.SetValue(Canvas.TopProperty, pY);
         }
 
         double currentPointY;
         double xCenter;
         double yCenter;
-
-
+        bool started = false;
+        int movingLevel;
 
         private string _xVal;
 
@@ -116,7 +103,9 @@ namespace wpf_playground
         }
 
 
-        public bool IsDebugMode { get
+        public bool IsDebugMode
+        {
+            get
             {
                 return State.DebugMode;
             }
@@ -153,19 +142,50 @@ namespace wpf_playground
             InitializeComponent();
             this.DataContext = this;
 
-            //Center the ball
-            Canvas.SetTop(ball, board.Height / 2 - (ball.Height / 2));
-            Canvas.SetLeft(ball, board.Width / 2 - (ball.Width / 2));
-            Task.Run(() =>
-            {
-                while (true)
-                {
 
-                    move();
-                    Thread.Sleep(10);
-                }
-            });
+
+            xCenter = board.Width / 2 - (ball.Width / 2);
+            yCenter = board.Height / 2 - (ball.Height / 2);
+
+            //Center the ball
+            Canvas.SetTop(ball, yCenter);
+            Canvas.SetLeft(ball, xCenter);
+
+
+            var diffLevel = State.UserInfo.Level;
+            if (diffLevel == Model.LevelEnum.L50)
+            {
+                movingLevel = 50;
+            }
+
+            if (diffLevel == Model.LevelEnum.L75)
+            {
+                movingLevel = 75;
+            }
+
+            if (diffLevel == Model.LevelEnum.L100)
+            {
+                movingLevel = 100;
+            }
+
             this.Loaded += BouncingBall_Loaded;
+        }
+
+        public void start()
+        {
+            if (!started)
+            {
+                started = true;
+                Task.Run(() =>
+                {
+                    while (true)
+                    {
+
+                        move();
+                        Thread.Sleep(10);
+                    }
+                });
+            }
         }
 
         private void BouncingBall_Loaded(object sender, RoutedEventArgs e)
@@ -196,7 +216,7 @@ namespace wpf_playground
 
                 // If Gamepad not found, look for a Joystick
                 if (joystickGuid == Guid.Empty)
-                    foreach (var deviceInstance in directInput.GetDevices( SharpDX.DirectInput.DeviceType.Joystick,
+                    foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Joystick,
                             DeviceEnumerationFlags.AllDevices))
                     {
                         joystickGuid = deviceInstance.InstanceGuid;
@@ -274,28 +294,9 @@ namespace wpf_playground
             xValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Cos(theta);
             yValue = Math.Sqrt(Math.Pow(xi, 2) + Math.Pow(yi, 2)) * Math.Sin(theta);
 
-            var movingLevel = 0;
-            var diffLevel = State.UserInfo.Level;
-            if ( diffLevel== Model.LevelEnum.L50)
-            {
-                movingLevel = 50;
-            }
-
-            if (diffLevel == Model.LevelEnum.L75)
-            {
-                movingLevel = 75;
-            }
-
-            if(diffLevel == Model.LevelEnum.L100)
-            {
-                movingLevel = 100;
-            }
-
 
             currentPointX = (xValue * movingLevel) + xCenter;
             currentPointY = (yValue * movingLevel) + yCenter;
-
-
 
             Dispatcher.Invoke(() =>
             {
@@ -311,12 +312,11 @@ namespace wpf_playground
                 var left = currentPointX;
 
 
-                bool hitEdge = false;
                 //hit right edge
                 if (left >= (board.Width - ball.Width))
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = 3.14;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -325,7 +325,7 @@ namespace wpf_playground
                 if (left <= 0)
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = 0;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -334,7 +334,7 @@ namespace wpf_playground
                 if (top >= (board.Height - ball.Height))
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = -2;
                     xCenter = left;
                     yCenter = top;
                 }
@@ -343,15 +343,9 @@ namespace wpf_playground
                 if (top <= 0)
                 {
                     xi = 0;
-                    hitEdge = true;
+                    phi = 1.5;
                     xCenter = left;
                     yCenter = top;
-                }
-
-                if(hitEdge)
-                {
-                    int rr = r.Next(0, phiArr.Count);
-                    phi = phiArr[rr];
                 }
 
 

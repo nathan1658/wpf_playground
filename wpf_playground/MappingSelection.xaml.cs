@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +20,7 @@ namespace wpf_playground
     /// <summary>
     /// Interaction logic for MappingSelection.xaml
     /// </summary>
-    public partial class MappingSelection : Window
+    public partial class MappingSelection : Window, INotifyPropertyChanged
     {
 
 
@@ -27,9 +29,11 @@ namespace wpf_playground
         public MappingEnum MappingEnum
         {
             get { return _mappingEnum; }
-            set { _mappingEnum = value;
-
-                State.UserInfo.Mapping = value; 
+            set
+            {
+                _mappingEnum = value;
+                FormValid = value != null && value != MappingEnum.NONE;
+                State.UserInfo.Mapping = value;
             }
         }
 
@@ -38,7 +42,32 @@ namespace wpf_playground
         {
             InitializeComponent();
             this.DataContext = this;
-            
+            BCRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.BC);
+            TCRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.TC);
+            LCRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.LC);
+            BIRadioButton.IsEnabled = !State.FinishedMappingList.Contains(MappingEnum.BI);
+
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool _formValid;
+        public bool FormValid
+        {
+            get { return _formValid; }
+            set
+            {
+                _formValid = value;
+                InformPropertyChanged();
+            }
+        }
+
+        void InformPropertyChanged([CallerMemberName] string propName = "")
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propName));
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -6,8 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using wpf_playground.Model;
 
 namespace wpf_playground
@@ -17,7 +19,6 @@ namespace wpf_playground
     /// </summary>
     public partial class UserInfoPage : Window
     {
-        private WaveOut waveOut;
         public UserInfoPage()
         {
             InitializeComponent();
@@ -30,13 +31,6 @@ namespace wpf_playground
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 
-        }
-        bool testAudio = false;
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-            testAudio = !testAudio;
-            AudioHelper.Instance.play(1000, testAudio);
         }
 
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
@@ -51,9 +45,9 @@ namespace wpf_playground
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
-
         public UserInfoPageViewModel()
         {
+             SoundDeviceList= DirectSoundOut.Devices.ToList();
         }
 
         public UserInfo UserInfo
@@ -148,19 +142,180 @@ namespace wpf_playground
             }
         }
 
-        private string _hz = State.UserInfo.Hz.ToString();
-        public string Hz
+
+        private List<DirectSoundDeviceInfo> _soundDeviceList;
+        public List<DirectSoundDeviceInfo> SoundDeviceList
         {
-            get { return _hz; }
+            get
+            {
+                return _soundDeviceList;
+            }
+            set
+            {
+                _soundDeviceList = value;
+                InformPropertyChanged("SoundDeviceList");
+            }
+        }
+
+
+        private string _pqHz = State.UserInfo.PQHz.ToString();
+        public string PQHz
+        {
+            get { return _pqHz; }
             set
             {
 
-                _hz = value;
-                UserInfo.Hz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
-                InformPropertyChanged("Hz");
+                _pqHz = value;
+                UserInfo.PQHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("PQHz");
             }
 
         }
+
+        private string _topSpeakerHz = State.UserInfo.TopSpeakerHz.ToString();
+        public string TopSpeakerHz
+        {
+            get { return _topSpeakerHz; }
+            set
+            {
+
+                _topSpeakerHz = value;
+                UserInfo.TopSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TopSpeakerHz");
+            }
+
+        }
+
+        private string _bottomSpeakerHz = State.UserInfo.BottomSpeakerHz.ToString();
+        public string BottomSpeakerHz
+        {
+            get { return _bottomSpeakerHz; }
+            set
+            {
+
+                _bottomSpeakerHz = value;
+                UserInfo.BottomSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("BottomSpeakerHz");
+            }
+
+        }
+
+        
+
+        private DirectSoundDeviceInfo _selectedPQSoundDevice;
+        public DirectSoundDeviceInfo SelectedPQSoundDevice
+        {
+            get { return _selectedPQSoundDevice; }
+            set
+            {
+                _selectedPQSoundDevice = value;
+                State.PQSpeaker = value;
+                InformPropertyChanged("SelectedPQSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedTopSpeakerSoundDevice;
+        public DirectSoundDeviceInfo SelectedTopSpeakerSoundDevice
+        {
+            get { return _selectedTopSpeakerSoundDevice; }
+            set
+            {
+                _selectedTopSpeakerSoundDevice = value;
+                State.TopSpeaker = value;
+                InformPropertyChanged("SelectedTopSpeakerSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedBottomSpeakerSoundDevice;
+        public DirectSoundDeviceInfo SelectedBottomSpeakerSoundDevice
+        {
+            get { return _selectedBottomSpeakerSoundDevice; }
+            set
+            {
+                _selectedBottomSpeakerSoundDevice = value;
+                State.BottomSpeaker = value;
+                InformPropertyChanged("SelectedBottomSpeakerSoundDevice");
+            }
+        }
+
+        private string _tactilePqHz = State.UserInfo.TactilePQHz.ToString();
+        public string TactilePQHz
+        {
+            get { return _tactilePqHz; }
+            set
+            {
+
+                _tactilePqHz = value;
+                UserInfo.TactilePQHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TactilePQHz");
+            }
+
+        }
+
+        private string _tactileTopSpeakerHz = State.UserInfo.TactileTopSpeakerHz.ToString();
+        public string TactileTopSpeakerHz
+        {
+            get { return _tactileTopSpeakerHz; }
+            set
+            {
+
+                _tactileTopSpeakerHz = value;
+                UserInfo.TactileTopSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TactileTopSpeakerHz");
+            }
+
+        }
+
+        private string _tactilebottomSpeakerHz = State.UserInfo.TactileBottomSpeakerHz.ToString();
+        public string TactileBottomSpeakerHz
+        {
+            get { return _tactilebottomSpeakerHz; }
+            set
+            {
+
+                _tactilebottomSpeakerHz = value;
+                UserInfo.TactileBottomSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TactileBottomSpeakerHz");
+            }
+
+        }
+
+        private DirectSoundDeviceInfo _selectedTactilePQSoundDevice;
+        public DirectSoundDeviceInfo SelectedTactilePQSoundDevice
+        {
+            get { return _selectedTactilePQSoundDevice; }
+            set
+            {
+                _selectedTactilePQSoundDevice = value;
+                State.TactilePQSpeaker = value;
+                InformPropertyChanged("SelectedTactilePQSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedTactileTopSpeakerSoundDevice;
+        public DirectSoundDeviceInfo SelectedTactileTopSpeakerSoundDevice
+        {
+            get { return _selectedTactileTopSpeakerSoundDevice; }
+            set
+            {
+                _selectedTactileTopSpeakerSoundDevice = value;
+                State.TactileTopSpeaker = value;
+                InformPropertyChanged("SelectedTactileTopSpeakerSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedTactileBottomSpeakerSoundDevice;
+        public DirectSoundDeviceInfo SelectedTactileBottomSpeakerSoundDevice
+        {
+            get { return _selectedTactileBottomSpeakerSoundDevice; }
+            set
+            {
+                _selectedTactileBottomSpeakerSoundDevice = value;
+                State.TactileBottomSpeaker = value;
+                InformPropertyChanged("SelectedTactileBottomSpeakerSoundDevice");
+            }
+        }
+
 
 
         private LevelEnum _levelEnum = LevelEnum.L50;

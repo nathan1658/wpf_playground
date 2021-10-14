@@ -18,7 +18,13 @@ namespace wpf_playground.Model
         public PQModeEnum PQMode { get; set; }
         public SOAEnum SOA { get; set; }
         public MappingEnum Mapping { get; set; }
-        public int Hz { get; set; } = 1000;
+        public int PQHz { get; set; } = 1000;
+        public int TopSpeakerHz { get; set; } = 1000;
+        public int BottomSpeakerHz { get; set; } = 1000;
+
+        public int TactilePQHz { get; set; } = 100;
+        public int TactileTopSpeakerHz { get; set; } = 100;
+        public int TactileBottomSpeakerHz { get; set; } = 100;
         public override string ToString()
         {
             string result = $"Name : {Name}" + "\n";
@@ -31,7 +37,12 @@ namespace wpf_playground.Model
             result += $"PQ Mode : {PQMode}" + "\n";
             result += $"SOA : {SOA}" + "\n";
             result += $"Mapping : {Mapping}" + "\n";
-            result += $"Hz : {Hz}" + "\n";
+            result += $"PQ Hz : {PQHz}" + "\n";
+            result += $"Top Speaker Hz : {TopSpeakerHz}" + "\n";
+            result += $"Bottom Speaker Hz : {BottomSpeakerHz}" + "\n";
+            result += $"Tactile PQ Hz : {TactilePQHz}" + "\n";
+            result += $"Tactile Top Speaker Hz : {TactileTopSpeakerHz}" + "\n";
+            result += $"Tactile Bottom Speaker Hz : {TactileBottomSpeakerHz}" + "\n";
             return result;
         }
     }

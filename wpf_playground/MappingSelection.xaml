@@ -24,7 +24,7 @@
     </Window.Resources>
     <Grid>
         <materialDesign:Card
-            MaxWidth="900"
+            MaxWidth="1200"
             MaxHeight="600"
             Padding="32"
             Margin="16"
@@ -82,8 +82,10 @@
                             TargetType="Image">
                             <Setter
                                 Property="Height"
-                                Value="300" />
+                                Value="400" />
+                            
                         </Style>
+                    
                         <Style
                             TargetType="RadioButton">
                             <Setter
@@ -96,46 +98,60 @@
                         </Style>
                     </StackPanel.Resources>
                     <StackPanel
-                        Width="150">
+                   >
                         <Image
                             Source="/Resources/BCBox.Image.bmp"
                             Stretch="Uniform" />
+                        <Viewbox Height="40">
                         <RadioButton
+                            x:Name="BCRadioButton"
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BC}}">
                             BC
                         </RadioButton>
+                        </Viewbox>
                     </StackPanel>
 
                     <StackPanel
-                        Width="150">
+                      >
                         <Image
                             Source="/Resources/TCBox.Image.bmp"
                             Stretch="Uniform" />
-                        <RadioButton
+                        <Viewbox Height="40">
+                            <RadioButton
+                            x:Name="TCRadioButton"
+
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.TC}}">
-                            TC
-                        </RadioButton>
+                                TC
+                            </RadioButton>
+                        </Viewbox>
                     </StackPanel>
                     <StackPanel
-                        Width="150">
+                      >
                         <Image
                             Source="/Resources/LCBox.Image.bmp"
                             Stretch="Uniform" />
-                        <RadioButton
+                        <Viewbox Height="40">
+                            <RadioButton
+                            x:Name="LCRadioButton"
+                                
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.LC}}">
-                            LC
-                        </RadioButton>
+                                LC
+                            </RadioButton>
+                        </Viewbox>
                     </StackPanel>
 
                     <StackPanel
-                        Width="150">
+                       >
                         <Image
                             Source="/Resources/BIBox.Image.bmp"
                             Stretch="Uniform" />
-                        <RadioButton
+                        <Viewbox Height="40">
+                            <RadioButton
+                            x:Name="BIRadioButton"
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BI}}">
-                            BI
-                        </RadioButton>
+                                BI
+                            </RadioButton>
+                        </Viewbox>
                     </StackPanel>
                  
 

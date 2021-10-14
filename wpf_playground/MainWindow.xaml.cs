@@ -30,19 +30,20 @@ namespace wpf_playground
                 return State.UserInfo;
             }
         }
-        List<MyBaseUserControl> circleList = new List<MyBaseUserControl>();
+        List<MyBaseUserControl> targetList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Count the time between red color and click
         /// </summary>
         Stopwatch reactionSw = new Stopwatch();
-        int delayMS;
+        int delayIntervalInMs;
         /// <summary>
         /// The timer of overall game
         /// </summary>
         Stopwatch gameSw = new Stopwatch();
         Random random = new Random();
+        public const double SIGNAL_VISIBLE_TIME = 1000;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
@@ -89,6 +90,18 @@ namespace wpf_playground
             }
         }
 
+        private bool _isGameStarted = false;
+
+        public bool IsGameStarted
+        {
+            get { return _isGameStarted; }
+            set
+            {
+                _isGameStarted = value;
+                InformPropertyChanged("IsGameStarted");
+            }
+        }
+
         //Init settings from app config
         void initSettingsFromConfig()
         {
@@ -107,9 +120,9 @@ namespace wpf_playground
                 State.TopLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopLeftKey"]);
                 State.TopRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopRightKey"]);
                 State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomLeftKey"]);
-                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
+                State.BottomRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
             }
-            catch (Exception ex)
+            catch
             {
                 //in case any of them is empty/ exception, throw and set with default mapping
 
@@ -123,52 +136,27 @@ namespace wpf_playground
             }
         }
 
-
-        public MainWindow()
+        void start()
         {
-            initSettingsFromConfig();
-
-
-            new UserInfoPage().ShowDialog();
-            new MappingSelection().ShowDialog();
-
-
-
-            this.DataContext = this;
-
-
-
-            InitializeComponent();
-
-            //Init the control list here
-            circleList = new List<MyBaseUserControl>
-            {
-                this.circle0,
-                this.circle1,
-                this.circle2,
-                this.circle3,
-            };
-            if (UserInfo.PQMode == PQModeEnum.Visual)
-            {
-                initPqCircle();
-            }
             gameSw.Start();
-
-
-
             Task.Run(() =>
             {
                 while (true)
                 {
-                    //update game time
-                    Dispatcher.Invoke(() =>
+                    try
                     {
-                        gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
-                    });
-                    Thread.Sleep(10);
+                        //update game time
+                        Dispatcher.Invoke(() =>
+                        {
+                            gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
+                        });
+                    }
+                    finally
+                    {
+                        Thread.Sleep(10);
+                    }
                 }
             });
-            initSequenceList();
 
             Task.Run(async () =>
             {
@@ -184,7 +172,7 @@ namespace wpf_playground
                     }
 
                     //start the red ball logic here
-                    var task = triggerControl(tokenSource);
+                    var task = triggerControl();
                     try
                     {
                         await task;
@@ -193,19 +181,103 @@ namespace wpf_playground
                     finally
                     {
                         task.Dispose();
-                        cleanUp();
                         tokenSource = new CancellationTokenSource();
                     }
                 }
             });
+        }
+
+        public MainWindow()
+        {
+            this.WindowState = WindowState.Maximized;
+
+            initSettingsFromConfig();
+
+            new UserInfoPage().ShowDialog();
+            new MappingSelection().ShowDialog();
+
+            this.DataContext = this;
+
+
+            InitializeComponent();
+
+
+            if (UserInfo.SignalMode == SignalModeEnum.Visual)
+            {
+                initVisualCircle();
+            }
+
+            if (UserInfo.SignalMode == SignalModeEnum.Auditory)
+            {
+                initAuditoryTarget();
+            }
+
+
+            if (UserInfo.PQMode == PQModeEnum.Visual)
+            {
+                initPqCircle();
+            }
+            if (UserInfo.PQMode == PQModeEnum.Auditory)
+            {
+                initAuditoryCircle();
+            }
+
+            initSequenceList();
 
             Loaded += MainWindow_Loaded;
-
 
             //update Mapping Image Src
             MappingImageSrc = $"/Resources/{UserInfo.Mapping}Box.Image.bmp";
 
         }
+        void initAuditoryTarget()
+        {
+            //Init the control list here
+            targetList = new List<MyBaseUserControl>
+            {
+                new AuditoryTarget(State.TopSpeaker, State.UserInfo.TopSpeakerHz, true),
+                new AuditoryTarget(State.TopSpeaker, State.UserInfo.TopSpeakerHz, false),
+                new AuditoryTarget(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, true),
+                new AuditoryTarget(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, false),
+            };
+        }
+
+        void initVisualCircle()
+        {
+            Func<HorizontalAlignment, VerticalAlignment, String, MyBaseUserControl> genCircle = (horizontalAlignment, verticalAlignment, text) =>
+               {
+                   var grid = new Grid
+                   {
+                       HorizontalAlignment = horizontalAlignment,
+                       VerticalAlignment = verticalAlignment
+                   };
+                   var circle = new Circle();
+                   grid.Children.Add(circle);
+
+                   //If its debug mode, add a text letter at center of circle
+                   if (IsDebugMode)
+                   {
+                       grid.Children.Add(new TextBlock
+                       {
+                           HorizontalAlignment = HorizontalAlignment.Center,
+                           VerticalAlignment = VerticalAlignment.Center,
+                           Text = text
+                       });
+                   }
+                   gameBoard.Children.Add(grid);
+                   return circle;
+               };
+            //Init the control list here
+            targetList = new List<MyBaseUserControl>
+            {
+                genCircle(HorizontalAlignment.Left, VerticalAlignment.Top, "0"),
+                genCircle(HorizontalAlignment.Right, VerticalAlignment.Top, "1"),
+                genCircle(HorizontalAlignment.Left, VerticalAlignment.Bottom, "2"),
+                genCircle(HorizontalAlignment.Right, VerticalAlignment.Bottom, "3"),
+            };
+        }
+
+        #region  PQ sections
 
         void initPqCircle()
         {
@@ -216,12 +288,17 @@ namespace wpf_playground
                   grid1.VerticalAlignment = VerticalAlignment.Center;
 
                   PQCircle circle1 = new PQCircle();
-                  TextBlock tb1 = new TextBlock();
-                  tb1.HorizontalAlignment = HorizontalAlignment.Center;
-                  tb1.VerticalAlignment = VerticalAlignment.Center;
-                  tb1.Text = val;
+
                   grid1.Children.Add(circle1);
-                  grid1.Children.Add(tb1);
+
+                  if (IsDebugMode)
+                  {
+                      TextBlock tb1 = new TextBlock();
+                      tb1.HorizontalAlignment = HorizontalAlignment.Center;
+                      tb1.VerticalAlignment = VerticalAlignment.Center;
+                      tb1.Text = val;
+                      grid1.Children.Add(tb1);
+                  }
 
                   gameBoard.Children.Add(grid1);
                   return circle1;
@@ -232,13 +309,20 @@ namespace wpf_playground
             rightPQ = rightCircle;
         }
 
+        void initAuditoryCircle()
+        {
+            leftPQ = new AuditoryPQ(true);
+            rightPQ = new AuditoryPQ(false);
+        }
+        #endregion
+
         void initSequenceList()
         {
             //The number of each button required to be pressed
             var pressCount = State.ClickCountForEachButton;
             for (int i = 0; i < pressCount; i++)
             {
-                for (int j = 0; j < circleList.Count; j++)
+                for (int j = 0; j < targetList.Count; j++)
                 {
                     SequenceList.Add(j);
                 }
@@ -257,6 +341,14 @@ namespace wpf_playground
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
+
+            if (!IsGameStarted)
+            {
+                bouncingBall.start();
+                start();
+                IsGameStarted = true;
+                return;
+            }
             bool isCorrect = false;
             reactionSw.Stop();
 
@@ -326,7 +418,7 @@ namespace wpf_playground
             if (btnIndex == -1)//Do nothing
                 return;
 
-            isCorrect = circleList[btnIndex].Click();
+            isCorrect = targetList[btnIndex].Click();
 
             //If its a hit
             if (isCorrect)
@@ -404,81 +496,81 @@ namespace wpf_playground
             MessageBox.Show("Done");
         }
 
+        int getDelayInterval()
+        {
+            var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
+            var delayIndex = random.Next(0, delayIntervalList.Count);
+            return delayIntervalList[delayIndex];
+        }
+
         //Randomly pick one and trigger it.
-        Task triggerControl(CancellationTokenSource source)
+        Task triggerControl()
         {
             return Task.Run(async () =>
             {
-                Stopwatch triggerSw = new Stopwatch();
-                triggerSw.Start();
-
-                var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
-                var delayIndex = random.Next(0, delayIntervalList.Count);
-                delayMS = delayIntervalList[delayIndex];
-                //Time 
-                await Task.Delay(delayMS);
-                System.Diagnostics.Debug.WriteLine("After delay: " + triggerSw.ElapsedMilliseconds);
-                int index = random.Next(SequenceList.Count);
-                index = SequenceList[index];
-                var targetControl = circleList[index];
-
-                int delayPQMS = -1;
-                delayPQMS = getSoa();
-
-                if (this.UserInfo.PQMode == PQModeEnum.Auditory)
+                try
                 {
-                    AudioHelper.Instance.play(delayPQMS, index == 0 || index == 2);
-                }
+                    Stopwatch triggerSw = new Stopwatch();
+                    triggerSw.Start();
 
-                var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
-                if (this.UserInfo.PQMode == PQModeEnum.Visual)
-                {
+                    delayIntervalInMs = getDelayInterval();
+                    //Time 
+                    await Task.Delay(delayIntervalInMs);
+
+                    int index = random.Next(SequenceList.Count);
+                    index = SequenceList[index];
+                    var targetControl = targetList[index];
+
+                    int delayPQMS = -1;
+                    delayPQMS = getSoa();
+
+                    var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
+
                     Dispatcher.Invoke(() =>
-                 {
-                     targetPQ.Enable();
-                 });
-                }
-
-                var pqEnded = false;
-                while (true)
-                {
-                    if (tokenSource.Token.IsCancellationRequested)
                     {
-                        //clicked
-                        return;
-                    }
+                        targetPQ.Enable();
+                    });
 
-                    //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
-                    if (triggerSw.ElapsedMilliseconds >= (1000 + delayPQMS + delayMS))
+
+                    var pqEnded = false;
+                    while (true)
                     {
-                        //miss
-                        Debug.WriteLine("***Missed***");
-                        Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
-
-                        Dispatcher.Invoke(() =>
+                        if (tokenSource.Token.IsCancellationRequested)
                         {
-                            targetControl.Disable();
-                        });
-                        miss();
-                        return;
-                    }
+                            break;
+                        }
 
-                    if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayMS))
-                    {
-                        pqEnded = true;
-                        Dispatcher.Invoke(() =>
+                        //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
+                        if (triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + delayPQMS + delayIntervalInMs))
                         {
-                            if (this.UserInfo.PQMode == PQModeEnum.Visual)
+                            //miss
+                            Debug.WriteLine("***Missed***");
+                            Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
+
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetControl.Disable();
+                            });
+                            miss();
+                            break;
+                        }
+
+                        if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayIntervalInMs))
+                        {
+                            pqEnded = true;
+                            Dispatcher.Invoke(() =>
                             {
                                 targetPQ.Disable();
-                            }
-                            Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
-                            targetControl.Enable();
-                            reactionSw.Restart();
-                        });
+                                Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
+                                targetControl.Enable();
+                                reactionSw.Restart();
+                            });
+                        }
+                        await Task.Delay(10);
                     }
-                    await Task.Delay(10);
+                    cleanUp();
                 }
+                catch { }
             });
         }
 
@@ -491,7 +583,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Miss,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -505,7 +597,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Correct,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -519,7 +611,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Incorrect,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -529,22 +621,16 @@ namespace wpf_playground
             Dispatcher.Invoke(() =>
             {
 
-                circleList.ForEach((x) =>
+                targetList.ForEach((x) =>
                 {
                     x.Disable();
                 });
-                if (this.UserInfo.PQMode == PQModeEnum.Visual)
-                {
-                    leftPQ.Disable();
-                    rightPQ.Disable();
-                }
+
+                leftPQ.Disable();
+                rightPQ.Disable();
+
             });
         }
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            saveResult();
-        }
+ 
     }
 }
