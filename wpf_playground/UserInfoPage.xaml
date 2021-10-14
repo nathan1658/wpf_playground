@@ -293,7 +293,7 @@
                                 DescriptionText="Bottom Speaker Hz"  HzValue="{Binding BottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedBottomSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
                         </StackPanel>
                     </TabItem>
-                    <TabItem Header="Tactile Settings" IsSelected="true">
+                    <TabItem Header="Tactile Settings">
                         <StackPanel Grid.IsSharedSizeScope="True">
                             <dd:SpeakerSelector
                                 ButtonColor="Red"

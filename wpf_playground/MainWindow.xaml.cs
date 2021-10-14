@@ -531,8 +531,6 @@ namespace wpf_playground
                 {
                     if (tokenSource.Token.IsCancellationRequested)
                     {
-                        targetPQ.Disable();
-                        targetControl.Disable();
                         return;
                     }
 
