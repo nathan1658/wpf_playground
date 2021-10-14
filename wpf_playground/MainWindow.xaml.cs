@@ -196,7 +196,6 @@ namespace wpf_playground
             this.DataContext = this;
 
 
-
             InitializeComponent();
 
 
@@ -527,7 +526,7 @@ namespace wpf_playground
                 });
 
 
-                var pqEnded = false;
+                var pqEnded = false;                
                 while (true)
                 {
                     if (tokenSource.Token.IsCancellationRequested)

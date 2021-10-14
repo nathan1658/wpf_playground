@@ -15,8 +15,10 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
+    xmlns:dd="clr-namespace:wpf_playground"
     d:DesignHeight="888.669"
     d:DesignWidth="751.372"
+    x:Name="userInfoPage"
     Title="User Info Page">
     <Window.Resources>
         <local:ComparisonConverter
@@ -24,7 +26,7 @@
     </Window.Resources>
     <Grid>
 
-            
+
 
         <materialDesign:Card
             MaxWidth="500"
@@ -279,115 +281,36 @@
                 </StackPanel>
                 <TabControl  Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource MaterialDesignTabControl}">
                     <TabItem Header="Auditory Settings">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                                
-                            </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0" Text="Top Speaker Hz"></TextBlock>
-                            <Grid Grid.Row="0" Grid.Column="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBox Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Stretch" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding TopSpeakerHz, UpdateSourceTrigger=PropertyChanged}">
-                                </TextBox>
-
-
-                                <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SoundDeviceList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedTopSpeakerSoundDevice}" ></ComboBox>
-
-                                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2">
-                                    <Button Command="{Binding TestCommand}" CommandParameter="0">Left</Button>
-                                    <Button Grid.Column="1" Command="{Binding TestCommand}" CommandParameter="1">Right</Button>
-                                </StackPanel>
-                            </Grid>
-
-                            <TextBlock
-                    Text="PQ Hz"
-                    Grid.Row="1"
-                    Grid.Column="0"></TextBlock>
-                            <Grid
-                    Grid.Row="1"
-                    Grid.Column="1"
-                        >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBox
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            HorizontalContentAlignment="Stretch"
-                        PreviewTextInput="TextBox_PreviewTextInput"
-                        Text="{Binding PQHz, UpdateSourceTrigger=PropertyChanged}"
-                    >
-                                </TextBox>
-
-
-                                <ComboBox
-                            Grid.Row="1"
-                 Grid.Column="0"
-                ItemsSource="{Binding SoundDeviceList}"
-                DisplayMemberPath="Description"
-                SelectedItem="{Binding SelectedPQSoundDevice}"
-                ></ComboBox>
-
-                                <StackPanel Orientation="Horizontal" 
-                            Grid.Row="1"
-                            Grid.Column="2" 
->
-                                    <Button Background="Green" BorderBrush="Green" Grid.Row="1" Command="{Binding TestCommand}" CommandParameter="4">Left</Button>
-                                    <Button Background="Green" BorderBrush="Green" Grid.Row="1" Grid.Column="1" Command="{Binding TestCommand}" CommandParameter="5">Right</Button>
-
-                                </StackPanel>
-                            </Grid>
-
-                            <TextBlock Text="Bottom Speaker Hz" Grid.Row="2" Grid.Column="0"></TextBlock>
-                            <Grid Grid.Row="2" Grid.Column="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBox Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Stretch" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding BottomSpeakerHz, UpdateSourceTrigger=PropertyChanged}">
-                                </TextBox>
-
-
-                                <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SoundDeviceList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedBottomSpeakerSoundDevice}"></ComboBox>
-
-                                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2" >
-                                    <Button Grid.Row="2" Command="{Binding TestCommand}" CommandParameter="2">Left</Button>
-                                    <Button Grid.Row="2" Grid.Column="1" Command="{Binding TestCommand}" CommandParameter="3">Right</Button>
-
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
+                        <StackPanel Grid.IsSharedSizeScope="True">
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTopSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Green"
+                                DescriptionText="PQ Hz"  HzValue="{Binding PQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedPQSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding BottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedBottomSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                        </StackPanel>
                     </TabItem>
-                    <TabItem Header="Tactile Settings">
-                        <!-- Your tab content -->
+                    <TabItem Header="Tactile Settings" IsSelected="true">
+                        <StackPanel Grid.IsSharedSizeScope="True">
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TESTT,Mode=OneWayToSource}"  SelectedSoundDevice="{Binding TEST2,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Green"
+                                DescriptionText="PQ Speaker Hz" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Bottom Speaker Hz" ></dd:SpeakerSelector>
+                        </StackPanel>
                     </TabItem>
                 </TabControl>
 
 
 
-              
+
 
 
                 <Button

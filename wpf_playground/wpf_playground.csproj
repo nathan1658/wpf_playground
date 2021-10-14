@@ -150,7 +150,11 @@
       <DependentUpon>PQCircle.xaml</DependentUpon>
     </Compile>
     <Compile Include="SineWaveProvider32.cs" />
+    <Compile Include="SpeakerSelector.xaml.cs">
+      <DependentUpon>SpeakerSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="State.cs" />
+    <Compile Include="TactileTarget.cs" />
     <Compile Include="UserInfoPage.xaml.cs">
       <DependentUpon>UserInfoPage.xaml</DependentUpon>
     </Compile>
@@ -188,6 +192,10 @@
     </Page>
     <Page Include="PQCircle.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+    <Page Include="SpeakerSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserInfoPage.xaml">
       <SubType>Designer</SubType>
