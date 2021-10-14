@@ -89,6 +89,20 @@ namespace wpf_playground
             }
         }
 
+        private bool _isGameStarted = false;
+
+        public bool IsGameStarted
+        {
+            get { return _isGameStarted; }
+            set
+            {
+                _isGameStarted = value;
+                InformPropertyChanged("IsGameStarted");
+            }
+        }
+
+
+
         //Init settings from app config
         void initSettingsFromConfig()
         {
@@ -123,50 +137,9 @@ namespace wpf_playground
             }
         }
 
-
-        public MainWindow()
+        void start()
         {
-            initSettingsFromConfig();
-
-
-            new UserInfoPage().ShowDialog();
-            new MappingSelection().ShowDialog();
-
-
-
-            this.DataContext = this;
-
-
-
-            InitializeComponent();
-
-
-            if (UserInfo.SignalMode == SignalModeEnum.Visual)
-            {
-                initVisualCircle();
-            }
-
-            if (UserInfo.SignalMode == SignalModeEnum.Auditory)
-            {
-                initAuditoryTarget();
-            }
-
-
-
-
-            if (UserInfo.PQMode == PQModeEnum.Visual)
-            {
-                initPqCircle();
-            }
-            if (UserInfo.PQMode == PQModeEnum.Auditory)
-            {
-                initAuditoryCircle();
-            }
-
             gameSw.Start();
-
-
-
             Task.Run(() =>
             {
                 while (true)
@@ -179,7 +152,6 @@ namespace wpf_playground
                     Thread.Sleep(10);
                 }
             });
-            initSequenceList();
 
             Task.Run(async () =>
             {
@@ -209,9 +181,47 @@ namespace wpf_playground
                     }
                 }
             });
+        }
+
+        public MainWindow()
+        {
+            this.WindowState = WindowState.Maximized;
+            
+            initSettingsFromConfig();
+
+            new UserInfoPage().ShowDialog();
+            new MappingSelection().ShowDialog();
+
+            this.DataContext = this;
+
+
+
+            InitializeComponent();
+
+
+            if (UserInfo.SignalMode == SignalModeEnum.Visual)
+            {
+                initVisualCircle();
+            }
+
+            if (UserInfo.SignalMode == SignalModeEnum.Auditory)
+            {
+                initAuditoryTarget();
+            }
+
+
+            if (UserInfo.PQMode == PQModeEnum.Visual)
+            {
+                initPqCircle();
+            }
+            if (UserInfo.PQMode == PQModeEnum.Auditory)
+            {
+                initAuditoryCircle();
+            }
+
+            initSequenceList();
 
             Loaded += MainWindow_Loaded;
-
 
             //update Mapping Image Src
             MappingImageSrc = $"/Resources/{UserInfo.Mapping}Box.Image.bmp";
@@ -329,8 +339,12 @@ namespace wpf_playground
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
 
-            bouncingBall.start();
-
+            if (!IsGameStarted)
+            {
+                bouncingBall.start();
+                start();
+                IsGameStarted = true;
+            }
             bool isCorrect = false;
             reactionSw.Stop();
 

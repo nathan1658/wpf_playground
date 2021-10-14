@@ -133,6 +133,21 @@
                     x:Name="gameCounter"
                      />
                 </StackPanel>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,5cm,0,0">
+                    <TextBlock.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="30"/>
+                            <Setter Property="Foreground" Value="Red"/>
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsGameStarted}" Value="true">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Resources>
+                    按下任意鍵開始跟踪任務
+                </TextBlock>
             </Grid>
         </materialDesign:Card>
 
