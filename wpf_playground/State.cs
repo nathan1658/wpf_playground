@@ -25,5 +25,9 @@ namespace wpf_playground
         public static DirectSoundDeviceInfo PQSpeaker;
         public static DirectSoundDeviceInfo TopSpeaker;
         public static DirectSoundDeviceInfo BottomSpeaker;
+
+        public static DirectSoundDeviceInfo TactilePQSpeaker;
+        public static DirectSoundDeviceInfo TactileTopSpeaker;
+        public static DirectSoundDeviceInfo TactileBottomSpeaker;
     }
 }

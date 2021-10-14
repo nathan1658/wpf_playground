@@ -297,13 +297,13 @@
                         <StackPanel Grid.IsSharedSizeScope="True">
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
-                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TESTT,Mode=OneWayToSource}"  SelectedSoundDevice="{Binding TEST2,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TactileTopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileTopSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
                             <dd:SpeakerSelector
                                 ButtonColor="Green"
-                                DescriptionText="PQ Speaker Hz" ></dd:SpeakerSelector>
+                                DescriptionText="PQ Hz"  HzValue="{Binding TactilePQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactilePQSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
-                                DescriptionText="Bottom Speaker Hz" ></dd:SpeakerSelector>
+                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding TactileBottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileBottomSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
                         </StackPanel>
                     </TabItem>
                 </TabControl>

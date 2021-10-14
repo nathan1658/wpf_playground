@@ -142,6 +142,22 @@ namespace wpf_playground
             }
         }
 
+
+        private List<DirectSoundDeviceInfo> _soundDeviceList;
+        public List<DirectSoundDeviceInfo> SoundDeviceList
+        {
+            get
+            {
+                return _soundDeviceList;
+            }
+            set
+            {
+                _soundDeviceList = value;
+                InformPropertyChanged("SoundDeviceList");
+            }
+        }
+
+
         private string _pqHz = State.UserInfo.PQHz.ToString();
         public string PQHz
         {
@@ -184,24 +200,9 @@ namespace wpf_playground
 
         }
 
-        private List<DirectSoundDeviceInfo> _soundDeviceList;
-
-        public List<DirectSoundDeviceInfo> SoundDeviceList
-        {
-            get
-            {
-                return _soundDeviceList;
-            }
-            set
-            {
-                _soundDeviceList = value;
-                InformPropertyChanged("SoundDeviceList");
-            }
-        }
-
+        
 
         private DirectSoundDeviceInfo _selectedPQSoundDevice;
-
         public DirectSoundDeviceInfo SelectedPQSoundDevice
         {
             get { return _selectedPQSoundDevice; }
@@ -214,7 +215,6 @@ namespace wpf_playground
         }
 
         private DirectSoundDeviceInfo _selectedTopSpeakerSoundDevice;
-
         public DirectSoundDeviceInfo SelectedTopSpeakerSoundDevice
         {
             get { return _selectedTopSpeakerSoundDevice; }
@@ -227,7 +227,6 @@ namespace wpf_playground
         }
 
         private DirectSoundDeviceInfo _selectedBottomSpeakerSoundDevice;
-
         public DirectSoundDeviceInfo SelectedBottomSpeakerSoundDevice
         {
             get { return _selectedBottomSpeakerSoundDevice; }
@@ -238,6 +237,86 @@ namespace wpf_playground
                 InformPropertyChanged("SelectedBottomSpeakerSoundDevice");
             }
         }
+
+        private string _tactilePqHz = State.UserInfo.TactilePQHz.ToString();
+        public string TactilePQHz
+        {
+            get { return _tactilePqHz; }
+            set
+            {
+
+                _tactilePqHz = value;
+                UserInfo.TactilePQHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TactilePQHz");
+            }
+
+        }
+
+        private string _tactileTopSpeakerHz = State.UserInfo.TactileTopSpeakerHz.ToString();
+        public string TactileTopSpeakerHz
+        {
+            get { return _tactileTopSpeakerHz; }
+            set
+            {
+
+                _tactileTopSpeakerHz = value;
+                UserInfo.TactileTopSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TactileTopSpeakerHz");
+            }
+
+        }
+
+        private string _tactilebottomSpeakerHz = State.UserInfo.TactileBottomSpeakerHz.ToString();
+        public string TactileBottomSpeakerHz
+        {
+            get { return _tactilebottomSpeakerHz; }
+            set
+            {
+
+                _tactilebottomSpeakerHz = value;
+                UserInfo.TactileBottomSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("TactileBottomSpeakerHz");
+            }
+
+        }
+
+        private DirectSoundDeviceInfo _selectedTactilePQSoundDevice;
+        public DirectSoundDeviceInfo SelectedTactilePQSoundDevice
+        {
+            get { return _selectedTactilePQSoundDevice; }
+            set
+            {
+                _selectedTactilePQSoundDevice = value;
+                State.TactilePQSpeaker = value;
+                InformPropertyChanged("SelectedTactilePQSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedTactileTopSpeakerSoundDevice;
+        public DirectSoundDeviceInfo SelectedTactileTopSpeakerSoundDevice
+        {
+            get { return _selectedTactileTopSpeakerSoundDevice; }
+            set
+            {
+                _selectedTactileTopSpeakerSoundDevice = value;
+                State.TactileTopSpeaker = value;
+                InformPropertyChanged("SelectedTactileTopSpeakerSoundDevice");
+            }
+        }
+
+        private DirectSoundDeviceInfo _selectedTactileBottomSpeakerSoundDevice;
+        public DirectSoundDeviceInfo SelectedTactileBottomSpeakerSoundDevice
+        {
+            get { return _selectedTactileBottomSpeakerSoundDevice; }
+            set
+            {
+                _selectedTactileBottomSpeakerSoundDevice = value;
+                State.TactileBottomSpeaker = value;
+                InformPropertyChanged("SelectedTactileBottomSpeakerSoundDevice");
+            }
+        }
+
+
 
         private LevelEnum _levelEnum = LevelEnum.L50;
 
