@@ -29,5 +29,7 @@ namespace wpf_playground
         public static DirectSoundDeviceInfo TactilePQSpeaker;
         public static DirectSoundDeviceInfo TactileTopSpeaker;
         public static DirectSoundDeviceInfo TactileBottomSpeaker;
+
+        public static List<MappingEnum> FinishedMappingList = new List<MappingEnum> { };
     }
 }

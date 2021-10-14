@@ -104,6 +104,7 @@
                             Stretch="Uniform" />
                         <Viewbox Height="40">
                         <RadioButton
+                            x:Name="BCRadioButton"
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BC}}">
                             BC
                         </RadioButton>
@@ -117,6 +118,7 @@
                             Stretch="Uniform" />
                         <Viewbox Height="40">
                             <RadioButton
+                            x:Name="TCRadioButton"
 
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.TC}}">
                                 TC
@@ -130,6 +132,8 @@
                             Stretch="Uniform" />
                         <Viewbox Height="40">
                             <RadioButton
+                            x:Name="LCRadioButton"
+                                
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.LC}}">
                                 LC
                             </RadioButton>
@@ -143,6 +147,7 @@
                             Stretch="Uniform" />
                         <Viewbox Height="40">
                             <RadioButton
+                            x:Name="BIRadioButton"
                             IsChecked="{Binding MappingEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BI}}">
                                 BI
                             </RadioButton>

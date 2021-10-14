@@ -77,17 +77,6 @@ namespace wpf_playground
             System.Windows.Point position = e.GetPosition(this);
             cursorX = position.X;
             cursorY = position.Y;
-
-
-            //double pY = position.Y;
-
-
-            //get ballPosition
-            //get top and left of ball
-
-            // Sets the position of the image to the mouse coordinates.
-            //myMouseImage.SetValue(Canvas.LeftProperty, pX);
-            //myMouseImage.SetValue(Canvas.TopProperty, pY);
         }
 
         double currentPointY;

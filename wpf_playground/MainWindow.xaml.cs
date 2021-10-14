@@ -143,12 +143,18 @@ namespace wpf_playground
             {
                 while (true)
                 {
-                    //update game time
-                    Dispatcher.Invoke(() =>
+                    try
                     {
-                        gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
-                    });
-                    Thread.Sleep(10);
+                        //update game time
+                        Dispatcher.Invoke(() =>
+                        {
+                            gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
+                        });
+                    }
+                    finally
+                    {
+                        Thread.Sleep(10);
+                    }
                 }
             });
 
@@ -408,7 +414,7 @@ namespace wpf_playground
                 if (mapping == MappingEnum.BI)
                     btnIndex = 0;
             }
-            
+
             if (btnIndex == -1)//Do nothing
                 return;
 
@@ -502,65 +508,69 @@ namespace wpf_playground
         {
             return Task.Run(async () =>
             {
-                Stopwatch triggerSw = new Stopwatch();
-                triggerSw.Start();
-
-                delayIntervalInMs = getDelayInterval();
-                //Time 
-                await Task.Delay(delayIntervalInMs);
-
-                int index = random.Next(SequenceList.Count);
-                index = SequenceList[index];
-                var targetControl = targetList[index];
-
-                int delayPQMS = -1;
-                delayPQMS = getSoa();
-
-                var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
-
-                Dispatcher.Invoke(() =>
+                try
                 {
-                    targetPQ.Enable();
-                });
+                    Stopwatch triggerSw = new Stopwatch();
+                    triggerSw.Start();
 
+                    delayIntervalInMs = getDelayInterval();
+                    //Time 
+                    await Task.Delay(delayIntervalInMs);
 
-                var pqEnded = false;                
-                while (true)
-                {
-                    if (tokenSource.Token.IsCancellationRequested)
+                    int index = random.Next(SequenceList.Count);
+                    index = SequenceList[index];
+                    var targetControl = targetList[index];
+
+                    int delayPQMS = -1;
+                    delayPQMS = getSoa();
+
+                    var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
+
+                    Dispatcher.Invoke(() =>
                     {
-                        break;
-                    }
+                        targetPQ.Enable();
+                    });
 
-                    //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
-                    if (triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + delayPQMS + delayIntervalInMs))
+
+                    var pqEnded = false;
+                    while (true)
                     {
-                        //miss
-                        Debug.WriteLine("***Missed***");
-                        Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
-
-                        Dispatcher.Invoke(() =>
+                        if (tokenSource.Token.IsCancellationRequested)
                         {
-                            targetControl.Disable();
-                        });
-                        miss();
-                        break;
-                    }
+                            break;
+                        }
 
-                    if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayIntervalInMs))
-                    {
-                        pqEnded = true;
-                        Dispatcher.Invoke(() =>
+                        //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
+                        if (triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + delayPQMS + delayIntervalInMs))
                         {
-                            targetPQ.Disable();
-                            Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
-                            targetControl.Enable();
-                            reactionSw.Restart();
-                        });
+                            //miss
+                            Debug.WriteLine("***Missed***");
+                            Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
+
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetControl.Disable();
+                            });
+                            miss();
+                            break;
+                        }
+
+                        if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayIntervalInMs))
+                        {
+                            pqEnded = true;
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetPQ.Disable();
+                                Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
+                                targetControl.Enable();
+                                reactionSw.Restart();
+                            });
+                        }
+                        await Task.Delay(10);
                     }
-                    await Task.Delay(10);
+                    cleanUp();
                 }
-                cleanUp();
+                catch { }
             });
         }
 

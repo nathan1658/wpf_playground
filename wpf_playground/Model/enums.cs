@@ -57,7 +57,7 @@ namespace wpf_playground.Model
 
     public enum MappingEnum
     {
-        BC,TC,LC,BI
+      NONE,BC,TC,LC,BI
     }
 
 }
