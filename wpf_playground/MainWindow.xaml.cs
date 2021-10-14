@@ -43,7 +43,7 @@ namespace wpf_playground
         /// </summary>
         Stopwatch gameSw = new Stopwatch();
         Random random = new Random();
-        public const double SIGNAL_VISIBLE_TIME = 200;
+        public const double SIGNAL_VISIBLE_TIME = 1000;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
@@ -175,7 +175,6 @@ namespace wpf_playground
                     finally
                     {
                         task.Dispose();
-                        cleanUp();
                         tokenSource = new CancellationTokenSource();
                     }
                 }
@@ -342,6 +341,7 @@ namespace wpf_playground
                 bouncingBall.start();
                 start();
                 IsGameStarted = true;
+                return;
             }
             bool isCorrect = false;
             reactionSw.Stop();
@@ -529,7 +529,7 @@ namespace wpf_playground
                 {
                     if (tokenSource.Token.IsCancellationRequested)
                     {
-                        return;
+                        break;
                     }
 
                     //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
@@ -544,7 +544,7 @@ namespace wpf_playground
                             targetControl.Disable();
                         });
                         miss();
-                        return;
+                        break;
                     }
 
                     if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayIntervalInMs))
@@ -560,6 +560,7 @@ namespace wpf_playground
                     }
                     await Task.Delay(10);
                 }
+                cleanUp();
             });
         }
 
