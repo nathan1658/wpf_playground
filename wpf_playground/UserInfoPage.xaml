@@ -369,8 +369,8 @@
                             Grid.Row="1"
                             Grid.Column="2" 
 >
-                        <Button Background="orange" Grid.Row="1" Command="{Binding TestCommand}" CommandParameter="4">Left</Button>
-                        <Button Background="orange" Grid.Row="1" Grid.Column="1" Command="{Binding TestCommand}" CommandParameter="5">Right</Button>
+                        <Button Background="Green" BorderBrush="Green" Grid.Row="1" Command="{Binding TestCommand}" CommandParameter="4">Left</Button>
+                        <Button Background="Green" BorderBrush="Green" Grid.Row="1" Grid.Column="1" Command="{Binding TestCommand}" CommandParameter="5">Right</Button>
 
                     </StackPanel>
                 </Grid>
