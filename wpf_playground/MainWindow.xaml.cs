@@ -37,12 +37,13 @@ namespace wpf_playground
         /// Count the time between red color and click
         /// </summary>
         Stopwatch reactionSw = new Stopwatch();
-        int delayMS;
+        int delayIntervalInMs;
         /// <summary>
         /// The timer of overall game
         /// </summary>
         Stopwatch gameSw = new Stopwatch();
         Random random = new Random();
+        public const double SIGNAL_VISIBLE_TIME = 200;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
@@ -186,7 +187,7 @@ namespace wpf_playground
         public MainWindow()
         {
             this.WindowState = WindowState.Maximized;
-            
+
             initSettingsFromConfig();
 
             new UserInfoPage().ShowDialog();
@@ -410,7 +411,7 @@ namespace wpf_playground
                 if (mapping == MappingEnum.BI)
                     btnIndex = 0;
             }
-
+            
             if (btnIndex == -1)//Do nothing
                 return;
 
@@ -492,6 +493,13 @@ namespace wpf_playground
             MessageBox.Show("Done");
         }
 
+        int getDelayInterval()
+        {
+            var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
+            var delayIndex = random.Next(0, delayIntervalList.Count);
+            return delayIntervalList[delayIndex];
+        }
+
         //Randomly pick one and trigger it.
         Task triggerControl()
         {
@@ -500,11 +508,10 @@ namespace wpf_playground
                 Stopwatch triggerSw = new Stopwatch();
                 triggerSw.Start();
 
-                var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
-                var delayIndex = random.Next(0, delayIntervalList.Count);
-                delayMS = delayIntervalList[delayIndex];
+                delayIntervalInMs = getDelayInterval();
                 //Time 
-                await Task.Delay(delayMS);
+                await Task.Delay(delayIntervalInMs);
+
                 int index = random.Next(SequenceList.Count);
                 index = SequenceList[index];
                 var targetControl = targetList[index];
@@ -525,12 +532,13 @@ namespace wpf_playground
                 {
                     if (tokenSource.Token.IsCancellationRequested)
                     {
-                        //clicked
+                        targetPQ.Disable();
+                        targetControl.Disable();
                         return;
                     }
 
                     //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
-                    if (triggerSw.ElapsedMilliseconds >= (1000 + delayPQMS + delayMS))
+                    if (triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + delayPQMS + delayIntervalInMs))
                     {
                         //miss
                         Debug.WriteLine("***Missed***");
@@ -544,14 +552,12 @@ namespace wpf_playground
                         return;
                     }
 
-                    if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayMS))
+                    if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayIntervalInMs))
                     {
                         pqEnded = true;
                         Dispatcher.Invoke(() =>
                         {
-
                             targetPQ.Disable();
-
                             Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
                             targetControl.Enable();
                             reactionSw.Restart();
@@ -571,7 +577,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Miss,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -585,7 +591,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Correct,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -599,7 +605,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Incorrect,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }

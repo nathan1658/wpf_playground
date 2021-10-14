@@ -32,28 +32,6 @@ namespace wpf_playground
 
 
         }
-        bool testAudio = false;
-        private void PQButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            testAudio = !testAudio;
-            AudioHelper.Instance.play(State.PQSpeaker.Guid, 1000, testAudio);
-        }
-
-        private void TopSpeakerButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            testAudio = !testAudio;
-            AudioHelper.Instance.play(State.TopSpeaker.Guid, 1000, testAudio);
-        }
-
-        private void BottomSpeakerButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            testAudio = !testAudio;
-            AudioHelper.Instance.play(State.BottomSpeaker.Guid, 1000, testAudio);
-        }
-
 
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
         private static bool IsTextAllowed(string text)
