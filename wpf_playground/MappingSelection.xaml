@@ -24,8 +24,8 @@
     </Window.Resources>
     <Grid>
         <materialDesign:Card
-            MaxWidth="500"
-            MaxHeight="400"
+            MaxWidth="900"
+            MaxHeight="600"
             Padding="32"
             Margin="16"
             Grid.Column="0">
@@ -82,7 +82,7 @@
                             TargetType="Image">
                             <Setter
                                 Property="Height"
-                                Value="200" />
+                                Value="300" />
                         </Style>
                         <Style
                             TargetType="RadioButton">
@@ -96,7 +96,7 @@
                         </Style>
                     </StackPanel.Resources>
                     <StackPanel
-                        Width="100">
+                        Width="150">
                         <Image
                             Source="/Resources/BCBox.Image.bmp"
                             Stretch="Uniform" />
@@ -107,7 +107,7 @@
                     </StackPanel>
 
                     <StackPanel
-                        Width="100">
+                        Width="150">
                         <Image
                             Source="/Resources/TCBox.Image.bmp"
                             Stretch="Uniform" />
@@ -117,7 +117,7 @@
                         </RadioButton>
                     </StackPanel>
                     <StackPanel
-                        Width="100">
+                        Width="150">
                         <Image
                             Source="/Resources/LCBox.Image.bmp"
                             Stretch="Uniform" />
@@ -128,7 +128,7 @@
                     </StackPanel>
 
                     <StackPanel
-                        Width="100">
+                        Width="150">
                         <Image
                             Source="/Resources/BIBox.Image.bmp"
                             Stretch="Uniform" />

@@ -12,7 +12,6 @@ namespace wpf_playground.Model
         public string SID { get; set; }
         public string Age { get; set; }
         public GenderEnum Gender { get; set; }
-        public GroupEnum Group { get; set; }
         public DominantHandEnum DominantHand { get; set; }
         public LevelEnum Level { get; set; }
         public SignalModeEnum SignalMode { get; set; }
@@ -28,7 +27,6 @@ namespace wpf_playground.Model
             result += $"SID: {SID}" + "\n";
             result += $"Age: {Age}" + "\n";
             result += $"Gender: {Gender}" + "\n";
-            result += $"Group: {Group}" + "\n";
             result += $"Dominant Hand : {DominantHand}" + "\n";
             result += $"Level : {Level}" + "\n";
             result += $"Signal Mode : {SignalMode}" + "\n";
