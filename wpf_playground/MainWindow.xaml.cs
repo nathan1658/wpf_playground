@@ -122,7 +122,7 @@ namespace wpf_playground
                 State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomLeftKey"]);
                 State.BottomRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
             }
-            catch (Exception ex)
+            catch
             {
                 //in case any of them is empty/ exception, throw and set with default mapping
 

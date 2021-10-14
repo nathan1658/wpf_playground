@@ -33,7 +33,7 @@ namespace wpf_playground
 
         // Using a DependencyProperty as the backing store for ButtonColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ButtonColorProperty =
-            DependencyProperty.Register("ButtonColor", typeof(string), typeof(SpeakerSelector));
+            DependencyProperty.Register("ButtonColor", typeof(string), typeof(SpeakerSelector),new PropertyMetadata("Purple"));
 
 
 

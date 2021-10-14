@@ -28,13 +28,22 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition
-                Width="400" />
+                Width="auto" />
             <ColumnDefinition
                 Width="*" />
 
         </Grid.ColumnDefinitions>
-        <StackPanel   Grid.Column="0">
-
+        <StackPanel  Width="400"  Grid.Column="0">
+            <StackPanel.Resources>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Resources>
             <materialDesign:Card
             Padding="32"
             Margin="16"
