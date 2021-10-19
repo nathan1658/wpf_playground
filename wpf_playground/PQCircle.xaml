@@ -9,6 +9,7 @@
     <Ellipse
         Height="3cm"
         Width="3cm"
+        Stroke="Black"
         x:Name="control">
 
         <Ellipse.Style>

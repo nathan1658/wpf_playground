@@ -206,13 +206,14 @@ namespace wpf_playground
 
         void initVisualCircle()
         {
-            Func<HorizontalAlignment, VerticalAlignment, String, MyBaseUserControl> genCircle = (horizontalAlignment, verticalAlignment, text) =>
+            Func<int, int, String, MyBaseUserControl> genCircle = (row, column, text) =>
                {
                    var grid = new Grid
                    {
-                       HorizontalAlignment = horizontalAlignment,
-                       VerticalAlignment = verticalAlignment
                    };
+                   Grid.SetRow(grid, row);
+                   Grid.SetColumn(grid, column);
+
                    var circle = new Circle();
                    grid.Children.Add(circle);
 
@@ -229,13 +230,14 @@ namespace wpf_playground
                    gameBoard.Children.Add(grid);
                    return circle;
                };
+            
             //Init the control list here
             targetList = new List<MyBaseUserControl>
             {
-                genCircle(HorizontalAlignment.Left, VerticalAlignment.Top, "0"),
-                genCircle(HorizontalAlignment.Right, VerticalAlignment.Top, "1"),
-                genCircle(HorizontalAlignment.Left, VerticalAlignment.Bottom, "2"),
-                genCircle(HorizontalAlignment.Right, VerticalAlignment.Bottom, "3"),
+                genCircle(0, 0, "0"),
+                genCircle(0, 2, "1"),
+                genCircle(2, 0, "2"),
+                genCircle(2, 2, "3"),
             };
         }
 
@@ -243,11 +245,13 @@ namespace wpf_playground
 
         void initPqCircle()
         {
-            Func<HorizontalAlignment, String, PQCircle> genCircleAndAddtoBoard = (alignment, val) =>
+            Func<int,int, String, PQCircle> genCircleAndAddtoBoard = (row,column, val) =>
               {
                   var grid1 = new Grid();
-                  grid1.HorizontalAlignment = alignment;
+                  Grid.SetRow(grid1, row);
+                  Grid.SetColumn(grid1, column);
                   grid1.VerticalAlignment = VerticalAlignment.Center;
+                  grid1.HorizontalAlignment = HorizontalAlignment.Center;
 
                   PQCircle circle1 = new PQCircle();
 
@@ -265,8 +269,8 @@ namespace wpf_playground
                   gameBoard.Children.Add(grid1);
                   return circle1;
               };
-            var leftCircle = genCircleAndAddtoBoard(HorizontalAlignment.Left, "1");
-            var rightCircle = genCircleAndAddtoBoard(HorizontalAlignment.Right, "2");
+            var leftCircle = genCircleAndAddtoBoard(1,0, "1");
+            var rightCircle = genCircleAndAddtoBoard(1,2, "2");
             leftPQ = leftCircle;
             rightPQ = rightCircle;
         }
