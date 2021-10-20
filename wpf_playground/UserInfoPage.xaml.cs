@@ -428,41 +428,22 @@ namespace wpf_playground
             {
                 var config = new Config();
 
-                config.TopAuditorySpeaker = new SpeakerConfig
+                Action<string, string, DirectSoundDeviceInfo> updateConfig = new Action<string, string, DirectSoundDeviceInfo>((configName, hzValue, deviceInfo) =>
                 {
-                    Hz = TopSpeakerHz,
-                    SpeakerGuid = SelectedTopSpeakerSoundDevice?.Guid.ToString()
-                };
+                        var configProp= config.GetType().GetProperty(configName);
+                        configProp.SetValue(config, new SpeakerConfig{
+                             Hz= hzValue,
+                             SpeakerGuid = deviceInfo?.Guid.ToString()
+                        });
+                });
 
-                config.PQAuditorySpeaker = new SpeakerConfig
-                {
-                    Hz = PQHz,
-                    SpeakerGuid = SelectedPQSoundDevice?.Guid.ToString()
-                };
+                updateConfig(nameof(Config.TopAuditorySpeaker), TopSpeakerHz, SelectedTopSpeakerSoundDevice);
+                updateConfig(nameof(Config.PQAuditorySpeaker), PQHz, SelectedPQSoundDevice);
+                updateConfig(nameof(Config.BottomAuditorySpeaker), BottomSpeakerHz, SelectedBottomSpeakerSoundDevice);
 
-                config.BottomAuditorySpeaker = new SpeakerConfig
-                {
-                    Hz = BottomSpeakerHz,
-                    SpeakerGuid = SelectedBottomSpeakerSoundDevice?.Guid.ToString()
-                };
-
-                config.TopTactileSpeaker = new SpeakerConfig
-                {
-                    Hz = TactileTopSpeakerHz,
-                    SpeakerGuid = SelectedTactileTopSpeakerSoundDevice?.Guid.ToString()
-                };
-
-                config.PQTactileSpeaker = new SpeakerConfig
-                {
-                    Hz = TactilePQHz,
-                    SpeakerGuid = SelectedTactilePQSoundDevice?.Guid.ToString()
-                };
-
-                config.BottomTactileSpeaker = new SpeakerConfig
-                {
-                    Hz = TactileBottomSpeakerHz,
-                    SpeakerGuid = SelectedTactileBottomSpeakerSoundDevice?.Guid.ToString()
-                };
+                updateConfig(nameof(Config.TopTactileSpeaker), TactileTopSpeakerHz, SelectedTactileTopSpeakerSoundDevice);
+                updateConfig(nameof(Config.PQTactileSpeaker), TactilePQHz, SelectedTactilePQSoundDevice);
+                updateConfig(nameof(Config.BottomTactileSpeaker), TactileBottomSpeakerHz, SelectedTactileBottomSpeakerSoundDevice);
 
                 //Write it to file
                 var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(config);
