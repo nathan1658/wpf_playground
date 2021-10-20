@@ -30,7 +30,7 @@
             </TextBox>
 
 
-            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SoundDeviceList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedSoundDevice, ElementName=speakerSelector}" ></ComboBox>
+            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SoundDeviceList}" DisplayMemberPath="Description" SelectedItem="{Binding SelectedSoundDevice, ElementName=speakerSelector,Mode=TwoWay}" ></ComboBox>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2">
                 <Button 

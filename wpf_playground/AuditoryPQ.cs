@@ -14,12 +14,12 @@ namespace wpf_playground
         private SineWaveProvider32 sineWaveProvider;
         private DirectSoundOut outputDevice;
 
-        public AuditoryPQ(bool isLeft)
+        public AuditoryPQ(bool isLeft, int hz, Guid deviceGuid)
         {
             this.IsLeft = isLeft;
             sineWaveProvider = new SineWaveProvider32();
             sineWaveProvider.SetWaveFormat(16000, 1); // 16kHz mono
-            sineWaveProvider.Frequency = State.UserInfo.PQHz;
+            sineWaveProvider.Frequency = hz;
             sineWaveProvider.Amplitude = 0.55f;
             var sampleProvider = sineWaveProvider.ToSampleProvider();
 
@@ -29,7 +29,7 @@ namespace wpf_playground
 
 
 
-            outputDevice = new DirectSoundOut(State.PQSpeaker.Guid);
+            outputDevice = new DirectSoundOut(deviceGuid);
             outputDevice.Init(stereo);
 
         }

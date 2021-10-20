@@ -107,49 +107,49 @@ namespace wpf_playground
         void start()
         {
             gameSw.Start();
-         Task.Run(() =>
-            {
-                while (!gameEnd)
-                {
-                    try
-                    {
-                        //update game time
-                        Dispatcher.Invoke(() =>
-                        {
-                            gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
-                        });
-                    }
-                    finally
-                    {
-                        Thread.Sleep(10);
-                    }
-                }
-            });
+            Task.Run(() =>
+               {
+                   while (!gameEnd)
+                   {
+                       try
+                       {
+                           //update game time
+                           Dispatcher.Invoke(() =>
+                              {
+                                  gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
+                              });
+                       }
+                       finally
+                       {
+                           Thread.Sleep(10);
+                       }
+                   }
+               });
 
-         Task.Run(async () =>
-            {
-                while (!gameEnd)
-                {
-                    if (SequenceList.Count <= 0)
-                    {
-                        finishedAllSequence();
-                    }
+            Task.Run(async () =>
+               {
+                   while (!gameEnd)
+                   {
+                       if (SequenceList.Count <= 0)
+                       {
+                           finishedAllSequence();
+                       }
 
-                    //start the red ball logic here
-                    var task = triggerControl();
-                    try
-                    {
-                        await task;
-                    }
-                    catch { }
-                    finally
-                    {
-                        task.Dispose();
-                        tokenSource = new CancellationTokenSource();
-                    }
-                }
-            });
-            
+                       //start the red ball logic here
+                       var task = triggerControl();
+                       try
+                       {
+                           await task;
+                       }
+                       catch { }
+                       finally
+                       {
+                           task.Dispose();
+                           tokenSource = new CancellationTokenSource();
+                       }
+                   }
+               });
+
         }
         bool practiceMode = false;
         MappingEnum mapping = MappingEnum.NONE;
@@ -159,7 +159,7 @@ namespace wpf_playground
             this.mapping = mapping;
             initSequenceList();
 
-        
+
             this.WindowState = WindowState.Maximized;
             this.DataContext = this;
             InitializeComponent();
@@ -167,22 +167,31 @@ namespace wpf_playground
 
             if (UserInfo.SignalMode == SignalModeEnum.Visual)
             {
-                initVisualCircle();
+                initVisualSignal();
             }
 
             if (UserInfo.SignalMode == SignalModeEnum.Auditory)
             {
-                initAuditoryTarget();
+                initAuditorySignal();
+            }
+
+            if (UserInfo.SignalMode == SignalModeEnum.Tactile)
+            {
+                initTactileSignal();
             }
 
 
             if (UserInfo.PQMode == PQModeEnum.Visual)
             {
-                initPqCircle();
+                initVisualPQ();
             }
             if (UserInfo.PQMode == PQModeEnum.Auditory)
             {
-                initAuditoryCircle();
+                initAuditoryPQ();
+            }
+            if(UserInfo.PQMode == PQModeEnum.Tactile)
+            {
+                initTactilePQ();
             }
 
 
@@ -192,7 +201,10 @@ namespace wpf_playground
             MappingImageSrc = $"/Resources/{mapping}Box.Image.bmp";
 
         }
-        void initAuditoryTarget()
+
+        #region init signal region
+
+        void initAuditorySignal()
         {
             //Init the control list here
             targetList = new List<MyBaseUserControl>
@@ -204,7 +216,19 @@ namespace wpf_playground
             };
         }
 
-        void initVisualCircle()
+        void initTactileSignal()
+        {
+            //Init the control list here
+            targetList = new List<MyBaseUserControl>
+            {
+                new AuditoryTarget(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, true),
+                new AuditoryTarget(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, false),
+                new AuditoryTarget(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, true),
+                new AuditoryTarget(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, false),
+            };
+        }
+
+        void initVisualSignal()
         {
             Func<int, int, String, MyBaseUserControl> genCircle = (row, column, text) =>
                {
@@ -230,7 +254,7 @@ namespace wpf_playground
                    gameBoard.Children.Add(grid);
                    return circle;
                };
-            
+
             //Init the control list here
             targetList = new List<MyBaseUserControl>
             {
@@ -241,45 +265,58 @@ namespace wpf_playground
             };
         }
 
+        #endregion
+
         #region  PQ sections
 
-        void initPqCircle()
+        void initVisualPQ()
         {
-            Func<int,int, String, PQCircle> genCircleAndAddtoBoard = (row,column, val) =>
-              {
-                  var grid1 = new Grid();
-                  Grid.SetRow(grid1, row);
-                  Grid.SetColumn(grid1, column);
-                  grid1.VerticalAlignment = VerticalAlignment.Center;
-                  grid1.HorizontalAlignment = HorizontalAlignment.Center;
+            Func<int, int, String, PQCircle> genCircleAndAddtoBoard = (row, column, val) =>
+               {
+                   var grid1 = new Grid();
+                   Grid.SetRow(grid1, row);
+                   Grid.SetColumn(grid1, column);
+                   grid1.VerticalAlignment = VerticalAlignment.Center;
+                   grid1.HorizontalAlignment = HorizontalAlignment.Center;
 
-                  PQCircle circle1 = new PQCircle();
+                   PQCircle circle1 = new PQCircle();
 
-                  grid1.Children.Add(circle1);
+                   grid1.Children.Add(circle1);
 
-                  if (IsDebugMode)
-                  {
-                      TextBlock tb1 = new TextBlock();
-                      tb1.HorizontalAlignment = HorizontalAlignment.Center;
-                      tb1.VerticalAlignment = VerticalAlignment.Center;
-                      tb1.Text = val;
-                      grid1.Children.Add(tb1);
-                  }
+                   if (IsDebugMode)
+                   {
+                       TextBlock tb1 = new TextBlock();
+                       tb1.HorizontalAlignment = HorizontalAlignment.Center;
+                       tb1.VerticalAlignment = VerticalAlignment.Center;
+                       tb1.Text = val;
+                       grid1.Children.Add(tb1);
+                   }
 
-                  gameBoard.Children.Add(grid1);
-                  return circle1;
-              };
-            var leftCircle = genCircleAndAddtoBoard(1,0, "1");
-            var rightCircle = genCircleAndAddtoBoard(1,2, "2");
+                   gameBoard.Children.Add(grid1);
+                   return circle1;
+               };
+            var leftCircle = genCircleAndAddtoBoard(1, 0, "1");
+            var rightCircle = genCircleAndAddtoBoard(1, 2, "2");
             leftPQ = leftCircle;
             rightPQ = rightCircle;
         }
 
-        void initAuditoryCircle()
+        void initAuditoryPQ()
         {
-            leftPQ = new AuditoryPQ(true);
-            rightPQ = new AuditoryPQ(false);
+            var guid = State.PQSpeaker.Guid;
+            var hz = State.UserInfo.PQHz;
+            leftPQ = new AuditoryPQ(true,hz,guid );
+            rightPQ = new AuditoryPQ(false,hz,guid);
         }
+
+        void initTactilePQ()
+        {
+            var guid = State.TactilePQSpeaker.Guid;
+            var hz = State.UserInfo.TactilePQHz;
+            leftPQ = new AuditoryPQ(true, hz, guid);
+            rightPQ = new AuditoryPQ(false, hz, guid);
+        }
+
         #endregion
 
         void initSequenceList()
@@ -312,7 +349,7 @@ namespace wpf_playground
                 if (practiceMode)
                 {
                     MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
-               
+
                 }
                 else
                 {
@@ -630,6 +667,6 @@ namespace wpf_playground
 
             });
         }
- 
+
     }
 }

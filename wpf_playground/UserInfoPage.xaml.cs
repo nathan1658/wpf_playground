@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -47,9 +48,56 @@ namespace wpf_playground
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
+        private const string CONFIG_FILE_NAME = "config.json";
+
+
+        //try to load config from json file and apply those settings
+        void loadConfig()
+        {
+
+            try
+            {
+                var jsonPayload = File.ReadAllText($"./{CONFIG_FILE_NAME}");
+                var config = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(jsonPayload);
+
+
+                Action<SpeakerConfig, string, string> updateProperty = new Action<SpeakerConfig, string, string>((speakerConfig, hzPropName, guidPropName) =>
+                {
+                    if (speakerConfig == null) return;
+                    if (!string.IsNullOrEmpty(speakerConfig.Hz))
+                    {
+                        var hzProp = this.GetType().GetProperty(hzPropName);
+                        hzProp.SetValue(this, speakerConfig.Hz);
+                    }
+
+                    if (!string.IsNullOrEmpty(speakerConfig.SpeakerGuid))
+                    {
+                        var guidProp = this.GetType().GetProperty(guidPropName);
+                        var targetDevice = SoundDeviceList.FirstOrDefault(x => x.Guid.ToString() == speakerConfig.SpeakerGuid);
+                        guidProp.SetValue(this, targetDevice );
+                    }
+                });
+
+                updateProperty(config.TopAuditorySpeaker, nameof(TopSpeakerHz), nameof(SelectedTopSpeakerSoundDevice));
+                updateProperty(config.PQAuditorySpeaker, nameof(PQHz), nameof(SelectedPQSoundDevice));
+                updateProperty(config.BottomAuditorySpeaker, nameof(BottomSpeakerHz), nameof(SelectedBottomSpeakerSoundDevice));
+
+                updateProperty(config.TopTactileSpeaker, nameof(TactileTopSpeakerHz), nameof(SelectedTactileTopSpeakerSoundDevice));
+                updateProperty(config.PQTactileSpeaker, nameof(TactilePQHz), nameof(SelectedTactilePQSoundDevice));
+                updateProperty(config.BottomTactileSpeaker, nameof(TactileBottomSpeakerHz), nameof(SelectedTactileBottomSpeakerSoundDevice));
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to load config.");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+        }
+
         public UserInfoPageViewModel()
         {
-             SoundDeviceList= DirectSoundOut.Devices.ToList();
+            SoundDeviceList = DirectSoundOut.Devices.ToList();
+            loadConfig();
         }
 
         public UserInfo UserInfo
@@ -202,7 +250,7 @@ namespace wpf_playground
 
         }
 
-        
+
 
         private DirectSoundDeviceInfo _selectedPQSoundDevice;
         public DirectSoundDeviceInfo SelectedPQSoundDevice
@@ -374,6 +422,59 @@ namespace wpf_playground
             }
         }
 
+        void saveConfig()
+        {
+            try
+            {
+                var config = new Config();
+
+                config.TopAuditorySpeaker = new SpeakerConfig
+                {
+                    Hz = TopSpeakerHz,
+                    SpeakerGuid = SelectedTopSpeakerSoundDevice?.Guid.ToString()
+                };
+
+                config.PQAuditorySpeaker = new SpeakerConfig
+                {
+                    Hz = PQHz,
+                    SpeakerGuid = SelectedPQSoundDevice?.Guid.ToString()
+                };
+
+                config.BottomAuditorySpeaker = new SpeakerConfig
+                {
+                    Hz = BottomSpeakerHz,
+                    SpeakerGuid = SelectedBottomSpeakerSoundDevice?.Guid.ToString()
+                };
+
+                config.TopTactileSpeaker = new SpeakerConfig
+                {
+                    Hz = TactileTopSpeakerHz,
+                    SpeakerGuid = SelectedTactileTopSpeakerSoundDevice?.Guid.ToString()
+                };
+
+                config.PQTactileSpeaker = new SpeakerConfig
+                {
+                    Hz = TactilePQHz,
+                    SpeakerGuid = SelectedTactilePQSoundDevice?.Guid.ToString()
+                };
+
+                config.BottomTactileSpeaker = new SpeakerConfig
+                {
+                    Hz = TactileBottomSpeakerHz,
+                    SpeakerGuid = SelectedTactileBottomSpeakerSoundDevice?.Guid.ToString()
+                };
+
+                //Write it to file
+                var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(config);
+                File.WriteAllText($"./{CONFIG_FILE_NAME}", jsonPayload);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error when writing config file.");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+
+        }
 
 
 
@@ -385,6 +486,8 @@ namespace wpf_playground
             {
                 return _clickCommand ?? (_clickCommand = new CommandHandler(() =>
                 {
+                    saveConfig();
+
                     CloseAction();
                 }, () => true));
             }
