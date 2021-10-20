@@ -5,50 +5,83 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:wpf_playground"
-   Background="White"
+    Background="White"
     mc:Ignorable="d">
     <Grid
-      
-        >
-        <Border BorderBrush="Black"
-                        BorderThickness="4"
-                        >
-        </Border>
+ >
+        <Border
+            BorderBrush="Black"
+            BorderThickness="4"></Border>
         <Canvas
-          Margin="4"
+            Margin="4"
             Height="13cm"
             Width="13cm"
             x:Name="board"
+            Background="Transparent"
             MouseMove="Board_MouseMove">
-            <Ellipse
+            <Grid
+                IsHitTestVisible="False"
                 x:Name="ball"
                 Height="0.5cm"
                 Width="0.5cm"
-                Fill="Red"
-                Canvas.Left="0"
-                Canvas.Top="0">
-            </Ellipse>
-            <Ellipse                
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Ellipse
+                    Height="0.5cm"
+                    Width="0.5cm"
+                    Stroke="Black"></Ellipse>
+                <Line
+                    X1="0cm"
+                    Y1="0.25cm"
+                    X2="0.5cm"
+                    Y2="0.25cm"
+                    Stroke="Black"
+                    StrokeThickness="1" />
+                <Line
+                    X1="0.25cm"
+                    Y1="0cm"
+                    X2="0.25cm"
+                    Y2="0.5cm"
+                    Stroke="Black"
+                    StrokeThickness="1" />
+            </Grid>
+            <Grid
+                IsHitTestVisible="False"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 x:Name="jBall"
-                Height="0.5cm"
+                Height="0.5cm"                
                 Width="0.5cm"
-                Fill="blue"
-                Canvas.Left="0"
-                Canvas.Top="0">
-            </Ellipse>
+             >
+                
+                <Line
+                    X1="0cm"
+                    Y1="0.25cm"
+                    X2="0.5cm"
+                    Y2="0.25cm"
+                    Stroke="Black"
+                    StrokeThickness="1" />
+                <Line
+                    X1="0.25cm"
+                    Y1="0cm"
+                    X2="0.25cm"
+                    Y2="0.5cm"
+                    Stroke="Black"
+                    StrokeThickness="1" />
+            </Grid>
         </Canvas>
         <TextBlock
             IsHitTestVisible="False"
             x:Name="cursorValue"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
-           DEFAULT
-        </TextBlock>
-
+           DEFAULT</TextBlock>
         <StackPanel
+            IsHitTestVisible="False"
+            Margin="4"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Grid.Column="1">
+            >
             <TextBlock
                 Text="{Binding XVal}" />
             <TextBlock

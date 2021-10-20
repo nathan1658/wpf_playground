@@ -21,6 +21,7 @@ namespace wpf_playground
     {
         public UserInfoPage()
         {
+            this.WindowState = WindowState.Maximized;
             InitializeComponent();
             var vm = new UserInfoPageViewModel();
             vm.CloseAction = () =>
