@@ -23,16 +23,19 @@
         <converter:ListToStringConverter
             x:Key="listToStringConverter" />
     </Window.Resources>
-    <Grid>
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
 
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 Width="auto" />
             <ColumnDefinition
-                Width="*" />
+                Width="auto" />
 
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <StackPanel  Width="400"  Grid.Column="0">
             <StackPanel.Resources>
                 <Style TargetType="StackPanel">
@@ -83,9 +86,10 @@
         </StackPanel>
 
         <materialDesign:Card
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
             Margin="16"     
-            Height="19cm"
-                Width="19cm"
+            Padding="16"
             Grid.Column="1">
             <materialDesign:Card.Resources>
                 <Style TargetType="TextBlock"
@@ -99,19 +103,28 @@
                 </Style>
             </materialDesign:Card.Resources>
             <Grid
+                
               >
-                <Grid
+                <Grid                    
                       x:Name="gameBoard"
-                    Background="Gray"
                     >
 
-
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
                     <local:BouncingBall
+                        Grid.Row="1"
+                        Grid.Column="1"
                         x:Name="bouncingBall"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
-
-
 
 
                     <TextBlock
@@ -142,6 +155,8 @@
                     x:Name="gameCounter"
                      />
                 </StackPanel>
+                
+                <!-- Press any key to start message -->
                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,5cm,0,0">
                     <TextBlock.Resources>
                         <Style TargetType="TextBlock">

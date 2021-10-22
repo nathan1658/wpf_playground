@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace wpf_playground
 {
-    public partial class PQCircle : MyBaseUserControl
+    public partial class VisualPQ : MyBaseUserControl
     {
-        public PQCircle()
+        public VisualPQ()
         {
             InitializeComponent();
             this.DataContext = this;

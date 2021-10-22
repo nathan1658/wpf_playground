@@ -18,9 +18,9 @@ namespace wpf_playground
     /// <summary>
     /// Interaction logic for Circle.xaml
     /// </summary>
-    public partial class Circle : MyBaseUserControl
+    public partial class VisualSignal : MyBaseUserControl
     {
-        public Circle()
+        public VisualSignal()
         {
             InitializeComponent();
             this.DataContext = this;

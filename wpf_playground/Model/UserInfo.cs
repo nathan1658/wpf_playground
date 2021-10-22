@@ -14,8 +14,15 @@ namespace wpf_playground.Model
         public GenderEnum Gender { get; set; }
         public DominantHandEnum DominantHand { get; set; }
         public LevelEnum Level { get; set; }
-        public SignalModeEnum SignalMode { get; set; }
-        public PQModeEnum PQMode { get; set; }
+
+        public bool SignalVisualChecked { get; set; }
+        public bool SignalAuditoryChecked { get; set; }
+        public bool SignalTactileChecked { get; set; }
+
+        public bool PQVisualChecked { get; set; }
+        public bool PQAuditoryChecked { get; set; }
+        public bool PQTactileChecked { get; set; }
+
         public SOAEnum SOA { get; set; }
         public int PQHz { get; set; } = 1000;
         public int TopSpeakerHz { get; set; } = 1000;
@@ -32,8 +39,6 @@ namespace wpf_playground.Model
             result += $"Gender: {Gender}" + "\n";
             result += $"Dominant Hand : {DominantHand}" + "\n";
             result += $"Level : {Level}" + "\n";
-            result += $"Signal Mode : {SignalMode}" + "\n";
-            result += $"PQ Mode : {PQMode}" + "\n";
             result += $"SOA : {SOA}" + "\n";
             result += $"PQ Hz : {PQHz}" + "\n";
             result += $"Top Speaker Hz : {TopSpeakerHz}" + "\n";
