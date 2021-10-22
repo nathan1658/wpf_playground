@@ -43,6 +43,7 @@ namespace wpf_playground
         Stopwatch gameSw = new Stopwatch();
         Random random = new Random();
         public const double SIGNAL_VISIBLE_TIME = 1000;
+        public const double PQ_VISIBLE_TIME = 200;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
@@ -594,8 +595,7 @@ namespace wpf_playground
                     if (UserInfo.SignalTactileChecked)
                         targetControlList.Add(tactileSignalList[index]);
 
-                    int delayPQMS = -1;
-                    delayPQMS = getSoa();
+                    int soa = getSoa();
 
                     var targetPQList = new List<MyBaseUserControl>();
 
@@ -612,7 +612,8 @@ namespace wpf_playground
                     });
 
 
-                    var pqEnded = false;
+                    var pqTriggered = false;
+                    var signalTriggred = false;
                     while (true)
                     {
                         if (tokenSource.Token.IsCancellationRequested)
@@ -620,8 +621,38 @@ namespace wpf_playground
                             break;
                         }
 
-                        //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
-                        if (triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + delayPQMS + delayIntervalInMs))
+                        if(!pqTriggered)
+                        {
+                            pqTriggered = true;
+
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetPQList.ForEach(x => x.Enable());
+                            });
+                        }
+
+                        if(pqTriggered && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs+ PQ_VISIBLE_TIME))
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetPQList.ForEach(x => x.Disable());
+                            });
+                        }
+
+                        if(!signalTriggred && triggerSw.ElapsedMilliseconds >=( delayIntervalInMs + soa))
+                        {
+                            signalTriggred = true;
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetControlList.ForEach(x => x.Enable());
+                            });
+                            canClick = true;
+                            reactionSw.Restart();
+                        }
+
+
+                        //pq time  1000 (Signal visible time) + SOA (0.2/0.6/0.8) + + delay (1-4s)
+                        if (signalTriggred && triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + soa + delayIntervalInMs))
                         {
                             //miss
                             Debug.WriteLine("***Missed***");
@@ -634,19 +665,7 @@ namespace wpf_playground
                             miss();
                             break;
                         }
-
-                        if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayIntervalInMs))
-                        {
-                            pqEnded = true;
-                            Dispatcher.Invoke(() =>
-                            {
-                                targetPQList.ForEach(x => x.Disable());
-                                Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
-                                targetControlList.ForEach(x => x.Enable());
-                                canClick = true;
-                                reactionSw.Restart();
-                            });
-                        }
+ 
                         await Task.Delay(10);
                     }
                     cleanUp();
