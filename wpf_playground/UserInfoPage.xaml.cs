@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -21,6 +22,7 @@ namespace wpf_playground
     {
         public UserInfoPage()
         {
+            this.WindowState = WindowState.Maximized;
             InitializeComponent();
             var vm = new UserInfoPageViewModel();
             vm.CloseAction = () =>
@@ -46,9 +48,56 @@ namespace wpf_playground
     }
     public class UserInfoPageViewModel : INotifyPropertyChanged
     {
+        private const string CONFIG_FILE_NAME = "config.json";
+
+
+        //try to load config from json file and apply those settings
+        void loadConfig()
+        {
+
+            try
+            {
+                var jsonPayload = File.ReadAllText($"./{CONFIG_FILE_NAME}");
+                var config = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(jsonPayload);
+
+
+                Action<SpeakerConfig, string, string> updateProperty = new Action<SpeakerConfig, string, string>((speakerConfig, hzPropName, guidPropName) =>
+                {
+                    if (speakerConfig == null) return;
+                    if (!string.IsNullOrEmpty(speakerConfig.Hz))
+                    {
+                        var hzProp = this.GetType().GetProperty(hzPropName);
+                        hzProp.SetValue(this, speakerConfig.Hz);
+                    }
+
+                    if (!string.IsNullOrEmpty(speakerConfig.SpeakerGuid))
+                    {
+                        var guidProp = this.GetType().GetProperty(guidPropName);
+                        var targetDevice = SoundDeviceList.FirstOrDefault(x => x.Guid.ToString() == speakerConfig.SpeakerGuid);
+                        guidProp.SetValue(this, targetDevice);
+                    }
+                });
+
+                updateProperty(config.TopAuditorySpeaker, nameof(TopSpeakerHz), nameof(SelectedTopSpeakerSoundDevice));
+                updateProperty(config.PQAuditorySpeaker, nameof(PQHz), nameof(SelectedPQSoundDevice));
+                updateProperty(config.BottomAuditorySpeaker, nameof(BottomSpeakerHz), nameof(SelectedBottomSpeakerSoundDevice));
+
+                updateProperty(config.TopTactileSpeaker, nameof(TactileTopSpeakerHz), nameof(SelectedTactileTopSpeakerSoundDevice));
+                updateProperty(config.PQTactileSpeaker, nameof(TactilePQHz), nameof(SelectedTactilePQSoundDevice));
+                updateProperty(config.BottomTactileSpeaker, nameof(TactileBottomSpeakerHz), nameof(SelectedTactileBottomSpeakerSoundDevice));
+
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to load config.");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+        }
+
         public UserInfoPageViewModel()
         {
-             SoundDeviceList= DirectSoundOut.Devices.ToList();
+            SoundDeviceList = DirectSoundOut.Devices.ToList();
+            loadConfig();
         }
 
         public UserInfo UserInfo
@@ -99,6 +148,8 @@ namespace wpf_playground
             get
             {
                 var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, };
+                if (!AtLeastOnePQChecked) return false;
+                if (!AtLeastOneSignalChecked) return false;
                 return !list.Any(x => string.IsNullOrEmpty(x));
             }
         }
@@ -130,8 +181,8 @@ namespace wpf_playground
             }
         }
 
-        private string _age;
 
+        private string _age;
         public string Age
         {
             get { return _age; }
@@ -201,7 +252,7 @@ namespace wpf_playground
 
         }
 
-        
+
 
         private DirectSoundDeviceInfo _selectedPQSoundDevice;
         public DirectSoundDeviceInfo SelectedPQSoundDevice
@@ -332,33 +383,110 @@ namespace wpf_playground
             }
         }
 
-        private SignalModeEnum signalModeEnum = SignalModeEnum.Visual;
 
-        public SignalModeEnum SignalModeEnum
+        private bool _signalVisualChecked;
+
+        public bool SignalVisualChecked
         {
-            get { return signalModeEnum; }
+            get { return _signalVisualChecked; }
             set
             {
-                signalModeEnum = value;
-                UserInfo.SignalMode = value;
-                InformPropertyChanged("SignalModeEnum");
+                _signalVisualChecked = value;
+                UserInfo.SignalVisualChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("SignalVisualChecked");
+            }
+        }
+
+        private bool _signalAuditoryChecked;
+
+        public bool SignalAuditoryChecked
+        {
+            get { return _signalAuditoryChecked; }
+            set
+            {
+                _signalAuditoryChecked = value;
+                UserInfo.SignalAuditoryChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("SignalAuditoryChecked");
+            }
+        }
+
+        private bool _signalTactileChecked;
+
+        public bool SignalTactileChecked
+        {
+            get { return _signalTactileChecked; }
+            set
+            {
+                _signalTactileChecked = value;
+                UserInfo.SignalTactileChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("SignalTactileChecked");
             }
         }
 
 
 
-        private PQModeEnum pQModeEnum = PQModeEnum.Visual;
+        private bool _pqVisualChecked;
 
-        public PQModeEnum PQModeEnum
+        public bool PQVisualChecked
         {
-            get { return pQModeEnum; }
+            get { return _pqVisualChecked; }
             set
             {
-                pQModeEnum = value;
-                UserInfo.PQMode = value;
-                InformPropertyChanged("PQModeEnum");
+                _pqVisualChecked = value;
+                UserInfo.PQVisualChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("PQVisualChecked");
             }
         }
+
+        private bool _pqAuditoryChecked;
+
+        public bool PQAuditoryChecked
+        {
+            get { return _pqAuditoryChecked; }
+            set
+            {
+                _pqAuditoryChecked = value;
+                UserInfo.PQAuditoryChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("PQAuditoryChecked");
+            }
+        }
+
+        private bool _pqTactileChecked;
+
+        public bool PQTactileChecked
+        {
+            get { return _pqTactileChecked; }
+            set
+            {
+                _pqTactileChecked = value;
+                UserInfo.PQTactileChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("PQTactileChecked");
+            }
+        }
+
+        public bool AtLeastOneSignalChecked
+        {
+            get
+            {
+                return SignalAuditoryChecked || SignalVisualChecked || SignalTactileChecked;
+            }
+        }
+
+        public bool AtLeastOnePQChecked
+        {
+            get
+            {
+                return PQVisualChecked || PQAuditoryChecked || PQTactileChecked;
+            }
+        }
+
+
 
         private SOAEnum soaEnum = SOAEnum.Soa200;
 
@@ -373,6 +501,41 @@ namespace wpf_playground
             }
         }
 
+        void saveConfig()
+        {
+            try
+            {
+                var config = new Config();
+
+                Action<string, string, DirectSoundDeviceInfo> updateConfig = new Action<string, string, DirectSoundDeviceInfo>((configName, hzValue, deviceInfo) =>
+                {
+                    var configProp = config.GetType().GetProperty(configName);
+                    configProp.SetValue(config, new SpeakerConfig
+                    {
+                        Hz = hzValue,
+                        SpeakerGuid = deviceInfo?.Guid.ToString()
+                    });
+                });
+
+                updateConfig(nameof(Config.TopAuditorySpeaker), TopSpeakerHz, SelectedTopSpeakerSoundDevice);
+                updateConfig(nameof(Config.PQAuditorySpeaker), PQHz, SelectedPQSoundDevice);
+                updateConfig(nameof(Config.BottomAuditorySpeaker), BottomSpeakerHz, SelectedBottomSpeakerSoundDevice);
+
+                updateConfig(nameof(Config.TopTactileSpeaker), TactileTopSpeakerHz, SelectedTactileTopSpeakerSoundDevice);
+                updateConfig(nameof(Config.PQTactileSpeaker), TactilePQHz, SelectedTactilePQSoundDevice);
+                updateConfig(nameof(Config.BottomTactileSpeaker), TactileBottomSpeakerHz, SelectedTactileBottomSpeakerSoundDevice);
+
+                //Write it to file
+                var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(config);
+                File.WriteAllText($"./{CONFIG_FILE_NAME}", jsonPayload);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error when writing config file.");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+
+        }
 
 
 
@@ -384,6 +547,8 @@ namespace wpf_playground
             {
                 return _clickCommand ?? (_clickCommand = new CommandHandler(() =>
                 {
+                    saveConfig();
+
                     CloseAction();
                 }, () => true));
             }

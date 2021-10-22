@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace wpf_playground
 {
-    public class AuditoryTarget : MyBaseUserControl
+    public class AuditorySignal : MyBaseUserControl
     {
         public bool IsLeft { get; set; }
-        private SineWaveProvider32 sineWaveProvider;
-        private DirectSoundOut outputDevice;
-        private DirectSoundDeviceInfo deviceInfo;
-        private float _frequency;
-        private bool initialized = false;
+        internal SineWaveProvider32 sineWaveProvider;
+        internal DirectSoundOut outputDevice;
+        internal DirectSoundDeviceInfo deviceInfo;
+        internal float _frequency;
+        internal bool initialized = false;
         public float Frequency
         {
             get
@@ -49,7 +49,7 @@ namespace wpf_playground
             outputDevice.Init(stereo);
         }
 
-        public AuditoryTarget(DirectSoundDeviceInfo deviceInfo, float frequency, bool isLeft)
+        public AuditorySignal(DirectSoundDeviceInfo deviceInfo, float frequency, bool isLeft)
         {
             this.IsLeft = isLeft;
             this.deviceInfo = deviceInfo;
@@ -78,7 +78,7 @@ namespace wpf_playground
             }
         }
 
-        ~AuditoryTarget()
+        ~AuditorySignal()
         {
             outputDevice.Dispose();
             outputDevice = null;
@@ -96,7 +96,6 @@ namespace wpf_playground
 
         public override void Disable()
         {
-            outputDevice.Stop();
             this.Triggered = false;
         }
 

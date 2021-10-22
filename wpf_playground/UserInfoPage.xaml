@@ -213,21 +213,18 @@
                     Grid.Row="8"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Visual}}"
+                    <CheckBox
+                        IsChecked="{Binding SignalVisualChecked}"
                         Content="Visual">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Auditory}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding SignalAuditoryChecked}"
                         Content="Auditory">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Tactile}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding SignalTactileChecked}"
                         Content="Tactile">
-                    </RadioButton>
+                    </CheckBox>
 
                 </StackPanel>
 
@@ -239,21 +236,18 @@
                     Grid.Row="9"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Visual}}"
+                    <CheckBox
+                        IsChecked="{Binding PQVisualChecked}"
                         Content="Visual">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Auditory}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding PQAuditoryChecked}"
                         Content="Auditory">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Tactile}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding PQTactileChecked}"
                         Content="Tactile">
-                    </RadioButton>
+                    </CheckBox>
                 </StackPanel>
                 <TextBlock
                     Text="SOA"
@@ -284,26 +278,26 @@
                         <StackPanel Grid.IsSharedSizeScope="True">
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
-                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTopSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTopSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                             <dd:SpeakerSelector
                                 ButtonColor="Green"
-                                DescriptionText="PQ Hz"  HzValue="{Binding PQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedPQSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="PQ Hz"  HzValue="{Binding PQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedPQSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
-                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding BottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedBottomSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding BottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedBottomSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                         </StackPanel>
                     </TabItem>
                     <TabItem Header="Tactile Settings">
                         <StackPanel Grid.IsSharedSizeScope="True">
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
-                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TactileTopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileTopSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TactileTopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileTopSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                             <dd:SpeakerSelector
                                 ButtonColor="Green"
-                                DescriptionText="PQ Hz"  HzValue="{Binding TactilePQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactilePQSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="PQ Hz"  HzValue="{Binding TactilePQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactilePQSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
-                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding TactileBottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileBottomSpeakerSoundDevice,Mode=OneWayToSource}" ></dd:SpeakerSelector>
+                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding TactileBottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileBottomSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                         </StackPanel>
                     </TabItem>
                 </TabControl>

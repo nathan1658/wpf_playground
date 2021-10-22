@@ -39,6 +39,8 @@ namespace wpf_playground
 
         public MappingSelection()
         {
+            this.WindowState = WindowState.Maximized;
+
             InitializeComponent();
             this.DataContext = this;
 

@@ -137,7 +137,7 @@ namespace wpf_playground
                 {
                     if (SelectedSoundDevice == null || string.IsNullOrEmpty(HzValue))
                         return;
-                    var control = new AuditoryTarget(SelectedSoundDevice, int.Parse(HzValue), isLeft);
+                    var control = new AuditorySignal(SelectedSoundDevice, int.Parse(HzValue), isLeft);
                     Dispatcher.InvokeAsync(async () =>
                     {
                         if (control != null)
