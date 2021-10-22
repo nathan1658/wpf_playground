@@ -7,7 +7,7 @@ using NAudio.Wave;
 
 namespace wpf_playground
 {
-    public class TactileTarget : AuditoryTarget
+    public class TactileTarget : AuditorySignal
     {
         public TactileTarget(DirectSoundDeviceInfo deviceInfo, float frequency, bool isLeft) : base(deviceInfo, frequency, isLeft)
         {

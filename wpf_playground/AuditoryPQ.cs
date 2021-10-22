@@ -11,8 +11,8 @@ namespace wpf_playground
     public class AuditoryPQ : MyBaseUserControl
     {
         public bool IsLeft { get; set; }
-        private SineWaveProvider32 sineWaveProvider;
-        private DirectSoundOut outputDevice;
+        internal SineWaveProvider32 sineWaveProvider;
+        internal DirectSoundOut outputDevice;
 
         public AuditoryPQ(bool isLeft, int hz, Guid deviceGuid)
         {

@@ -131,7 +131,7 @@
     <Compile Include="AudioHelper.cs" />
     <Compile Include="AudioPlaybackEngine.cs" />
     <Compile Include="AuditoryPQ.cs" />
-    <Compile Include="AuditoryTarget.cs" />
+    <Compile Include="AuditorySignal.cs" />
     <Compile Include="AudoDisposeFileReader.cs" />
     <Compile Include="CachedSound.cs" />
     <Compile Include="CachedSoundSampleProvider.cs" />
@@ -147,14 +147,16 @@
     <Compile Include="Model\enums.cs" />
     <Compile Include="Model\TestResult.cs" />
     <Compile Include="Model\UserInfo.cs" />
-    <Compile Include="PQCircle.xaml.cs">
-      <DependentUpon>PQCircle.xaml</DependentUpon>
+    <Compile Include="TactileSignal.cs" />
+    <Compile Include="VisualPQ.xaml.cs">
+      <DependentUpon>VisualPQ.xaml</DependentUpon>
     </Compile>
     <Compile Include="SineWaveProvider32.cs" />
     <Compile Include="SpeakerSelector.xaml.cs">
       <DependentUpon>SpeakerSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="State.cs" />
+    <Compile Include="TactilePQ.cs" />
     <Compile Include="TactileTarget.cs" />
     <Compile Include="UserInfoPage.xaml.cs">
       <DependentUpon>UserInfoPage.xaml</DependentUpon>
@@ -164,7 +166,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Circle.xaml">
+    <Page Include="VisualSignal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -180,8 +182,8 @@
     <Compile Include="BouncingBall.xaml.cs">
       <DependentUpon>BouncingBall.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Circle.xaml.cs">
-      <DependentUpon>Circle.xaml</DependentUpon>
+    <Compile Include="VisualSignal.xaml.cs">
+      <DependentUpon>VisualSignal.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -191,7 +193,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PQCircle.xaml">
+    <Page Include="VisualPQ.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
     <Page Include="SpeakerSelector.xaml">

@@ -74,7 +74,7 @@ namespace wpf_playground
                     {
                         var guidProp = this.GetType().GetProperty(guidPropName);
                         var targetDevice = SoundDeviceList.FirstOrDefault(x => x.Guid.ToString() == speakerConfig.SpeakerGuid);
-                        guidProp.SetValue(this, targetDevice );
+                        guidProp.SetValue(this, targetDevice);
                     }
                 });
 
@@ -148,6 +148,8 @@ namespace wpf_playground
             get
             {
                 var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, };
+                if (!AtLeastOnePQChecked) return false;
+                if (!AtLeastOneSignalChecked) return false;
                 return !list.Any(x => string.IsNullOrEmpty(x));
             }
         }
@@ -179,8 +181,8 @@ namespace wpf_playground
             }
         }
 
-        private string _age;
 
+        private string _age;
         public string Age
         {
             get { return _age; }
@@ -381,33 +383,110 @@ namespace wpf_playground
             }
         }
 
-        private SignalModeEnum signalModeEnum = SignalModeEnum.Visual;
 
-        public SignalModeEnum SignalModeEnum
+        private bool _signalVisualChecked;
+
+        public bool SignalVisualChecked
         {
-            get { return signalModeEnum; }
+            get { return _signalVisualChecked; }
             set
             {
-                signalModeEnum = value;
-                UserInfo.SignalMode = value;
-                InformPropertyChanged("SignalModeEnum");
+                _signalVisualChecked = value;
+                UserInfo.SignalVisualChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("SignalVisualChecked");
+            }
+        }
+
+        private bool _signalAuditoryChecked;
+
+        public bool SignalAuditoryChecked
+        {
+            get { return _signalAuditoryChecked; }
+            set
+            {
+                _signalAuditoryChecked = value;
+                UserInfo.SignalAuditoryChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("SignalAuditoryChecked");
+            }
+        }
+
+        private bool _signalTactileChecked;
+
+        public bool SignalTactileChecked
+        {
+            get { return _signalTactileChecked; }
+            set
+            {
+                _signalTactileChecked = value;
+                UserInfo.SignalTactileChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("SignalTactileChecked");
             }
         }
 
 
 
-        private PQModeEnum pQModeEnum = PQModeEnum.Visual;
+        private bool _pqVisualChecked;
 
-        public PQModeEnum PQModeEnum
+        public bool PQVisualChecked
         {
-            get { return pQModeEnum; }
+            get { return _pqVisualChecked; }
             set
             {
-                pQModeEnum = value;
-                UserInfo.PQMode = value;
-                InformPropertyChanged("PQModeEnum");
+                _pqVisualChecked = value;
+                UserInfo.PQVisualChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("PQVisualChecked");
             }
         }
+
+        private bool _pqAuditoryChecked;
+
+        public bool PQAuditoryChecked
+        {
+            get { return _pqAuditoryChecked; }
+            set
+            {
+                _pqAuditoryChecked = value;
+                UserInfo.PQAuditoryChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("PQAuditoryChecked");
+            }
+        }
+
+        private bool _pqTactileChecked;
+
+        public bool PQTactileChecked
+        {
+            get { return _pqTactileChecked; }
+            set
+            {
+                _pqTactileChecked = value;
+                UserInfo.PQTactileChecked = value;
+                InformPropertyChanged("FormValid");
+                InformPropertyChanged("PQTactileChecked");
+            }
+        }
+
+        public bool AtLeastOneSignalChecked
+        {
+            get
+            {
+                return SignalAuditoryChecked || SignalVisualChecked || SignalTactileChecked;
+            }
+        }
+
+        public bool AtLeastOnePQChecked
+        {
+            get
+            {
+                return PQVisualChecked || PQAuditoryChecked || PQTactileChecked;
+            }
+        }
+
+
 
         private SOAEnum soaEnum = SOAEnum.Soa200;
 
@@ -430,11 +509,12 @@ namespace wpf_playground
 
                 Action<string, string, DirectSoundDeviceInfo> updateConfig = new Action<string, string, DirectSoundDeviceInfo>((configName, hzValue, deviceInfo) =>
                 {
-                        var configProp= config.GetType().GetProperty(configName);
-                        configProp.SetValue(config, new SpeakerConfig{
-                             Hz= hzValue,
-                             SpeakerGuid = deviceInfo?.Guid.ToString()
-                        });
+                    var configProp = config.GetType().GetProperty(configName);
+                    configProp.SetValue(config, new SpeakerConfig
+                    {
+                        Hz = hzValue,
+                        SpeakerGuid = deviceInfo?.Guid.ToString()
+                    });
                 });
 
                 updateConfig(nameof(Config.TopAuditorySpeaker), TopSpeakerHz, SelectedTopSpeakerSoundDevice);

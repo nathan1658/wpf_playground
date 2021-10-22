@@ -30,7 +30,6 @@ namespace wpf_playground
                 return State.UserInfo;
             }
         }
-        List<MyBaseUserControl> targetList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
@@ -66,7 +65,19 @@ namespace wpf_playground
             }
         }
 
-        private MyBaseUserControl leftPQ, rightPQ;
+        List<MyBaseUserControl> signalList = new List<MyBaseUserControl>();
+
+        private List<VisualSignal> visualSignalList = new List<VisualSignal>();
+        private List<AuditorySignal> auditorySignalList = new List<AuditorySignal>();
+        private List<TactileSignal> tactileSignalList = new List<TactileSignal>();
+
+        List<MyBaseUserControl> pqList = new List<MyBaseUserControl>();
+
+        private VisualPQ leftVisualPQ, rightVisualPQ;
+        private AuditoryPQ leftAuditoryPQ, rightAuditoryPQ;
+        private TactilePQ leftTactilePQ, rightTactilePQ;
+
+
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         private string _mappingImageSrc;
@@ -165,31 +176,33 @@ namespace wpf_playground
             InitializeComponent();
 
 
-            if (UserInfo.SignalMode == SignalModeEnum.Visual)
+            if (UserInfo.SignalVisualChecked)
             {
                 initVisualSignal();
             }
 
-            if (UserInfo.SignalMode == SignalModeEnum.Auditory)
+            if (UserInfo.SignalAuditoryChecked)
             {
                 initAuditorySignal();
             }
 
-            if (UserInfo.SignalMode == SignalModeEnum.Tactile)
+            if (UserInfo.SignalTactileChecked)
             {
                 initTactileSignal();
             }
 
 
-            if (UserInfo.PQMode == PQModeEnum.Visual)
+            if (UserInfo.PQVisualChecked)
             {
                 initVisualPQ();
             }
-            if (UserInfo.PQMode == PQModeEnum.Auditory)
+
+            if (UserInfo.PQAuditoryChecked)
             {
                 initAuditoryPQ();
             }
-            if(UserInfo.PQMode == PQModeEnum.Tactile)
+
+            if (UserInfo.PQTactileChecked)
             {
                 initTactilePQ();
             }
@@ -200,6 +213,16 @@ namespace wpf_playground
             //update Mapping Image Src
             MappingImageSrc = $"/Resources/{mapping}Box.Image.bmp";
 
+
+            //Init Signal List
+            signalList.AddRange(visualSignalList);
+            signalList.AddRange(auditorySignalList);
+            signalList.AddRange(tactileSignalList);
+
+            //Init PQ List
+            pqList.AddRange(new List<MyBaseUserControl> { leftVisualPQ, rightVisualPQ });
+            pqList.AddRange(new List<MyBaseUserControl> { leftAuditoryPQ, rightAuditoryPQ });
+            pqList.AddRange(new List<MyBaseUserControl> { leftTactilePQ, rightTactilePQ });
         }
 
         #region init signal region
@@ -207,30 +230,30 @@ namespace wpf_playground
         void initAuditorySignal()
         {
             //Init the control list here
-            targetList = new List<MyBaseUserControl>
+            auditorySignalList = new List<AuditorySignal>
             {
-                new AuditoryTarget(State.TopSpeaker, State.UserInfo.TopSpeakerHz, true),
-                new AuditoryTarget(State.TopSpeaker, State.UserInfo.TopSpeakerHz, false),
-                new AuditoryTarget(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, true),
-                new AuditoryTarget(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, false),
+                new AuditorySignal(State.TopSpeaker, State.UserInfo.TopSpeakerHz, true),
+                new AuditorySignal(State.TopSpeaker, State.UserInfo.TopSpeakerHz, false),
+                new AuditorySignal(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, true),
+                new AuditorySignal(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, false),
             };
         }
 
         void initTactileSignal()
         {
             //Init the control list here
-            targetList = new List<MyBaseUserControl>
+            tactileSignalList = new List<TactileSignal>
             {
-                new AuditoryTarget(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, true),
-                new AuditoryTarget(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, false),
-                new AuditoryTarget(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, true),
-                new AuditoryTarget(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, false),
+                new TactileSignal(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, true),
+                new TactileSignal(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, false),
+                new TactileSignal(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, true),
+                new TactileSignal(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, false),
             };
         }
 
         void initVisualSignal()
         {
-            Func<int, int, String, MyBaseUserControl> genCircle = (row, column, text) =>
+            Func<int, int, String, VisualSignal> genCircle = (row, column, text) =>
                {
                    var grid = new Grid
                    {
@@ -238,7 +261,7 @@ namespace wpf_playground
                    Grid.SetRow(grid, row);
                    Grid.SetColumn(grid, column);
 
-                   var circle = new Circle();
+                   var circle = new VisualSignal();
                    grid.Children.Add(circle);
 
                    //If its debug mode, add a text letter at center of circle
@@ -256,7 +279,7 @@ namespace wpf_playground
                };
 
             //Init the control list here
-            targetList = new List<MyBaseUserControl>
+            visualSignalList = new List<VisualSignal>
             {
                 genCircle(0, 0, "0"),
                 genCircle(0, 2, "1"),
@@ -271,7 +294,7 @@ namespace wpf_playground
 
         void initVisualPQ()
         {
-            Func<int, int, String, PQCircle> genCircleAndAddtoBoard = (row, column, val) =>
+            Func<int, int, String, VisualPQ> genCircleAndAddtoBoard = (row, column, val) =>
                {
                    var grid1 = new Grid();
                    Grid.SetRow(grid1, row);
@@ -279,7 +302,7 @@ namespace wpf_playground
                    grid1.VerticalAlignment = VerticalAlignment.Center;
                    grid1.HorizontalAlignment = HorizontalAlignment.Center;
 
-                   PQCircle circle1 = new PQCircle();
+                   VisualPQ circle1 = new VisualPQ();
 
                    grid1.Children.Add(circle1);
 
@@ -295,26 +318,25 @@ namespace wpf_playground
                    gameBoard.Children.Add(grid1);
                    return circle1;
                };
-            var leftCircle = genCircleAndAddtoBoard(1, 0, "1");
-            var rightCircle = genCircleAndAddtoBoard(1, 2, "2");
-            leftPQ = leftCircle;
-            rightPQ = rightCircle;
+            leftVisualPQ = genCircleAndAddtoBoard(1, 0, "1");
+            rightVisualPQ = genCircleAndAddtoBoard(1, 2, "2");
+
         }
 
         void initAuditoryPQ()
         {
             var guid = State.PQSpeaker.Guid;
             var hz = State.UserInfo.PQHz;
-            leftPQ = new AuditoryPQ(true,hz,guid );
-            rightPQ = new AuditoryPQ(false,hz,guid);
+            leftAuditoryPQ = new AuditoryPQ(true, hz, guid);
+            rightAuditoryPQ = new AuditoryPQ(false, hz, guid);
         }
 
         void initTactilePQ()
         {
             var guid = State.TactilePQSpeaker.Guid;
             var hz = State.UserInfo.TactilePQHz;
-            leftPQ = new AuditoryPQ(true, hz, guid);
-            rightPQ = new AuditoryPQ(false, hz, guid);
+            leftTactilePQ = new TactilePQ(true, hz, guid);
+            rightTactilePQ = new TactilePQ(false, hz, guid);
         }
 
         #endregion
@@ -457,7 +479,13 @@ namespace wpf_playground
             Debug.WriteLine($"***{reactionSw.ElapsedMilliseconds}ms");
 
             tokenSource.Cancel();
-            isCorrect = targetList[btnIndex].Click();
+            var targetSignalList = new List<MyBaseUserControl>();
+            if (UserInfo.SignalVisualChecked) targetSignalList.Add(visualSignalList[btnIndex]);
+            if (UserInfo.SignalAuditoryChecked) targetSignalList.Add(auditorySignalList[btnIndex]);
+            if (UserInfo.SignalTactileChecked) targetSignalList.Add(tactileSignalList[btnIndex]);
+
+            //click the first one anyway.
+            isCorrect = targetSignalList[0].Click();
 
             //If its a hit
             if (isCorrect)
@@ -498,7 +526,7 @@ namespace wpf_playground
 
             //Write to CSV
 
-            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "SignalMode", "PQMode", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
+            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "VisualSignalEnabled", "AuditorySignalEnabled", "TactileSignalEnabled", "VisualPQEnabled", "AuditoryPQEnabled", "TactilePQEnabled", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
             var csvOutput = String.Join(",", header) + "\n";
             for (int i = 0; i < clickHistoryList.Count; i++)
             {
@@ -511,8 +539,12 @@ namespace wpf_playground
                     UserInfo.Gender.ToString(),
                     UserInfo.DominantHand.ToString(),
                     UserInfo.Level.ToString(),
-                    UserInfo.SignalMode.ToString(),
-                    UserInfo.PQMode.ToString(),
+                    UserInfo.SignalVisualChecked.ToString(),
+                    UserInfo.SignalAuditoryChecked.ToString(),
+                    UserInfo.SignalTactileChecked.ToString(),
+                    UserInfo.PQVisualChecked.ToString(),
+                    UserInfo.PQAuditoryChecked.ToString(),
+                    UserInfo.PQTactileChecked.ToString(),
                     UserInfo.SOA.ToString(),
                     this.mapping.ToString(),
                     element.ClickDate.ToString(),
@@ -554,16 +586,29 @@ namespace wpf_playground
 
                     int index = random.Next(SequenceList.Count);
                     index = SequenceList[index];
-                    var targetControl = targetList[index];
+                    var targetControlList = new List<MyBaseUserControl>();
+                    if (UserInfo.SignalVisualChecked)
+                        targetControlList.Add(visualSignalList[index]);
+                    if (UserInfo.SignalAuditoryChecked)
+                        targetControlList.Add(auditorySignalList[index]);
+                    if (UserInfo.SignalTactileChecked)
+                        targetControlList.Add(tactileSignalList[index]);
 
                     int delayPQMS = -1;
                     delayPQMS = getSoa();
 
-                    var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
+                    var targetPQList = new List<MyBaseUserControl>();
+
+                    if (UserInfo.PQVisualChecked)
+                        targetPQList.Add(index == 0 || index == 2 ? leftVisualPQ : rightVisualPQ);
+                    if (UserInfo.PQAuditoryChecked)
+                        targetPQList.Add(index == 0 || index == 2 ? leftAuditoryPQ : rightAuditoryPQ);
+                    if (UserInfo.PQTactileChecked)
+                        targetPQList.Add(index == 0 || index == 2 ? leftTactilePQ : rightTactilePQ);
 
                     Dispatcher.Invoke(() =>
                     {
-                        targetPQ.Enable();
+                        targetPQList.ForEach(x => x.Enable());
                     });
 
 
@@ -584,7 +629,7 @@ namespace wpf_playground
 
                             Dispatcher.Invoke(() =>
                             {
-                                targetControl.Disable();
+                                targetControlList.ForEach(x => x.Disable());
                             });
                             miss();
                             break;
@@ -595,9 +640,9 @@ namespace wpf_playground
                             pqEnded = true;
                             Dispatcher.Invoke(() =>
                             {
-                                targetPQ.Disable();
+                                targetPQList.ForEach(x => x.Disable());
                                 Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
-                                targetControl.Enable();
+                                targetControlList.ForEach(x => x.Enable());
                                 canClick = true;
                                 reactionSw.Restart();
                             });
@@ -652,18 +697,22 @@ namespace wpf_playground
             });
         }
 
+
         void cleanUp()
         {
             Dispatcher.Invoke(() =>
             {
                 canClick = false;
-                targetList.ForEach((x) =>
+
+                signalList.ForEach((x) =>
                 {
-                    x.Disable();
+                    x?.Disable();
                 });
 
-                leftPQ.Disable();
-                rightPQ.Disable();
+                pqList.ForEach((x) =>
+                {
+                    x?.Disable();
+                });
 
             });
         }

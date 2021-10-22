@@ -213,21 +213,18 @@
                     Grid.Row="8"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Visual}}"
+                    <CheckBox
+                        IsChecked="{Binding SignalVisualChecked}"
                         Content="Visual">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Auditory}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding SignalAuditoryChecked}"
                         Content="Auditory">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Tactile}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding SignalTactileChecked}"
                         Content="Tactile">
-                    </RadioButton>
+                    </CheckBox>
 
                 </StackPanel>
 
@@ -239,21 +236,18 @@
                     Grid.Row="9"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Visual}}"
+                    <CheckBox
+                        IsChecked="{Binding PQVisualChecked}"
                         Content="Visual">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Auditory}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding PQAuditoryChecked}"
                         Content="Auditory">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Tactile}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding PQTactileChecked}"
                         Content="Tactile">
-                    </RadioButton>
+                    </CheckBox>
                 </StackPanel>
                 <TextBlock
                     Text="SOA"
