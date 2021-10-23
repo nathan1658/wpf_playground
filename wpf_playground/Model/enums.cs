@@ -9,11 +9,18 @@ namespace wpf_playground.Model
 
     public enum ClickState
     {
+        NA = -1,
         Correct,
         Incorrect,
         Miss
     }
 
+    public enum HistoryType
+    {
+        Click,
+        PQ,
+        Signal
+    }
 
     public enum GenderEnum
     {

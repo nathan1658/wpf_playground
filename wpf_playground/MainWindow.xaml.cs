@@ -52,7 +52,7 @@ namespace wpf_playground
         }
 
 
-        private List<ClickHistory> clickHistoryList { get; set; } = new List<ClickHistory>();
+        private List<ExperimentLog> clickHistoryList { get; set; } = new List<ExperimentLog>();
 
         private ObservableCollection<int> _sequenceList = new ObservableCollection<int>();
 
@@ -495,7 +495,7 @@ namespace wpf_playground
                 var itemToRemove = SequenceList.FirstOrDefault(r => r == btnIndex);
                 SequenceList.Remove(itemToRemove);
                 SequenceList = new ObservableCollection<int>(SequenceList);
-                hit();
+                hit(signalIndex);
             }
             else
             {
@@ -621,7 +621,7 @@ namespace wpf_playground
                             break;
                         }
 
-                        if(!pqTriggered)
+                        if (!pqTriggered)
                         {
                             pqTriggered = true;
 
@@ -631,7 +631,7 @@ namespace wpf_playground
                             });
                         }
 
-                        if(pqTriggered && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs+ PQ_VISIBLE_TIME))
+                        if (pqTriggered && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + PQ_VISIBLE_TIME))
                         {
                             Dispatcher.Invoke(() =>
                             {
@@ -639,7 +639,7 @@ namespace wpf_playground
                             });
                         }
 
-                        if(!signalTriggred && triggerSw.ElapsedMilliseconds >=( delayIntervalInMs + soa))
+                        if (!signalTriggred && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + soa))
                         {
                             signalTriggred = true;
                             Dispatcher.Invoke(() =>
@@ -665,8 +665,8 @@ namespace wpf_playground
                             miss();
                             break;
                         }
- 
-                        await Task.Delay(10);
+
+                        //await Task.Delay(10);
                     }
                     cleanUp();
                 }
@@ -674,11 +674,19 @@ namespace wpf_playground
             });
         }
 
+
+        void addPQRecord(int signalIndex)
+        {            
+            var clickHistory = new ExperimentLog(HistoryType.PQ)
+            {
+                
+            };
+        }
+
         void miss()
         {
-            clickHistoryList.Add(new ClickHistory
+            clickHistoryList.Add(new ExperimentLog(HistoryType.Click)
             {
-                ClickDate = DateTime.Now,
                 Distance = bouncingBall.Distance,
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
@@ -688,25 +696,26 @@ namespace wpf_playground
             });
         }
 
-        void hit()
+        void hit(int signalIndex)
         {
-            clickHistoryList.Add(new ClickHistory
+            var newRecord = new ExperimentLog(HistoryType.Click)
             {
-                ClickDate = DateTime.Now,
                 Distance = bouncingBall.Distance,
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Correct,
                 Delay = delayIntervalInMs,
-
-            });
+            };
+            gameSw.Restart();
+            clickHistoryList.Add(newRecord);
+            var tt = newRecord.ElapsedTime - newRecord.ReactionTime - newRecord.Delay;
+            System.Diagnostics.Debug.WriteLine("-------------" + tt.ToString() + "ms");
         }
 
         void wrong()
         {
-            clickHistoryList.Add(new ClickHistory
+            clickHistoryList.Add(new ExperimentLog(HistoryType.Click)
             {
-                ClickDate = DateTime.Now,
                 Distance = bouncingBall.Distance,
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
