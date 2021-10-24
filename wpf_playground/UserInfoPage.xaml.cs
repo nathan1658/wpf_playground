@@ -7,10 +7,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 using wpf_playground.Model;
 
 namespace wpf_playground
@@ -32,7 +30,6 @@ namespace wpf_playground
             };
             this.DataContext = vm;
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
 
         }
 
@@ -100,7 +97,7 @@ namespace wpf_playground
             loadConfig();
         }
 
-        public UserInfo UserInfo
+        public static UserInfo UserInfo
         {
             get
             {
@@ -117,8 +114,7 @@ namespace wpf_playground
             }
         }
 
-        private GenderEnum genderEnum = GenderEnum.Male;
-
+        private GenderEnum genderEnum = UserInfo.Gender;
         public GenderEnum GenderEnum
         {
             get { return genderEnum; }
@@ -131,7 +127,7 @@ namespace wpf_playground
         }
 
 
-        private DominantHandEnum dominantHandEnum = DominantHandEnum.Right;
+        private DominantHandEnum dominantHandEnum = UserInfo.DominantHand;
         public DominantHandEnum DominantHandEnum
         {
             get { return dominantHandEnum; }
@@ -156,7 +152,7 @@ namespace wpf_playground
 
 
 
-        private string _name;
+        private string _name = UserInfo.Name;
         public string Name
         {
             get { return _name; }
@@ -168,7 +164,7 @@ namespace wpf_playground
 
             }
         }
-        private string _sid;
+        private string _sid = UserInfo.SID;
         public string SID
         {
             get { return _sid; }
@@ -182,7 +178,7 @@ namespace wpf_playground
         }
 
 
-        private string _age;
+        private string _age = UserInfo.Age;
         public string Age
         {
             get { return _age; }
@@ -370,7 +366,7 @@ namespace wpf_playground
 
 
 
-        private LevelEnum _levelEnum = LevelEnum.L50;
+        private LevelEnum _levelEnum = UserInfo.Level;
 
         public LevelEnum LevelEnum
         {
@@ -384,8 +380,7 @@ namespace wpf_playground
         }
 
 
-        private bool _signalVisualChecked;
-
+        private bool _signalVisualChecked = UserInfo.SignalVisualChecked;
         public bool SignalVisualChecked
         {
             get { return _signalVisualChecked; }
@@ -398,8 +393,7 @@ namespace wpf_playground
             }
         }
 
-        private bool _signalAuditoryChecked;
-
+        private bool _signalAuditoryChecked = UserInfo.SignalAuditoryChecked;
         public bool SignalAuditoryChecked
         {
             get { return _signalAuditoryChecked; }
@@ -412,8 +406,7 @@ namespace wpf_playground
             }
         }
 
-        private bool _signalTactileChecked;
-
+        private bool _signalTactileChecked = UserInfo.SignalTactileChecked;
         public bool SignalTactileChecked
         {
             get { return _signalTactileChecked; }
@@ -428,8 +421,7 @@ namespace wpf_playground
 
 
 
-        private bool _pqVisualChecked;
-
+        private bool _pqVisualChecked = UserInfo.PQVisualChecked;
         public bool PQVisualChecked
         {
             get { return _pqVisualChecked; }
@@ -442,7 +434,7 @@ namespace wpf_playground
             }
         }
 
-        private bool _pqAuditoryChecked;
+        private bool _pqAuditoryChecked = UserInfo.PQAuditoryChecked;
 
         public bool PQAuditoryChecked
         {
@@ -456,7 +448,7 @@ namespace wpf_playground
             }
         }
 
-        private bool _pqTactileChecked;
+        private bool _pqTactileChecked = UserInfo.PQTactileChecked;
 
         public bool PQTactileChecked
         {
@@ -487,9 +479,7 @@ namespace wpf_playground
         }
 
 
-
-        private SOAEnum soaEnum = SOAEnum.Soa200;
-
+        private SOAEnum soaEnum = UserInfo.SOA;
         public SOAEnum SOAEnum
         {
             get { return soaEnum; }

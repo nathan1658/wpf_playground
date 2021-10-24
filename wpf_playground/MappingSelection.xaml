@@ -149,7 +149,7 @@
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom"
                     Click="Button_Click">
-                    Finish Test
+                    Back to setting
                 </Button>
 
             </Grid>

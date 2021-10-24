@@ -78,8 +78,9 @@ namespace wpf_playground
         private AuditoryPQ leftAuditoryPQ, rightAuditoryPQ;
         private TactilePQ leftTactilePQ, rightTactilePQ;
 
-
         CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+        int signalIndex = -1;
 
         private string _mappingImageSrc;
 
@@ -128,7 +129,7 @@ namespace wpf_playground
                            //update game time
                            Dispatcher.Invoke(() =>
                               {
-                                  gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
+                                  gameCounter.Text = ElapsedTime.ToString() + "ms";
                               });
                        }
                        finally
@@ -371,8 +372,8 @@ namespace wpf_playground
 
                 if (practiceMode)
                 {
+                    State.FinishedTestMappingList.Add(mapping);
                     MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
-
                 }
                 else
                 {
@@ -411,10 +412,12 @@ namespace wpf_playground
             reactionSw.Stop();
 
             int btnIndex = -1;
+            int buttonPositionIndex = -1;
             var mapping = this.mapping;
 
             if (e.Key == State.TopLeftKey)
             {
+                buttonPositionIndex = 0;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 0;
 
@@ -430,6 +433,7 @@ namespace wpf_playground
 
             if (e.Key == State.TopRightKey)
             {
+                buttonPositionIndex = 1;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 1;
 
@@ -445,6 +449,7 @@ namespace wpf_playground
 
             if (e.Key == State.BottomLeftKey)
             {
+                buttonPositionIndex = 2;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 2;
 
@@ -460,6 +465,7 @@ namespace wpf_playground
 
             if (e.Key == State.BottomRightKey)
             {
+                buttonPositionIndex = 3;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 3;
 
@@ -495,15 +501,19 @@ namespace wpf_playground
                 var itemToRemove = SequenceList.FirstOrDefault(r => r == btnIndex);
                 SequenceList.Remove(itemToRemove);
                 SequenceList = new ObservableCollection<int>(SequenceList);
-                hit(signalIndex);
+                hit(buttonPositionIndex);
             }
             else
             {
-                wrong();
+                wrong(buttonPositionIndex);
             }
 
         }
 
+        public static object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
 
         int getSoa()
         {
@@ -526,36 +536,65 @@ namespace wpf_playground
             };
 
             //Write to CSV
+            var mappingDict = new Dictionary<string, string>();
+            mappingDict.Add("Name", UserInfo.Name);
+            mappingDict.Add("SID", UserInfo.SID);
+            mappingDict.Add("Age", UserInfo.Age);
+            mappingDict.Add("Gender", UserInfo.Gender.ToString());
+            mappingDict.Add("DominantHand", UserInfo.DominantHand.ToString());
+            mappingDict.Add("Level", UserInfo.Level.ToString());
+            mappingDict.Add("VisualSignalEnabled", UserInfo.SignalVisualChecked.ToString());
+            mappingDict.Add("AuditorySignalEnabled", UserInfo.SignalAuditoryChecked.ToString());
+            mappingDict.Add("TactileSignalEnabled", UserInfo.SignalTactileChecked.ToString());
+            mappingDict.Add("VisualPQEnabled", UserInfo.PQVisualChecked.ToString());
+            mappingDict.Add("AuditoryPQEnabled", UserInfo.PQAuditoryChecked.ToString());
+            mappingDict.Add("TactilePQEnabled", UserInfo.PQTactileChecked.ToString());
+            mappingDict.Add("SOA", UserInfo.SOA.ToString());
+            mappingDict.Add("Mapping", mapping.ToString());
 
-            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "VisualSignalEnabled", "AuditorySignalEnabled", "TactileSignalEnabled", "VisualPQEnabled", "AuditoryPQEnabled", "TactilePQEnabled", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
-            var csvOutput = String.Join(",", header) + "\n";
+            var historyMappingDict = new Dictionary<string, string>();
+            historyMappingDict.Add("HistoryType", nameof(ExperimentLog.HistoryType));
+            historyMappingDict.Add("SignalIndex", nameof(ExperimentLog.SignalIndex));
+            historyMappingDict.Add("ButtonPositionIndex", nameof(ExperimentLog.ButtonPositionIndex));
+            historyMappingDict.Add("PQPositionIndex", nameof(ExperimentLog.PQPositionIndex));
+            historyMappingDict.Add("ElapsedTime", nameof(ExperimentLog.ElapsedTime));
+            historyMappingDict.Add("ReactionTime", nameof(ExperimentLog.ReactionTime));
+            historyMappingDict.Add("Distance", nameof(ExperimentLog.Distance));
+            historyMappingDict.Add("ClickState", nameof(ExperimentLog.ClickState));
+            historyMappingDict.Add("Delay", nameof(ExperimentLog.Delay));
+
+
+
+            var headers = new List<String> ();
+            //concat the headers
+            foreach(var kvp in mappingDict)
+            {
+                headers.Add(kvp.Key);
+            }
+            foreach(var kvp in historyMappingDict)
+            {
+                headers.Add(kvp.Key);
+            }
+
+            var csvOutput = String.Join(",", headers) + "\n";
             for (int i = 0; i < clickHistoryList.Count; i++)
             {
                 var element = clickHistoryList[i];
-                var tmp = new List<String>
+                var tmpList = new List<string>();
+
+                foreach (var kvp in mappingDict)
                 {
-                    UserInfo.Name,
-                    UserInfo.SID,
-                    UserInfo.Age,
-                    UserInfo.Gender.ToString(),
-                    UserInfo.DominantHand.ToString(),
-                    UserInfo.Level.ToString(),
-                    UserInfo.SignalVisualChecked.ToString(),
-                    UserInfo.SignalAuditoryChecked.ToString(),
-                    UserInfo.SignalTactileChecked.ToString(),
-                    UserInfo.PQVisualChecked.ToString(),
-                    UserInfo.PQAuditoryChecked.ToString(),
-                    UserInfo.PQTactileChecked.ToString(),
-                    UserInfo.SOA.ToString(),
-                    this.mapping.ToString(),
-                    element.ClickDate.ToString(),
-                    element.ElapsedTime.ToString(),
-                    element.ReactionTime.ToString(),
-                    element.Distance.ToString(),
-                    element.ClickState.ToString(),
-                    element.Delay.ToString()
-                };
-                csvOutput += String.Join(",", tmp) + "\n";
+                    tmpList.Add(kvp.Value);
+                }
+
+                foreach(var kvp in historyMappingDict)
+                {
+                    //resolve it via reflection
+                    var val = GetPropValue(element, kvp.Value);
+                    tmpList.Add(val.ToString());
+                }
+                
+                csvOutput += String.Join(",", tmpList) + "\n";
             }
             if (!Directory.Exists("./output"))
                 Directory.CreateDirectory("output");
@@ -578,6 +617,9 @@ namespace wpf_playground
             {
                 try
                 {
+                    signalIndex = -1;
+                    delayIntervalInMs = -1;
+
                     Stopwatch triggerSw = new Stopwatch();
                     triggerSw.Start();
 
@@ -587,6 +629,9 @@ namespace wpf_playground
 
                     int index = random.Next(SequenceList.Count);
                     index = SequenceList[index];
+
+                    signalIndex = index;
+
                     var targetControlList = new List<MyBaseUserControl>();
                     if (UserInfo.SignalVisualChecked)
                         targetControlList.Add(visualSignalList[index]);
@@ -599,12 +644,15 @@ namespace wpf_playground
 
                     var targetPQList = new List<MyBaseUserControl>();
 
+
+                    bool isLeft = index == 0 || index == 2;
+
                     if (UserInfo.PQVisualChecked)
-                        targetPQList.Add(index == 0 || index == 2 ? leftVisualPQ : rightVisualPQ);
+                        targetPQList.Add(isLeft ? leftVisualPQ : rightVisualPQ);
                     if (UserInfo.PQAuditoryChecked)
-                        targetPQList.Add(index == 0 || index == 2 ? leftAuditoryPQ : rightAuditoryPQ);
+                        targetPQList.Add(isLeft ? leftAuditoryPQ : rightAuditoryPQ);
                     if (UserInfo.PQTactileChecked)
-                        targetPQList.Add(index == 0 || index == 2 ? leftTactilePQ : rightTactilePQ);
+                        targetPQList.Add(isLeft ? leftTactilePQ : rightTactilePQ);
 
                     Dispatcher.Invoke(() =>
                     {
@@ -624,6 +672,7 @@ namespace wpf_playground
                         if (!pqTriggered)
                         {
                             pqTriggered = true;
+                            addPQRecord(isLeft);
 
                             Dispatcher.Invoke(() =>
                             {
@@ -642,6 +691,7 @@ namespace wpf_playground
                         if (!signalTriggred && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + soa))
                         {
                             signalTriggred = true;
+                            addSignalRecord();
                             Dispatcher.Invoke(() =>
                             {
                                 targetControlList.ForEach(x => x.Enable());
@@ -674,57 +724,51 @@ namespace wpf_playground
             });
         }
 
-
-        void addPQRecord(int signalIndex)
-        {            
-            var clickHistory = new ExperimentLog(HistoryType.PQ)
+        private double BouncingBallDistance
+        {
+            get
             {
-                
-            };
+                return this.bouncingBall.Distance;
+            }
+        }
+        private double ElapsedTime
+        {
+            get
+            {
+                return this.gameSw.ElapsedMilliseconds;
+            }
+        }
+
+
+        void addSignalRecord()
+        {
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs);
+            clickHistoryList.Add(clickHistory);
+        }
+
+        void addPQRecord(bool isLeft)
+        {
+            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: isLeft ? 0 : 1);
+            clickHistoryList.Add(clickHistory);
         }
 
         void miss()
         {
-            clickHistoryList.Add(new ExperimentLog(HistoryType.Click)
-            {
-                Distance = bouncingBall.Distance,
-                ReactionTime = reactionSw.ElapsedMilliseconds,
-                ElapsedTime = gameSw.ElapsedMilliseconds,
-                ClickState = ClickState.Miss,
-                Delay = delayIntervalInMs,
-
-            });
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs);
+            clickHistoryList.Add(history);
         }
 
-        void hit(int signalIndex)
+        void hit(int pressedButtonIndex)
         {
-            var newRecord = new ExperimentLog(HistoryType.Click)
-            {
-                Distance = bouncingBall.Distance,
-                ReactionTime = reactionSw.ElapsedMilliseconds,
-                ElapsedTime = gameSw.ElapsedMilliseconds,
-                ClickState = ClickState.Correct,
-                Delay = delayIntervalInMs,
-            };
-            gameSw.Restart();
-            clickHistoryList.Add(newRecord);
-            var tt = newRecord.ElapsedTime - newRecord.ReactionTime - newRecord.Delay;
-            System.Diagnostics.Debug.WriteLine("-------------" + tt.ToString() + "ms");
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs);
+            clickHistoryList.Add(history);
         }
 
-        void wrong()
+        void wrong(int pressedButtonIndex)
         {
-            clickHistoryList.Add(new ExperimentLog(HistoryType.Click)
-            {
-                Distance = bouncingBall.Distance,
-                ReactionTime = reactionSw.ElapsedMilliseconds,
-                ElapsedTime = gameSw.ElapsedMilliseconds,
-                ClickState = ClickState.Incorrect,
-                Delay = delayIntervalInMs,
-
-            });
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs);
+            clickHistoryList.Add(history);
         }
-
 
         void cleanUp()
         {

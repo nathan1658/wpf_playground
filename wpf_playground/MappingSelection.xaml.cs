@@ -32,7 +32,7 @@ namespace wpf_playground
             set
             {
                 _mappingEnum = value;
-                FormValid = value != MappingEnum.NONE;                
+                FormValid = value != MappingEnum.NONE;
             }
         }
 
@@ -61,16 +61,21 @@ namespace wpf_playground
             practiceButton.Content = "Practice " + mapping.ToString();
             practiceButton.Margin = new Thickness(0, 0, 0, 10);
 
-            var testButton = new Button();
-            testButton.Click += (s, e) =>
-            {
-                openWindowAndCloseThis(false, mapping);
-            };
-            testButton.Content = "Test " + mapping.ToString();
 
-            testButton.IsEnabled = !State.FinishedMappingList.Contains(mapping);
             panel.Children.Add(practiceButton);
-            panel.Children.Add(testButton);
+
+            if (State.FinishedTestMappingList.Contains(mapping))
+            {
+                var testButton = new Button();
+                testButton.Click += (s, e) =>
+                {
+                    openWindowAndCloseThis(false, mapping);
+                };
+                testButton.Content = "Test " + mapping.ToString();
+
+                testButton.IsEnabled = !State.FinishedMappingList.Contains(mapping);
+                panel.Children.Add(testButton);
+            }
 
         }
 
@@ -103,7 +108,7 @@ namespace wpf_playground
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Program will exit now.", "Alert");
+            new UserInfoPage().Show();
             this.Close();
         }
     }

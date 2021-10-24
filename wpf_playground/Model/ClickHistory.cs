@@ -8,12 +8,19 @@ namespace wpf_playground.Model
 {
     public class ExperimentLog
     {
-        public ExperimentLog(HistoryType historyType, int signalIndex,double elapsedTime, double distance)
+        public ExperimentLog(HistoryType historyType, int signalIndex, int buttonPositionIndex, double elapsedTime, double reactionTime, double distance, ClickState clickState, int delay, int pqPositionIndex = -1)
         {
+
             HistoryType = historyType;
             SignalIndex = signalIndex;
-            Distance = distance;
+            ButtonPositionIndex = buttonPositionIndex;
             ElapsedTime = elapsedTime;
+            ReactionTime = reactionTime;
+            Distance = distance;
+            ClickState = clickState;
+            Delay = delay;
+
+            PQPositionIndex = pqPositionIndex;
         }
 
         /// <summary>
@@ -29,6 +36,23 @@ namespace wpf_playground.Model
         /// 3 for bottom right
         /// </summary>
         public int SignalIndex { get; private set; }
+
+        /// <summary>
+        /// Index of the pressed button
+        /// 0 for top left
+        /// 1 for top right
+        /// 2 for bottom left
+        /// 3 for bottom right
+        /// </summary>
+        public int ButtonPositionIndex { get; set; }
+
+
+        /// <summary>
+        /// Index of displayed PQ
+        /// 0 for left
+        /// 1 for right
+        /// </summary>
+        public int PQPositionIndex { get; set; }
 
         /// <summary>
         /// Total Elapsed time of a single experiment

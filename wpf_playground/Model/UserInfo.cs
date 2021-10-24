@@ -11,9 +11,9 @@ namespace wpf_playground.Model
         public string Name { get; set; }
         public string SID { get; set; }
         public string Age { get; set; }
-        public GenderEnum Gender { get; set; }
-        public DominantHandEnum DominantHand { get; set; }
-        public LevelEnum Level { get; set; }
+        public GenderEnum Gender { get; set; } = GenderEnum.Male;
+        public DominantHandEnum DominantHand { get; set; } = DominantHandEnum.Right;
+        public LevelEnum Level { get; set; } = LevelEnum.L50;
 
         public bool SignalVisualChecked { get; set; }
         public bool SignalAuditoryChecked { get; set; }
@@ -23,7 +23,7 @@ namespace wpf_playground.Model
         public bool PQAuditoryChecked { get; set; }
         public bool PQTactileChecked { get; set; }
 
-        public SOAEnum SOA { get; set; }
+        public SOAEnum SOA { get; set; } = SOAEnum.Soa200;
         public int PQHz { get; set; } = 1000;
         public int TopSpeakerHz { get; set; } = 1000;
         public int BottomSpeakerHz { get; set; } = 1000;
