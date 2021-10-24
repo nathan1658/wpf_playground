@@ -81,7 +81,7 @@ namespace wpf_playground
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         int signalIndex = -1;
-
+        int pqIndex = -1;
         private string _mappingImageSrc;
 
         public string MappingImageSrc
@@ -617,6 +617,7 @@ namespace wpf_playground
             {
                 try
                 {
+                    pqIndex = -1;
                     signalIndex = -1;
                     delayIntervalInMs = -1;
 
@@ -646,7 +647,7 @@ namespace wpf_playground
 
 
                     bool isLeft = index == 0 || index == 2;
-
+                    pqIndex = isLeft ? 0 : 1;
                     if (UserInfo.PQVisualChecked)
                         targetPQList.Add(isLeft ? leftVisualPQ : rightVisualPQ);
                     if (UserInfo.PQAuditoryChecked)
@@ -672,7 +673,7 @@ namespace wpf_playground
                         if (!pqTriggered)
                         {
                             pqTriggered = true;
-                            addPQRecord(isLeft);
+                            addPQRecord();
 
                             Dispatcher.Invoke(() =>
                             {
@@ -742,31 +743,31 @@ namespace wpf_playground
 
         void addSignalRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs);
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex:pqIndex);
             clickHistoryList.Add(clickHistory);
         }
 
-        void addPQRecord(bool isLeft)
+        void addPQRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: isLeft ? 0 : 1);
+            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(clickHistory);
         }
 
         void miss()
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex:pqIndex);
             clickHistoryList.Add(history);
         }
 
         void hit(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex:pqIndex);
             clickHistoryList.Add(history);
         }
 
         void wrong(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
         }
 
