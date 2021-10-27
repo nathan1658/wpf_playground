@@ -372,13 +372,13 @@ namespace wpf_playground
 
                 if (practiceMode)
                 {
-                    State.FinishedTestMappingList.Add(mapping);
+                    //State.FinishedTestMappingList.Add(mapping);
                     MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
                 }
                 else
                 {
                     //Add current mapping to finished state
-                    State.FinishedMappingList.Add(mapping);
+                    //State.FinishedMappingList.Add(mapping);
                     saveResult();
                 }
                 gameEnd = true;
