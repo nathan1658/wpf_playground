@@ -18,6 +18,25 @@ namespace wpf_playground
     /// </summary>
     public partial class UserInfoPage : Window
     {
+
+
+        void initList()
+        {
+            State.TestMappingList = new List<TestMapping>();
+            //Soa200
+            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa600, SOAEnum.Soa1000 };
+            foreach (var soa in soaList)
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        State.TestMappingList.Add(new TestMapping(soa, i, j));
+                    }
+                }
+            }
+        }
+
         public UserInfoPage()
         {
             this.WindowState = WindowState.Maximized;
@@ -29,6 +48,8 @@ namespace wpf_playground
                 this.Close();
             };
             this.DataContext = vm;
+            initList();
+
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }

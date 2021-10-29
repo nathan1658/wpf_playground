@@ -21,6 +21,7 @@
     <Window.Resources>
         <local:ComparisonConverter
             x:Key="ComparisonConverter" />
+        <local:NotNullConverter x:Key="notNullConverter"/>
     </Window.Resources>
     <Grid>
         <materialDesign:Card
@@ -88,18 +89,21 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <CheckBox
+                    <RadioButton
+                        GroupName="signal"
                         IsChecked="{Binding SignalVisualChecked}"
                         Content="Visual">
-                    </CheckBox>
-                    <CheckBox
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="signal"
                         IsChecked="{Binding SignalAuditoryChecked}"
                         Content="Auditory">
-                    </CheckBox>
-                    <CheckBox
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="signal"
                         IsChecked="{Binding SignalTactileChecked}"
                         Content="Tactile">
-                    </CheckBox>
+                    </RadioButton>
 
                 </StackPanel>
 
@@ -112,18 +116,21 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <CheckBox
+                    <RadioButton
+                        GroupName="pq"
                         IsChecked="{Binding PQVisualChecked}"
                         Content="Visual">
-                    </CheckBox>
-                    <CheckBox
+                    </RadioButton>
+                    <RadioButton
+                    GroupName="pq"
                         IsChecked="{Binding PQAuditoryChecked}"
                         Content="Auditory">
-                    </CheckBox>
-                    <CheckBox
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="pq"
                         IsChecked="{Binding PQTactileChecked}"
                         Content="Tactile">
-                    </CheckBox>
+                    </RadioButton>
                 </StackPanel>
 
 
@@ -157,23 +164,47 @@
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     >
+
                     <StackPanel.Resources>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Margin" Value="10"/>
                             <Setter Property="MaxWidth" Value="500"/>
                         </Style>
+
                     </StackPanel.Resources>
                     <Button
-                    IsEnabled="{Binding FormValid}"
                         Click="practiceBtnClick">
+                        <Button.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
                         Practice
                     </Button>
                     <Button
-                        
-                    IsEnabled="{Binding FormValid}"
                         Click="testBtnClick">
+                        <Button.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding TestMapping.TestDone}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
                         Test
                     </Button>
+
 
 
                     <Button
@@ -182,6 +213,17 @@
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom"
                     Click="Button_Click">
+                        <Button.Resources
+                            >
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AllTestCompleted}" Value="true">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
                         Back to setting
                     </Button>
                 </StackPanel>

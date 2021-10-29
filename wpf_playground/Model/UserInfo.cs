@@ -15,11 +15,11 @@ namespace wpf_playground.Model
         public DominantHandEnum DominantHand { get; set; } = DominantHandEnum.Right;
         public LevelEnum Level { get; set; } = LevelEnum.L50;
 
-        public bool SignalVisualChecked { get; set; }
+        public bool SignalVisualChecked { get; set; } = true;
         public bool SignalAuditoryChecked { get; set; }
         public bool SignalTactileChecked { get; set; }
 
-        public bool PQVisualChecked { get; set; }
+        public bool PQVisualChecked { get; set; } = true;
         public bool PQAuditoryChecked { get; set; }
         public bool PQTactileChecked { get; set; }
 

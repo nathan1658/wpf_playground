@@ -18,56 +18,6 @@ using wpf_playground.Model;
 namespace wpf_playground
 {
 
-    class TestMapping
-    {
-        public SOAEnum SoaEnum;
-        public bool VisualSignal;
-        public bool AuditorySignal;
-        public bool TactileSignal;
-
-        public bool VisualPQ;
-        public bool AuditoryPQ;
-        public bool TactilePQ;
-
-        public TestMapping(SOAEnum soa, int signal, int pq)
-        {
-            this.SoaEnum = soa;
-            if (signal == 1)
-            {
-                VisualSignal = true;
-            }
-            if (signal == 2)
-            {
-                AuditorySignal = true;
-            }
-            if (signal == 3)
-            {
-                VisualSignal = true;
-                AuditorySignal = true;
-            }
-            if (signal == 4)
-            {
-                TactileSignal = true;
-
-            }
-            if (signal == 5)
-            {
-                VisualSignal = true;
-                TactileSignal = true;
-            }
-            if (signal == 6)
-            {
-                AuditorySignal = true;
-                TactileSignal = true;
-            }
-            if (signal == 7)
-            {
-                VisualSignal = true;
-                AuditorySignal = true;
-                TactileSignal = true;
-            }
-        }
-    }
 
 
     /// <summary>
@@ -75,8 +25,7 @@ namespace wpf_playground
     /// </summary>
     public partial class MappingSelection : Window, INotifyPropertyChanged
     {
-
-
+       
 
         public MappingSelection()
         {
@@ -84,6 +33,7 @@ namespace wpf_playground
 
             InitializeComponent();
             this.DataContext = this;
+
 
             //genPanelButtons(ref bcPanel, MappingEnum.BC);
             //genPanelButtons(ref tcPanel, MappingEnum.TC);
@@ -122,7 +72,7 @@ namespace wpf_playground
 
         void openWindowAndCloseThis(bool practiceMode, MappingEnum mapping)
         {
-            new MainWindow(practiceMode, mapping).Show();
+            new MainWindow(practiceMode, mapping, TestMapping).Show();
             this.Close();
         }
 
@@ -153,6 +103,29 @@ namespace wpf_playground
             openWindowAndCloseThis(false, State.SelectedMapping);
         }
 
+        public TestMapping TestMapping
+        {
+            get
+            {
+                return State.TestMappingList.FirstOrDefault(x =>
+                    x.SOA == soaEnum &&
+                    x.VisualSignal == SignalVisualChecked &&
+                    x.AuditorySignal == SignalAuditoryChecked &&
+                    x.TactileSignal == SignalTactileChecked &&
+                    x.VisualPQ == PQVisualChecked &&
+                    x.AuditoryPQ == PQAuditoryChecked &&
+                    x.TactilePQ == PQTactileChecked
+                );
+            }
+        }
+
+        public bool AllTestCompleted
+        {
+            get
+            {
+                return State.TestMappingList.All(x => x.TestDone == true);
+            }
+        }
 
 
         private bool _signalVisualChecked = UserInfo.SignalVisualChecked;
@@ -164,6 +137,7 @@ namespace wpf_playground
                 _signalVisualChecked = value;
                 UserInfo.SignalVisualChecked = value;
                 InformPropertyChanged("FormValid");
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("SignalVisualChecked");
             }
         }
@@ -177,6 +151,7 @@ namespace wpf_playground
                 _signalAuditoryChecked = value;
                 UserInfo.SignalAuditoryChecked = value;
                 InformPropertyChanged("FormValid");
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("SignalAuditoryChecked");
             }
         }
@@ -190,6 +165,7 @@ namespace wpf_playground
                 _signalTactileChecked = value;
                 UserInfo.SignalTactileChecked = value;
                 InformPropertyChanged("FormValid");
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("SignalTactileChecked");
             }
         }
@@ -203,6 +179,7 @@ namespace wpf_playground
                 _pqVisualChecked = value;
                 UserInfo.PQVisualChecked = value;
                 InformPropertyChanged("FormValid");
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("PQVisualChecked");
             }
         }
@@ -217,6 +194,7 @@ namespace wpf_playground
                 _pqAuditoryChecked = value;
                 UserInfo.PQAuditoryChecked = value;
                 InformPropertyChanged("FormValid");
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("PQAuditoryChecked");
             }
         }
@@ -231,6 +209,7 @@ namespace wpf_playground
                 _pqTactileChecked = value;
                 UserInfo.PQTactileChecked = value;
                 InformPropertyChanged("FormValid");
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("PQTactileChecked");
             }
         }
@@ -243,6 +222,7 @@ namespace wpf_playground
             {
                 soaEnum = value;
                 UserInfo.SOA = value;
+                InformPropertyChanged("TestMapping");
                 InformPropertyChanged("SOAEnum");
             }
         }

@@ -166,9 +166,11 @@ namespace wpf_playground
         }
         bool practiceMode = false;
         MappingEnum mapping = MappingEnum.NONE;
-        public MainWindow(bool isPracticeMode, MappingEnum mapping)
+        TestMapping testMapping;
+        public MainWindow(bool isPracticeMode, MappingEnum mapping, TestMapping testMapping)
         {
             this.practiceMode = isPracticeMode;
+            this.testMapping = testMapping;
             this.mapping = mapping;
             initSequenceList();
 
@@ -372,11 +374,13 @@ namespace wpf_playground
 
                 if (practiceMode)
                 {
+                    testMapping.PracticeDone = true;
                     //State.FinishedTestMappingList.Add(mapping);
                     MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
                 }
                 else
                 {
+                    testMapping.TestDone = true;
                     //Add current mapping to finished state
                     //State.FinishedMappingList.Add(mapping);
                     saveResult();
@@ -565,13 +569,13 @@ namespace wpf_playground
 
 
 
-            var headers = new List<String> ();
+            var headers = new List<String>();
             //concat the headers
-            foreach(var kvp in mappingDict)
+            foreach (var kvp in mappingDict)
             {
                 headers.Add(kvp.Key);
             }
-            foreach(var kvp in historyMappingDict)
+            foreach (var kvp in historyMappingDict)
             {
                 headers.Add(kvp.Key);
             }
@@ -587,13 +591,13 @@ namespace wpf_playground
                     tmpList.Add(kvp.Value);
                 }
 
-                foreach(var kvp in historyMappingDict)
+                foreach (var kvp in historyMappingDict)
                 {
                     //resolve it via reflection
                     var val = GetPropValue(element, kvp.Value);
                     tmpList.Add(val.ToString());
                 }
-                
+
                 csvOutput += String.Join(",", tmpList) + "\n";
             }
             if (!Directory.Exists("./output"))
@@ -743,7 +747,7 @@ namespace wpf_playground
 
         void addSignalRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex:pqIndex);
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(clickHistory);
         }
 
@@ -755,13 +759,13 @@ namespace wpf_playground
 
         void miss()
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex:pqIndex);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
         }
 
         void hit(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex:pqIndex);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
         }
 
