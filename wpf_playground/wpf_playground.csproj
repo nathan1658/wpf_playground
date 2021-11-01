@@ -138,6 +138,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Converter\ComparisonConverter.cs" />
     <Compile Include="Converter\ListToStringConverter.cs" />
+    <Compile Include="Converter\NotNullConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="MappingSelection.xaml.cs">
       <DependentUpon>MappingSelection.xaml</DependentUpon>
@@ -145,6 +146,7 @@
     <Compile Include="Model\ClickHistory.cs" />
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\enums.cs" />
+    <Compile Include="Model\TestMapping.cs" />
     <Compile Include="Model\TestResult.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="TactileSignal.cs" />

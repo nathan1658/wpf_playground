@@ -21,11 +21,12 @@
     <Window.Resources>
         <local:ComparisonConverter
             x:Key="ComparisonConverter" />
+        <local:NotNullConverter x:Key="notNullConverter"/>
     </Window.Resources>
     <Grid>
         <materialDesign:Card
-            MaxWidth="1200"
-            MaxHeight="600"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             Padding="32"
             Margin="16"
             Grid.Column="0">
@@ -62,6 +63,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition
                         Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
 
                     <RowDefinition
                         Height="*" />
@@ -70,88 +75,158 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
 
                 </Grid.ColumnDefinitions>
 
+
+                <TextBlock
+                    Text="Signal Mode"
+                    Grid.Row="0"
+                    Grid.Column="0"></TextBlock>
                 <StackPanel
-                    HorizontalAlignment="Center"
+                    Grid.Row="0"
+                    Grid.Column="1"
                     Orientation="Horizontal">
-
-                    <StackPanel.Resources>
-                        <Style
-                            TargetType="Image">
-                            <Setter
-                                Property="Height"
-                                Value="400" />
-
-                        </Style>
-
-                        <Style
-                            TargetType="RadioButton">
-                            <Setter
-                                Property="GroupName"
-                                Value="mappingGroup" />
-                            <Setter
-                                Property="HorizontalAlignment"
-                                Value="Center">
-                            </Setter>
-                        </Style>
-                    </StackPanel.Resources>
-                    <StackPanel
-                   >
-                        <Image
-                            Source="/Resources/BCBox.Image.bmp"
-                            Stretch="Uniform" />
-                        <StackPanel x:Name="bcPanel">
-                            
-                        </StackPanel>
-                        
-                    </StackPanel>
-
-                    <StackPanel
-                      >
-                        <Image
-                            Source="/Resources/TCBox.Image.bmp"
-                            Stretch="Uniform" />
-                        <StackPanel x:Name="tcPanel">
-
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel
-                      >
-                        <Image
-                            Source="/Resources/LCBox.Image.bmp"
-                            Stretch="Uniform" />
-                        <StackPanel x:Name="lcPanel">
-
-                        </StackPanel>
-                    </StackPanel>
-
-                    <StackPanel
-                       >
-                        <Image
-                            Source="/Resources/BIBox.Image.bmp"
-                            Stretch="Uniform" />
-                        <StackPanel x:Name="biPanel">
-
-                        </StackPanel>
-                    </StackPanel>
-
+                    <RadioButton
+                        GroupName="signal"
+                        IsChecked="{Binding SignalVisualChecked}"
+                        Content="Visual">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="signal"
+                        IsChecked="{Binding SignalAuditoryChecked}"
+                        Content="Auditory">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="signal"
+                        IsChecked="{Binding SignalTactileChecked}"
+                        Content="Tactile">
+                    </RadioButton>
 
                 </StackPanel>
 
-                <Button
-                    Grid.Row="11"
+
+                <TextBlock
+                    Text="PQ Mode"
+                    Grid.Row="1"
+                    Grid.Column="0"></TextBlock>
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <RadioButton
+                        GroupName="pq"
+                        IsChecked="{Binding PQVisualChecked}"
+                        Content="Visual">
+                    </RadioButton>
+                    <RadioButton
+                    GroupName="pq"
+                        IsChecked="{Binding PQAuditoryChecked}"
+                        Content="Auditory">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="pq"
+                        IsChecked="{Binding PQTactileChecked}"
+                        Content="Tactile">
+                    </RadioButton>
+                </StackPanel>
+
+
+                <TextBlock
+                    Text="SOA"
+                    Grid.Row="2"
+                    Grid.Column="0"></TextBlock>
+                <StackPanel
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <RadioButton
+                        GroupName="soaGroup"
+                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
+                        Content="200">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="soaGroup"
+                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
+                        Content="600">
+                    </RadioButton>
+                    <RadioButton
+                        GroupName="soaGroup"
+                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa1000}}"
+                        Content="1000">
+                    </RadioButton>
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
+                    >
+
+                    <StackPanel.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Margin" Value="10"/>
+                            <Setter Property="MaxWidth" Value="500"/>
+                        </Style>
+
+                    </StackPanel.Resources>
+                    <Button
+                        Click="practiceBtnClick">
+                        <Button.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
+                        Practice
+                    </Button>
+                    <Button
+                        Click="testBtnClick">
+                        <Button.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding TestMapping.TestDone}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
+                        Test
+                    </Button>
+
+
+
+                    <Button
                     Background="Orange"
                     BorderBrush="Orange"
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom"
                     Click="Button_Click">
-                    Back to setting
-                </Button>
-
+                        <Button.Resources
+                            >
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AllTestCompleted}" Value="true">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
+                        Back to setting
+                    </Button>
+                </StackPanel>
             </Grid>
         </materialDesign:Card>
 

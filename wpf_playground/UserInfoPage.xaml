@@ -25,9 +25,6 @@
             x:Key="ComparisonConverter" />
     </Window.Resources>
     <Grid>
-
-
-
         <materialDesign:Card
             MaxWidth="500"
             MaxHeight="700"
@@ -205,74 +202,70 @@
                     </RadioButton>
                 </StackPanel>
 
+
+
                 <TextBlock
-                    Text="Signal Mode"
+                    Text="Mapping"
                     Grid.Row="8"
                     Grid.Column="0"></TextBlock>
+         
                 <StackPanel
                     Grid.Row="8"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                    <CheckBox
-                        IsChecked="{Binding SignalVisualChecked}"
-                        Content="Visual">
-                    </CheckBox>
-                    <CheckBox
-                        IsChecked="{Binding SignalAuditoryChecked}"
-                        Content="Auditory">
-                    </CheckBox>
-                    <CheckBox
-                        IsChecked="{Binding SignalTactileChecked}"
-                        Content="Tactile">
-                    </CheckBox>
+                    <StackPanel.Resources>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Width" Value="50"/>
+                        </Style>
+                        <Style TargetType="RadioButton">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <StackPanel >
+                        <Image
+                            Source="/Resources/BCBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton GroupName="mapping"
+                        IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BC}}"
+                                     ></RadioButton>
+                    </StackPanel>
+                    <StackPanel >
+                        <Image
+                            Source="/Resources/TCBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton GroupName="mapping"
+                                     
+                        IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.TC}}"
+                                     
+                                     ></RadioButton>
+                    </StackPanel>
+                    <StackPanel >
+                        <Image
+                            Source="/Resources/LCBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton GroupName="mapping" 
+                        IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.LC}}"
+                                     
+                                     ></RadioButton>
+                    </StackPanel>
+                    <StackPanel >
+                        <Image
+                            Source="/Resources/BIBox.Image.bmp"
+                            Stretch="Uniform" />
+                        <RadioButton GroupName="mapping" 
+                                     
+                        IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BI}}"
+                                     
+                                     ></RadioButton>
+                    </StackPanel>
 
                 </StackPanel>
 
-                <TextBlock
-                    Text="PQ Mode"
-                    Grid.Row="9"
-                    Grid.Column="0"></TextBlock>
-                <StackPanel
-                    Grid.Row="9"
-                    Grid.Column="1"
-                    Orientation="Horizontal">
-                    <CheckBox
-                        IsChecked="{Binding PQVisualChecked}"
-                        Content="Visual">
-                    </CheckBox>
-                    <CheckBox
-                        IsChecked="{Binding PQAuditoryChecked}"
-                        Content="Auditory">
-                    </CheckBox>
-                    <CheckBox
-                        IsChecked="{Binding PQTactileChecked}"
-                        Content="Tactile">
-                    </CheckBox>
-                </StackPanel>
-                <TextBlock
-                    Text="SOA"
-                    Grid.Row="10"
-                    Grid.Column="0"></TextBlock>
-                <StackPanel
-                    Grid.Row="10"
-                    Grid.Column="1"
-                    Orientation="Horizontal">
-                    <RadioButton
-                        GroupName="soaGroup"
-                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
-                        Content="200">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="soaGroup"
-                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
-                        Content="600">
-                    </RadioButton>
-                    <RadioButton
-                        GroupName="soaGroup"
-                        IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa1000}}"
-                        Content="1000">
-                    </RadioButton>
-                </StackPanel>
+
+
                 <TabControl  Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource MaterialDesignTabControl}">
                     <TabItem Header="Auditory Settings">
                         <StackPanel Grid.IsSharedSizeScope="True">

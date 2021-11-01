@@ -18,6 +18,25 @@ namespace wpf_playground
     /// </summary>
     public partial class UserInfoPage : Window
     {
+
+
+        void initList()
+        {
+            State.TestMappingList = new List<TestMapping>();
+            //Soa200
+            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa600, SOAEnum.Soa1000 };
+            foreach (var soa in soaList)
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        State.TestMappingList.Add(new TestMapping(soa, i, j));
+                    }
+                }
+            }
+        }
+
         public UserInfoPage()
         {
             this.WindowState = WindowState.Maximized;
@@ -29,6 +48,8 @@ namespace wpf_playground
                 this.Close();
             };
             this.DataContext = vm;
+            initList();
+
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
@@ -97,13 +118,6 @@ namespace wpf_playground
             loadConfig();
         }
 
-        public static UserInfo UserInfo
-        {
-            get
-            {
-                return State.UserInfo;
-            }
-        }
 
 
         public bool IsDebugMode
@@ -123,6 +137,7 @@ namespace wpf_playground
                 genderEnum = value;
                 UserInfo.Gender = value;
                 InformPropertyChanged("GenderEnum");
+                InformPropertyChanged("FormValid");
             }
         }
 
@@ -135,6 +150,7 @@ namespace wpf_playground
             {
                 dominantHandEnum = value;
                 UserInfo.DominantHand = value;
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("DominantHandEnum");
             }
         }
@@ -144,13 +160,22 @@ namespace wpf_playground
             get
             {
                 var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, };
-                if (!AtLeastOnePQChecked) return false;
-                if (!AtLeastOneSignalChecked) return false;
+                var speakerList = new List<DirectSoundDeviceInfo> { SelectedTopSpeakerSoundDevice, SelectedPQSoundDevice, SelectedBottomSpeakerSoundDevice, SelectedTactileTopSpeakerSoundDevice, SelectedTactilePQSoundDevice, SelectedTactileBottomSpeakerSoundDevice };
+                if (speakerList.Any(x => x == null || x.Guid == null)) return false;
+                //if (!AtLeastOnePQChecked) return false;
+                //if (!AtLeastOneSignalChecked) return false;
                 return !list.Any(x => string.IsNullOrEmpty(x));
             }
         }
 
 
+        public static UserInfo UserInfo
+        {
+            get
+            {
+                return State.UserInfo;
+            }
+        }
 
         private string _name = UserInfo.Name;
         public string Name
@@ -258,6 +283,7 @@ namespace wpf_playground
             {
                 _selectedPQSoundDevice = value;
                 State.PQSpeaker = value;
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("SelectedPQSoundDevice");
             }
         }
@@ -271,6 +297,8 @@ namespace wpf_playground
                 _selectedTopSpeakerSoundDevice = value;
                 State.TopSpeaker = value;
                 InformPropertyChanged("SelectedTopSpeakerSoundDevice");
+                InformPropertyChanged("FormValid");
+
             }
         }
 
@@ -283,6 +311,7 @@ namespace wpf_playground
                 _selectedBottomSpeakerSoundDevice = value;
                 State.BottomSpeaker = value;
                 InformPropertyChanged("SelectedBottomSpeakerSoundDevice");
+                InformPropertyChanged("FormValid");
             }
         }
 
@@ -309,6 +338,7 @@ namespace wpf_playground
 
                 _tactileTopSpeakerHz = value;
                 UserInfo.TactileTopSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("TactileTopSpeakerHz");
             }
 
@@ -323,6 +353,7 @@ namespace wpf_playground
 
                 _tactilebottomSpeakerHz = value;
                 UserInfo.TactileBottomSpeakerHz = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("TactileBottomSpeakerHz");
             }
 
@@ -336,6 +367,7 @@ namespace wpf_playground
             {
                 _selectedTactilePQSoundDevice = value;
                 State.TactilePQSpeaker = value;
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("SelectedTactilePQSoundDevice");
             }
         }
@@ -348,6 +380,7 @@ namespace wpf_playground
             {
                 _selectedTactileTopSpeakerSoundDevice = value;
                 State.TactileTopSpeaker = value;
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("SelectedTactileTopSpeakerSoundDevice");
             }
         }
@@ -360,6 +393,7 @@ namespace wpf_playground
             {
                 _selectedTactileBottomSpeakerSoundDevice = value;
                 State.TactileBottomSpeaker = value;
+                InformPropertyChanged("FormValid");
                 InformPropertyChanged("SelectedTactileBottomSpeakerSoundDevice");
             }
         }
@@ -376,120 +410,28 @@ namespace wpf_playground
                 _levelEnum = value;
                 UserInfo.Level = value;
                 InformPropertyChanged("LevelEnum");
-            }
-        }
-
-
-        private bool _signalVisualChecked = UserInfo.SignalVisualChecked;
-        public bool SignalVisualChecked
-        {
-            get { return _signalVisualChecked; }
-            set
-            {
-                _signalVisualChecked = value;
-                UserInfo.SignalVisualChecked = value;
                 InformPropertyChanged("FormValid");
-                InformPropertyChanged("SignalVisualChecked");
+
             }
         }
 
-        private bool _signalAuditoryChecked = UserInfo.SignalAuditoryChecked;
-        public bool SignalAuditoryChecked
+
+
+        private MappingEnum _selectedMapping = State.SelectedMapping;
+
+        public MappingEnum SelectedMapping
         {
-            get { return _signalAuditoryChecked; }
+            get { return _selectedMapping; }
             set
             {
-                _signalAuditoryChecked = value;
-                UserInfo.SignalAuditoryChecked = value;
+                _selectedMapping = value;
+                InformPropertyChanged("SelectedMapping");
                 InformPropertyChanged("FormValid");
-                InformPropertyChanged("SignalAuditoryChecked");
-            }
-        }
-
-        private bool _signalTactileChecked = UserInfo.SignalTactileChecked;
-        public bool SignalTactileChecked
-        {
-            get { return _signalTactileChecked; }
-            set
-            {
-                _signalTactileChecked = value;
-                UserInfo.SignalTactileChecked = value;
-                InformPropertyChanged("FormValid");
-                InformPropertyChanged("SignalTactileChecked");
+                State.SelectedMapping = value;
             }
         }
 
 
-
-        private bool _pqVisualChecked = UserInfo.PQVisualChecked;
-        public bool PQVisualChecked
-        {
-            get { return _pqVisualChecked; }
-            set
-            {
-                _pqVisualChecked = value;
-                UserInfo.PQVisualChecked = value;
-                InformPropertyChanged("FormValid");
-                InformPropertyChanged("PQVisualChecked");
-            }
-        }
-
-        private bool _pqAuditoryChecked = UserInfo.PQAuditoryChecked;
-
-        public bool PQAuditoryChecked
-        {
-            get { return _pqAuditoryChecked; }
-            set
-            {
-                _pqAuditoryChecked = value;
-                UserInfo.PQAuditoryChecked = value;
-                InformPropertyChanged("FormValid");
-                InformPropertyChanged("PQAuditoryChecked");
-            }
-        }
-
-        private bool _pqTactileChecked = UserInfo.PQTactileChecked;
-
-        public bool PQTactileChecked
-        {
-            get { return _pqTactileChecked; }
-            set
-            {
-                _pqTactileChecked = value;
-                UserInfo.PQTactileChecked = value;
-                InformPropertyChanged("FormValid");
-                InformPropertyChanged("PQTactileChecked");
-            }
-        }
-
-        public bool AtLeastOneSignalChecked
-        {
-            get
-            {
-                return SignalAuditoryChecked || SignalVisualChecked || SignalTactileChecked;
-            }
-        }
-
-        public bool AtLeastOnePQChecked
-        {
-            get
-            {
-                return PQVisualChecked || PQAuditoryChecked || PQTactileChecked;
-            }
-        }
-
-
-        private SOAEnum soaEnum = UserInfo.SOA;
-        public SOAEnum SOAEnum
-        {
-            get { return soaEnum; }
-            set
-            {
-                soaEnum = value;
-                UserInfo.SOA = value;
-                InformPropertyChanged("SOAEnum");
-            }
-        }
 
         void saveConfig()
         {

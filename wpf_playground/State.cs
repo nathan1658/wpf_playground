@@ -22,6 +22,9 @@ namespace wpf_playground
         public static Key BottomLeftKey;
         public static Key BottomRightKey;
 
+
+        public static MappingEnum SelectedMapping = MappingEnum.BC;
+
         public static DirectSoundDeviceInfo PQSpeaker;
         public static DirectSoundDeviceInfo TopSpeaker;
         public static DirectSoundDeviceInfo BottomSpeaker;
@@ -30,7 +33,10 @@ namespace wpf_playground
         public static DirectSoundDeviceInfo TactileTopSpeaker;
         public static DirectSoundDeviceInfo TactileBottomSpeaker;
 
-        public static List<MappingEnum> FinishedTestMappingList = new List<MappingEnum> { };
-        public static List<MappingEnum> FinishedMappingList = new List<MappingEnum> { };
+
+        public static List<TestMapping> TestMappingList = new List<TestMapping>();
+
+        //public static List<MappingEnum> FinishedTestMappingList = new List<MappingEnum> { };
+        //public static List<MappingEnum> FinishedMappingList = new List<MappingEnum> { };
     }
 }
