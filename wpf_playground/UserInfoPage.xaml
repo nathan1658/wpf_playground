@@ -26,8 +26,7 @@
     </Window.Resources>
     <Grid>
         <materialDesign:Card
-            MaxWidth="500"
-            MaxHeight="700"
+            MaxWidth="800"
             Padding="32"
             Margin="16"
             Grid.Column="0">
@@ -38,6 +37,7 @@
                         <Setter
                             Property="Margin"
                             Value="5" />
+                        <Setter Property="FontSize" Value="0.7cm"/>
                         <Setter
                             Property="VerticalAlignment"
                             Value="Center" />
@@ -53,12 +53,17 @@
                         <Setter
                             Property="Margin"
                             Value="5" />
+                        <Setter Property="FontSize" Value="0.7cm"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
                     </Style>
                     <Style
                         TargetType="TextBox">
                         <Setter
                             Property="Margin"
                             Value="5" />
+                        <Setter Property="FontSize" Value="0.7cm"/>
                     </Style>
                 </Grid.Resources>
                 <Grid.RowDefinitions>
@@ -203,44 +208,42 @@
                 </StackPanel>
 
 
-
                 <TextBlock
                     Text="Mapping"
                     Grid.Row="8"
                     Grid.Column="0"></TextBlock>
-         
+
+
                 <StackPanel
                     Grid.Row="8"
                     Grid.Column="1"
-                    Orientation="Horizontal">
+                    Orientation="Vertical">
                     <StackPanel.Resources>
                         <Style TargetType="StackPanel">
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                         <Style TargetType="Image">
-                            <Setter Property="Width" Value="50"/>
+                            <Setter Property="Height" Value="150"/>
                         </Style>
-                        <Style TargetType="RadioButton">
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                        </Style>
+                        
                     </StackPanel.Resources>
+               
+                    <StackPanel Orientation="Horizontal">
                     <StackPanel >
                         <Image
                             Source="/Resources/BCBox.Image.bmp"
                             Stretch="Uniform" />
                         <RadioButton GroupName="mapping"
                         IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BC}}"
-                                     ></RadioButton>
+                                     >BC</RadioButton>
                     </StackPanel>
                     <StackPanel >
                         <Image
                             Source="/Resources/TCBox.Image.bmp"
                             Stretch="Uniform" />
                         <RadioButton GroupName="mapping"
-                                     
                         IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.TC}}"
-                                     
-                                     ></RadioButton>
+                                     >TC</RadioButton>
                     </StackPanel>
                     <StackPanel >
                         <Image
@@ -249,25 +252,26 @@
                         <RadioButton GroupName="mapping" 
                         IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.LC}}"
                                      
-                                     ></RadioButton>
+                                     >LC</RadioButton>
                     </StackPanel>
                     <StackPanel >
                         <Image
                             Source="/Resources/BIBox.Image.bmp"
                             Stretch="Uniform" />
                         <RadioButton GroupName="mapping" 
-                                     
                         IsChecked="{Binding SelectedMapping, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MappingEnum.BI}}"
-                                     
-                                     ></RadioButton>
+                                     >BI</RadioButton>
                     </StackPanel>
-
+                    </StackPanel>
                 </StackPanel>
 
 
 
                 <TabControl  Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource MaterialDesignTabControl}">
-                    <TabItem Header="Auditory Settings">
+                    <TabItem FontSize="0.7cm">
+                        <TabItem.Header>
+                            <TextBlock>Auditory Settings</TextBlock>
+                        </TabItem.Header>
                         <StackPanel Grid.IsSharedSizeScope="True">
                             <dd:SpeakerSelector
                                 ButtonColor="Red"
@@ -280,7 +284,10 @@
                                 DescriptionText="Bottom Speaker Hz"  HzValue="{Binding BottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedBottomSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
                         </StackPanel>
                     </TabItem>
-                    <TabItem Header="Tactile Settings">
+                    <TabItem  FontSize="0.7cm">
+                        <TabItem.Header>
+                            <TextBlock>Tactile Settings</TextBlock>
+                        </TabItem.Header>
                         <StackPanel Grid.IsSharedSizeScope="True">
                             <dd:SpeakerSelector
                                 ButtonColor="Red"

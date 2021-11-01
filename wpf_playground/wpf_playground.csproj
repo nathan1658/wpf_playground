@@ -143,7 +143,7 @@
     <Compile Include="MappingSelection.xaml.cs">
       <DependentUpon>MappingSelection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\ClickHistory.cs" />
+    <Compile Include="Model\ExperimentLog.cs" />
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\enums.cs" />
     <Compile Include="Model\TestMapping.cs" />

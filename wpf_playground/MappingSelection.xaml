@@ -37,6 +37,7 @@
                         <Setter
                             Property="Margin"
                             Value="5" />
+                        <Setter Property="FontSize" Value=".7CM"/>
                         <Setter
                             Property="VerticalAlignment"
                             Value="Center" />
@@ -52,6 +53,8 @@
                         <Setter
                             Property="Margin"
                             Value="5" />
+                        <Setter Property="FontSize" Value=".7CM"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                     </Style>
                     <Style
                         TargetType="TextBox">
@@ -195,9 +198,6 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
                                         <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding TestMapping.TestDone}" Value="true">
-                                        <Setter Property="IsEnabled" Value="False"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
