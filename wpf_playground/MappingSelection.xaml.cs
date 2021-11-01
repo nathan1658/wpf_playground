@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,7 +26,7 @@ namespace wpf_playground
     /// </summary>
     public partial class MappingSelection : Window, INotifyPropertyChanged
     {
-       
+
 
         public MappingSelection()
         {
@@ -70,6 +71,98 @@ namespace wpf_playground
 
         //}
 
+
+
+
+        void outputCSV()
+        {
+
+            //Write to CSV
+            var mappingDict = new Dictionary<string, string>();
+            mappingDict.Add("Name", nameof(UserInfo.Name));
+            mappingDict.Add("SID", nameof(UserInfo.SID));
+            mappingDict.Add("Age", nameof(UserInfo.Age));
+            mappingDict.Add("Gender", nameof(UserInfo.Gender).ToString());
+            mappingDict.Add("DominantHand", nameof(UserInfo.DominantHand).ToString());
+            mappingDict.Add("Level", nameof(UserInfo.Level).ToString());
+            mappingDict.Add("VisualSignalEnabled", nameof(UserInfo.SignalVisualChecked).ToString());
+            mappingDict.Add("AuditorySignalEnabled", nameof(UserInfo.SignalAuditoryChecked).ToString());
+            mappingDict.Add("TactileSignalEnabled", nameof(UserInfo.SignalTactileChecked).ToString());
+            mappingDict.Add("VisualPQEnabled", nameof(UserInfo.PQVisualChecked).ToString());
+            mappingDict.Add("AuditoryPQEnabled", nameof(UserInfo.PQAuditoryChecked).ToString());
+            mappingDict.Add("TactilePQEnabled", nameof(UserInfo.PQTactileChecked).ToString());
+            mappingDict.Add("SOA", nameof(UserInfo.SOA).ToString());
+            mappingDict.Add("Mapping", "");
+
+            var historyMappingDict = new Dictionary<string, string>();
+            historyMappingDict.Add("HistoryType", nameof(ExperimentLog.HistoryType));
+            historyMappingDict.Add("SignalIndex", nameof(ExperimentLog.SignalIndex));
+            historyMappingDict.Add("ButtonPositionIndex", nameof(ExperimentLog.ButtonPositionIndex));
+            historyMappingDict.Add("PQPositionIndex", nameof(ExperimentLog.PQPositionIndex));
+            historyMappingDict.Add("ElapsedTime", nameof(ExperimentLog.ElapsedTime));
+            historyMappingDict.Add("ReactionTime", nameof(ExperimentLog.ReactionTime));
+            historyMappingDict.Add("Distance", nameof(ExperimentLog.Distance));
+            historyMappingDict.Add("ClickState", nameof(ExperimentLog.ClickState));
+            historyMappingDict.Add("Delay", nameof(ExperimentLog.Delay));
+
+
+            var headers = new List<String>();
+            //concat the headers
+            foreach (var kvp in mappingDict)
+            {
+                headers.Add(kvp.Key);
+            }
+            foreach (var kvp in historyMappingDict)
+            {
+                headers.Add(kvp.Key);
+            }
+
+            var csvOutput = String.Join(",", headers) + "\n";
+            for (int i = 0; i < State.TestResultList.Count; i++)
+            {
+                var testResult = State.TestResultList[i];
+                var tmpList = new List<string>();
+                foreach (var clickHistory in testResult.ClickHistoryList)
+                {
+                    foreach (var kvp in mappingDict)
+                    {
+
+                        //Hardcode here for mapping..
+                        if (kvp.Key == "Mapping")
+                        {
+                            tmpList.Add(testResult.Mapping.ToString());
+                        }
+                        else
+                        {
+                            //resolve it via reflection
+                            var val = GetPropValue(testResult.UserInfo, kvp.Value);
+                            tmpList.Add(kvp.Value);
+                        }
+                    }
+
+
+                    foreach (var kvp in historyMappingDict)
+                    {
+                        //resolve it via reflection
+                        var val = GetPropValue(clickHistory, kvp.Value);
+                        tmpList.Add(val.ToString());
+                    }
+                }
+                csvOutput += String.Join(",", tmpList) + "\n";
+            }
+            if (!Directory.Exists("./output"))
+                Directory.CreateDirectory("output");
+            var fileName = $"output/{ DateTime.Now.ToString("yyyyMMddHHmmss") }.csv";
+            File.WriteAllText(fileName, csvOutput);
+            MessageBox.Show($"Saved test result to {fileName}");
+        }
+
+
+        public static object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+
         void openWindowAndCloseThis(bool practiceMode, MappingEnum mapping)
         {
             new MainWindow(practiceMode, mapping, TestMapping).Show();
@@ -89,6 +182,7 @@ namespace wpf_playground
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            outputCSV();
             new UserInfoPage().Show();
             this.Close();
         }

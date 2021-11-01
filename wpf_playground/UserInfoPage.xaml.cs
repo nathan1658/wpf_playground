@@ -44,6 +44,11 @@ namespace wpf_playground
             var vm = new UserInfoPageViewModel();
             vm.CloseAction = () =>
             {
+
+                //Reset timer and clean up test history
+                State.TestResultList = new List<TestResult>();
+                State.TestStopwatch.Restart();
+
                 new MappingSelection().Show();
                 this.Close();
             };

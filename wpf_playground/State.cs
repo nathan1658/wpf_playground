@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,8 @@ namespace wpf_playground
         public static DirectSoundDeviceInfo TactileBottomSpeaker;
 
 
+        public static Stopwatch TestStopwatch = new Stopwatch();
+        public static List<TestResult> TestResultList { get; set; } = new List<TestResult>();
         public static List<TestMapping> TestMappingList = new List<TestMapping>();
 
         //public static List<MappingEnum> FinishedTestMappingList = new List<MappingEnum> { };

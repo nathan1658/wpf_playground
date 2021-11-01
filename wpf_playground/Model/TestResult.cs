@@ -10,6 +10,10 @@ namespace wpf_playground.Model
     {
         public UserInfo UserInfo { get; set; }
         public IList<ExperimentLog> ClickHistoryList { get; set; }
-        
+        public MappingEnum Mapping { get; set; }
+        public TestResult(MappingEnum mapping)
+        {
+            this.Mapping = mapping;
+        }
     }
 }
