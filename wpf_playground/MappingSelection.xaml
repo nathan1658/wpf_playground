@@ -180,11 +180,6 @@
                         <Button.Resources>
                             <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                                 <Setter Property="IsEnabled" Value="True"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
                             </Style>
                         </Button.Resources>
                         Practice
