@@ -35,7 +35,6 @@ namespace wpf_playground
             InitializeComponent();
             this.DataContext = this;
 
-
             //genPanelButtons(ref bcPanel, MappingEnum.BC);
             //genPanelButtons(ref tcPanel, MappingEnum.TC);
             //genPanelButtons(ref lcPanel, MappingEnum.LC);
@@ -82,16 +81,16 @@ namespace wpf_playground
             mappingDict.Add("Name", nameof(UserInfo.Name));
             mappingDict.Add("SID", nameof(UserInfo.SID));
             mappingDict.Add("Age", nameof(UserInfo.Age));
-            mappingDict.Add("Gender", nameof(UserInfo.Gender).ToString());
-            mappingDict.Add("DominantHand", nameof(UserInfo.DominantHand).ToString());
-            mappingDict.Add("Level", nameof(UserInfo.Level).ToString());
-            mappingDict.Add("VisualSignalEnabled", nameof(UserInfo.SignalVisualChecked).ToString());
-            mappingDict.Add("AuditorySignalEnabled", nameof(UserInfo.SignalAuditoryChecked).ToString());
-            mappingDict.Add("TactileSignalEnabled", nameof(UserInfo.SignalTactileChecked).ToString());
-            mappingDict.Add("VisualPQEnabled", nameof(UserInfo.PQVisualChecked).ToString());
-            mappingDict.Add("AuditoryPQEnabled", nameof(UserInfo.PQAuditoryChecked).ToString());
-            mappingDict.Add("TactilePQEnabled", nameof(UserInfo.PQTactileChecked).ToString());
-            mappingDict.Add("SOA", nameof(UserInfo.SOA).ToString());
+            mappingDict.Add("Gender", nameof(UserInfo.Gender));
+            mappingDict.Add("DominantHand", nameof(UserInfo.DominantHand));
+            mappingDict.Add("Level", nameof(UserInfo.Level));
+            mappingDict.Add("VisualSignalEnabled", nameof(UserInfo.SignalVisualChecked));
+            mappingDict.Add("AuditorySignalEnabled", nameof(UserInfo.SignalAuditoryChecked));
+            mappingDict.Add("TactileSignalEnabled", nameof(UserInfo.SignalTactileChecked));
+            mappingDict.Add("VisualPQEnabled", nameof(UserInfo.PQVisualChecked));
+            mappingDict.Add("AuditoryPQEnabled", nameof(UserInfo.PQAuditoryChecked));
+            mappingDict.Add("TactilePQEnabled", nameof(UserInfo.PQTactileChecked));
+            mappingDict.Add("SOA", nameof(UserInfo.SOA));
             mappingDict.Add("Mapping", "");
 
             var historyMappingDict = new Dictionary<string, string>();
@@ -121,9 +120,9 @@ namespace wpf_playground
             for (int i = 0; i < State.TestResultList.Count; i++)
             {
                 var testResult = State.TestResultList[i];
-                var tmpList = new List<string>();
                 foreach (var clickHistory in testResult.ClickHistoryList)
                 {
+                    var tmpList = new List<string>();
                     foreach (var kvp in mappingDict)
                     {
 
@@ -136,7 +135,7 @@ namespace wpf_playground
                         {
                             //resolve it via reflection
                             var val = GetPropValue(testResult.UserInfo, kvp.Value);
-                            tmpList.Add(kvp.Value);
+                            tmpList.Add(val.ToString());
                         }
                     }
 
@@ -147,8 +146,8 @@ namespace wpf_playground
                         var val = GetPropValue(clickHistory, kvp.Value);
                         tmpList.Add(val.ToString());
                     }
+                    csvOutput += String.Join(",", tmpList) + "\n";
                 }
-                csvOutput += String.Join(",", tmpList) + "\n";
             }
             if (!Directory.Exists("./output"))
                 Directory.CreateDirectory("output");

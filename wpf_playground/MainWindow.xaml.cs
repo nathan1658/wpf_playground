@@ -376,6 +376,8 @@ namespace wpf_playground
                 else
                 {
                     testMapping.TestDone = true;
+                    MessageBox.Show("Finished Test! Now back to mapping selection.");
+
                     //Add current mapping to finished state
                     //State.FinishedMappingList.Add(mapping);
                     saveResult();
