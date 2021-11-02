@@ -115,7 +115,7 @@ namespace wpf_playground
 
         void start()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
                {
                    while (!gameEnd)
                    {
@@ -129,7 +129,7 @@ namespace wpf_playground
                        }
                        finally
                        {
-                           Thread.Sleep(10);
+                           await Task.Delay(10);
                        }
                    }
                });

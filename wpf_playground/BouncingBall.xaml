@@ -5,8 +5,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:wpf_playground"
+    xmlns:converter="clr-namespace:wpf_playground.Converter"
     Background="White"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:CMConverter x:Key="cmConverter"/>
+    </UserControl.Resources>
     <Grid
  >
         <Border
@@ -14,34 +18,35 @@
             BorderThickness="4"></Border>
         <Canvas
             Margin="4"
-            Height="13cm"
-            Width="13cm"
+            Width="{Binding Converter={StaticResource cmConverter}, ConverterParameter=13}"
+            Height="{Binding Converter={StaticResource cmConverter}, ConverterParameter=13}"
             x:Name="board"
             Background="Transparent"
             MouseMove="Board_MouseMove">
             <Grid
                 IsHitTestVisible="False"
                 x:Name="ball"
-                Height="0.5cm"
-                Width="0.5cm"
+                          Width="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
+                          Height="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
+
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
                 <Ellipse
-                    Height="0.5cm"
-                    Width="0.5cm"
+                    Height="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
+                      Width="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
                     Stroke="Black"></Ellipse>
                 <Line
-                    X1="0cm"
-                    Y1="0.25cm"
-                    X2="0.5cm"
-                    Y2="0.25cm"
+                    X1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0}"
+                    Y1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
+                    X2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
+                    Y2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
                     Stroke="Black"
                     StrokeThickness="1" />
                 <Line
-                    X1="0.25cm"
-                    Y1="0cm"
-                    X2="0.25cm"
-                    Y2="0.5cm"
+                    X1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
+                    Y1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0}"
+                    X2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
+                    Y2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
                     Stroke="Black"
                     StrokeThickness="1" />
             </Grid>
@@ -50,21 +55,21 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 x:Name="jBall"
-                Height="0.5cm"                
-                Width="0.5cm"
+                Height="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"                
+                  Width="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
              >
                 <Line
-                    X1="0cm"
-                    Y1="0.25cm"
-                    X2="0.5cm"
-                    Y2="0.25cm"
+                    X1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0}"
+                    Y1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
+                    X2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
+                    Y2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
                     Stroke="Black"
                     StrokeThickness="1" />
                 <Line
-                    X1="0.25cm"
-                    Y1="0cm"
-                    X2="0.25cm"
-                    Y2="0.5cm"
+                    X1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
+                    Y1="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0}"
+                    X2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.25}"
+                    Y2="{Binding Converter={StaticResource cmConverter}, ConverterParameter=0.5}"
                     Stroke="Black"
                     StrokeThickness="1" />
             </Grid>
