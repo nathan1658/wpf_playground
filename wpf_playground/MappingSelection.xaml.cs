@@ -19,8 +19,6 @@ using wpf_playground.Model;
 namespace wpf_playground
 {
 
-
-
     /// <summary>
     /// Interaction logic for MappingSelection.xaml
     /// </summary>
