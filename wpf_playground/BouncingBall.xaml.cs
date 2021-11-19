@@ -144,8 +144,6 @@ namespace wpf_playground
 
 
 
-            xCenter = board.Width / 2 - (ball.Width / 2);
-            yCenter = board.Height / 2 - (ball.Height / 2);
 
    
 
@@ -197,6 +195,8 @@ namespace wpf_playground
         private void BouncingBall_Loaded(object sender, RoutedEventArgs e)
         {
 
+            xCenter = board.Width / 2 - (ball.Width / 2);
+            yCenter = board.Height / 2 - (ball.Height / 2);
             //Accquire controller
 
             new Thread(() =>

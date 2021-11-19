@@ -37,10 +37,7 @@ namespace wpf_playground
         /// </summary>
         Stopwatch reactionSw = new Stopwatch();
         int delayIntervalInMs;
-        /// <summary>
-        /// The timer of overall game
-        /// </summary>
-        Stopwatch gameSw = new Stopwatch();
+
         Random random = new Random();
         public const double SIGNAL_VISIBLE_TIME = 1000;
         public const double PQ_VISIBLE_TIME = 200;
@@ -50,7 +47,6 @@ namespace wpf_playground
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-
 
         private List<ExperimentLog> clickHistoryList { get; set; } = new List<ExperimentLog>();
 
@@ -119,8 +115,7 @@ namespace wpf_playground
 
         void start()
         {
-            gameSw.Start();
-            Task.Run(() =>
+            Task.Run(async () =>
                {
                    while (!gameEnd)
                    {
@@ -134,7 +129,7 @@ namespace wpf_playground
                        }
                        finally
                        {
-                           Thread.Sleep(10);
+                           await Task.Delay(10);
                        }
                    }
                });
@@ -381,6 +376,8 @@ namespace wpf_playground
                 else
                 {
                     testMapping.TestDone = true;
+                    MessageBox.Show("Finished Test! Now back to mapping selection.");
+
                     //Add current mapping to finished state
                     //State.FinishedMappingList.Add(mapping);
                     saveResult();
@@ -514,10 +511,7 @@ namespace wpf_playground
 
         }
 
-        public static object GetPropValue(object src, string propName)
-        {
-            return src.GetType().GetProperty(propName).GetValue(src, null);
-        }
+        
 
         int getSoa()
         {
@@ -533,78 +527,13 @@ namespace wpf_playground
 
         void saveResult()
         {
-            var output = new TestResult
+            var output = new TestResult(this.mapping)
             {
-                UserInfo = UserInfo,
+                UserInfo = JsonConvert.DeserializeObject<UserInfo>(JsonConvert.SerializeObject(UserInfo)),
                 ClickHistoryList = clickHistoryList
             };
+            State.TestResultList.Add(output);
 
-            //Write to CSV
-            var mappingDict = new Dictionary<string, string>();
-            mappingDict.Add("Name", UserInfo.Name);
-            mappingDict.Add("SID", UserInfo.SID);
-            mappingDict.Add("Age", UserInfo.Age);
-            mappingDict.Add("Gender", UserInfo.Gender.ToString());
-            mappingDict.Add("DominantHand", UserInfo.DominantHand.ToString());
-            mappingDict.Add("Level", UserInfo.Level.ToString());
-            mappingDict.Add("VisualSignalEnabled", UserInfo.SignalVisualChecked.ToString());
-            mappingDict.Add("AuditorySignalEnabled", UserInfo.SignalAuditoryChecked.ToString());
-            mappingDict.Add("TactileSignalEnabled", UserInfo.SignalTactileChecked.ToString());
-            mappingDict.Add("VisualPQEnabled", UserInfo.PQVisualChecked.ToString());
-            mappingDict.Add("AuditoryPQEnabled", UserInfo.PQAuditoryChecked.ToString());
-            mappingDict.Add("TactilePQEnabled", UserInfo.PQTactileChecked.ToString());
-            mappingDict.Add("SOA", UserInfo.SOA.ToString());
-            mappingDict.Add("Mapping", mapping.ToString());
-
-            var historyMappingDict = new Dictionary<string, string>();
-            historyMappingDict.Add("HistoryType", nameof(ExperimentLog.HistoryType));
-            historyMappingDict.Add("SignalIndex", nameof(ExperimentLog.SignalIndex));
-            historyMappingDict.Add("ButtonPositionIndex", nameof(ExperimentLog.ButtonPositionIndex));
-            historyMappingDict.Add("PQPositionIndex", nameof(ExperimentLog.PQPositionIndex));
-            historyMappingDict.Add("ElapsedTime", nameof(ExperimentLog.ElapsedTime));
-            historyMappingDict.Add("ReactionTime", nameof(ExperimentLog.ReactionTime));
-            historyMappingDict.Add("Distance", nameof(ExperimentLog.Distance));
-            historyMappingDict.Add("ClickState", nameof(ExperimentLog.ClickState));
-            historyMappingDict.Add("Delay", nameof(ExperimentLog.Delay));
-
-
-
-            var headers = new List<String>();
-            //concat the headers
-            foreach (var kvp in mappingDict)
-            {
-                headers.Add(kvp.Key);
-            }
-            foreach (var kvp in historyMappingDict)
-            {
-                headers.Add(kvp.Key);
-            }
-
-            var csvOutput = String.Join(",", headers) + "\n";
-            for (int i = 0; i < clickHistoryList.Count; i++)
-            {
-                var element = clickHistoryList[i];
-                var tmpList = new List<string>();
-
-                foreach (var kvp in mappingDict)
-                {
-                    tmpList.Add(kvp.Value);
-                }
-
-                foreach (var kvp in historyMappingDict)
-                {
-                    //resolve it via reflection
-                    var val = GetPropValue(element, kvp.Value);
-                    tmpList.Add(val.ToString());
-                }
-
-                csvOutput += String.Join(",", tmpList) + "\n";
-            }
-            if (!Directory.Exists("./output"))
-                Directory.CreateDirectory("output");
-            var fileName = $"output/{ DateTime.Now.ToString("yyyyMMddHHmmss") }.csv";
-            File.WriteAllText(fileName, csvOutput);
-            MessageBox.Show($"Saved test result to {fileName}");
         }
 
         int getDelayInterval()
@@ -736,11 +665,12 @@ namespace wpf_playground
                 return this.bouncingBall.Distance;
             }
         }
+
         private double ElapsedTime
         {
             get
             {
-                return this.gameSw.ElapsedMilliseconds;
+                return State.TestStopwatch.ElapsedMilliseconds;
             }
         }
 

@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:wpf_playground"
              mc:Ignorable="d" 
+    xmlns:converter="clr-namespace:wpf_playground.Converter"
+                         
 >
-    <Ellipse Height="3cm" Width="3cm" x:Name="control"  Stroke="Black">
-        
+    <local:MyBaseUserControl.Resources>
+        <converter:CMConverter x:Key="cmConverter"/>
+    </local:MyBaseUserControl.Resources>
+    <Ellipse  Height="{Binding Converter={StaticResource cmConverter}, ConverterParameter=3}"
+        Width="{Binding Converter={StaticResource cmConverter}, ConverterParameter=3}" x:Name="control"  Stroke="Black">
+
         <Ellipse.Style>
             <Style TargetType="Ellipse">
                 <Setter Property="Fill" Value="White"/>
