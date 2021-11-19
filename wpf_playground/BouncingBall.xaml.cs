@@ -147,13 +147,6 @@ namespace wpf_playground
 
    
 
-            //Center both ball and jBall
-            foreach(var tmpBall in new List<Grid> { ball,jBall})
-            {
-                //Center jBall
-                Canvas.SetTop(tmpBall, yCenter);
-                Canvas.SetLeft(tmpBall, xCenter);
-            }
 
 
             var diffLevel = State.UserInfo.Level;
@@ -195,10 +188,21 @@ namespace wpf_playground
         private void BouncingBall_Loaded(object sender, RoutedEventArgs e)
         {
 
+
+          
+
+
             xCenter = board.Width / 2 - (ball.Width / 2);
             yCenter = board.Height / 2 - (ball.Height / 2);
-            //Accquire controller
 
+            //Center both ball and jBall
+            foreach (var tmpBall in new List<Grid> { ball, jBall })
+            {
+                Canvas.SetTop(tmpBall, yCenter);
+                Canvas.SetLeft(tmpBall, xCenter);
+            }
+            
+            //Accquire controller
             new Thread(() =>
             {
                 // Initialize DirectInput

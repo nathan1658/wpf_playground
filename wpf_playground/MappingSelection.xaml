@@ -24,206 +24,205 @@
         <local:NotNullConverter x:Key="notNullConverter"/>
     </Window.Resources>
     <Grid >
-            <materialDesign:Card
+        <materialDesign:Card
                 MaxWidth="800"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Padding="32"
             Margin="16"
             >
-                <Grid>
-                    <Grid.Resources>
-                        <Style
+            <Grid>
+                <Grid.Resources>
+                    <Style
                         TargetType="TextBlock">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                            <Setter Property="FontSize" Value="25"/>
-                            <Setter
+                        <Setter Property="FontSize" Value="25"/>
+                        <Setter
                             Property="VerticalAlignment"
                             Value="Center" />
-                        </Style>
-                        <Style
+                    </Style>
+                    <Style
                         TargetType="StackPanel">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                        </Style>
-                        <Style
+                    </Style>
+                    <Style
                         TargetType="RadioButton">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                            <Setter Property="FontSize" Value="25"/>
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        </Style>
-                        <Style
+                        <Setter Property="FontSize" Value="25"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                    <Style
                         TargetType="TextBox">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.RowDefinitions>
-                        <RowDefinition
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
 
-                        <RowDefinition
+                    <RowDefinition
                         Height="*" />
 
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
                         Width="*" />
-                        <ColumnDefinition
+                    <ColumnDefinition
                         Width="*" />
 
-                    </Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>
 
 
-                    <TextBlock
+                <TextBlock
                     Text="Signal Mode"
                     Grid.Row="0"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="0"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
+                    <RadioButton
                         GroupName="signal"
                         IsChecked="{Binding SignalVisualChecked}"
                         Content="Visual">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="signal"
                         IsChecked="{Binding SignalAuditoryChecked}"
                         Content="Auditory">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="signal"
                         IsChecked="{Binding SignalTactileChecked}"
                         Content="Tactile">
-                        </RadioButton>
+                    </RadioButton>
 
-                    </StackPanel>
+                </StackPanel>
 
 
-                    <TextBlock
+                <TextBlock
                     Text="PQ Mode"
                     Grid.Row="1"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="1"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
+                    <RadioButton
                         GroupName="pq"
                         IsChecked="{Binding PQVisualChecked}"
                         Content="Visual">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                     GroupName="pq"
                         IsChecked="{Binding PQAuditoryChecked}"
                         Content="Auditory">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="pq"
                         IsChecked="{Binding PQTactileChecked}"
                         Content="Tactile">
-                        </RadioButton>
-                    </StackPanel>
+                    </RadioButton>
+                </StackPanel>
 
 
-                    <TextBlock
+                <TextBlock
                     Text="SOA"
                     Grid.Row="2"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="2"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
+                    <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
                         Content="200">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
                         Content="600">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa1000}}"
                         Content="1000">
-                        </RadioButton>
-                    </StackPanel>
+                    </RadioButton>
+                </StackPanel>
 
-                    <StackPanel
+                <StackPanel
                     Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     >
 
-                        <StackPanel.Resources>
-                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Margin" Value="10"/>
-                                <Setter Property="MaxWidth" Value="500"/>
-                            </Style>
+                    <StackPanel.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Margin" Value="10"/>
+                            <Setter Property="MaxWidth" Value="500"/>
+                        </Style>
 
-                        </StackPanel.Resources>
-                        <Button
+                    </StackPanel.Resources>
+                    <Button
                         Click="practiceBtnClick">
-                            <Button.Resources>
-                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                    <Setter Property="IsEnabled" Value="True"/>
-                                </Style>
-                            </Button.Resources>
-                            Practice
-                        </Button>
-                        <Button
+                        <Button.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </Style>
+                        </Button.Resources>
+                        Practice
+                    </Button>
+                    <Button
                         Click="testBtnClick">
-                            <Button.Resources>
-                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                    <Setter Property="IsEnabled" Value="True"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding TestMapping.PracticeDone}" Value="true">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Resources>
-                            Test
-                        </Button>
+                        <Button.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TestMapping.TestDone}" Value="true">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
+                        Test
+                    </Button>
 
 
 
-                        <Button
+                    <Button
                     Background="Orange"
                     BorderBrush="Orange"
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom"
                     Click="Button_Click">
-                            <Button.Resources
+                        <Button.Resources
                             >
-                                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                    <Setter Property="IsEnabled" Value="False"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding AllTestCompleted}" Value="true">
-                                            <Setter Property="IsEnabled" Value="True"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Resources>
-                            Back to setting
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </materialDesign:Card>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AllTestCompleted}" Value="true">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
+                        Back to setting
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
     </Grid>
 </Window>
