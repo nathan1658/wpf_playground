@@ -15,309 +15,314 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    d:DesignHeight="539.669"
-    d:DesignWidth="667.372"
+    xmlns:dd="clr-namespace:wpf_playground"
+    d:DesignHeight="888.669"
+    d:DesignWidth="751.372"
+    x:Name="userInfoPage"
     Title="User Info Page">
     <Window.Resources>
         <local:ComparisonConverter
             x:Key="ComparisonConverter" />
     </Window.Resources>
     <Grid>
-        <StackPanel>
 
 
-            <materialDesign:Card
+
+        <materialDesign:Card
             MaxWidth="500"
-            MaxHeight="600"
+            MaxHeight="700"
             Padding="32"
             Margin="16"
             Grid.Column="0">
-                <Grid>
-                    <Grid.Resources>
-                        <Style
+            <Grid>
+                <Grid.Resources>
+                    <Style
                         TargetType="TextBlock">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                            <Setter
+                        <Setter
                             Property="VerticalAlignment"
                             Value="Center" />
-                        </Style>
-                        <Style
+                    </Style>
+                    <Style
                         TargetType="StackPanel">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                        </Style>
-                        <Style
+                    </Style>
+                    <Style
                         TargetType="RadioButton">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                        </Style>
-                        <Style
+                    </Style>
+                    <Style
                         TargetType="TextBox">
-                            <Setter
+                        <Setter
                             Property="Margin"
                             Value="5" />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.RowDefinitions>
-                        <RowDefinition
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
                         Height="auto" />
-                        <RowDefinition
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
                         Height="*" />
 
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
                         Width="auto" />
-                        <ColumnDefinition
+                    <ColumnDefinition
                         Width="*" />
-                    </Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>
 
-                    <TextBlock
+                <TextBlock
                     Text="Name"
                     Grid.Row="0"
                     Grid.Column="0" />
-                    <TextBox
+                <TextBox
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
-                    </TextBox>
+                </TextBox>
 
-                    <TextBlock
+                <TextBlock
                     Text="SID"
                     Grid.Row="1"
                     Grid.Column="0"></TextBlock>
-                    <TextBox
+                <TextBox
                     Grid.Row="1"
                     Grid.Column="1"
                     Text="{Binding SID, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
-                    <TextBlock
+                <TextBlock
                     Text="Age"
                     Grid.Row="2"
                     Grid.Column="0"></TextBlock>
-                    <TextBox
+                <TextBox
                     Grid.Row="2"
                     Grid.Column="1"
                     Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
-                    <TextBlock
+                <TextBlock
                     Text="Gender"
                     Grid.Row="3"
                     Grid.Column="0"></TextBlock>
 
-                    <StackPanel
+                <StackPanel
                     Grid.Row="3"
                     Grid.Column="1"
                     Orientation="Horizontal">
 
-                        <RadioButton
+                    <RadioButton
                         GroupName="genderGroup"
                         IsChecked="{Binding GenderEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GenderEnum.Male}}"
                         Content="Male">
-                        </RadioButton>
+                    </RadioButton>
 
-                        <RadioButton
+                    <RadioButton
                         GroupName="genderGroup"
                         IsChecked="{Binding GenderEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:GenderEnum.Female}}"
                         Content="Female">
-                        </RadioButton>
+                    </RadioButton>
 
-                    </StackPanel>
+                </StackPanel>
 
-                    <TextBlock
+
+                <TextBlock
                     Text="Dominant Hand"
                     Grid.Row="5"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="5"
                     Grid.Column="1"
                     Orientation="Horizontal">
 
-                        <RadioButton
-                        GroupName="dominantGroup"
-                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Left}}"
-                        Content="Left">
-                        </RadioButton>
-
-                        <RadioButton
+                    <RadioButton
                         GroupName="dominantGroup"
                         IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Right}}"
                         Content="Right">
-                        </RadioButton>
+                    </RadioButton>
 
-                    </StackPanel>
+                    <RadioButton
+                        GroupName="dominantGroup"
+                        IsChecked="{Binding DominantHandEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:DominantHandEnum.Left}}"
+                        Content="Left">
+                    </RadioButton>
 
-                    <TextBlock
+                </StackPanel>
+
+                <TextBlock
                     Text="Level"
                     Grid.Row="7"
                     Grid.Column="0" />
-                    <StackPanel
+                <StackPanel
                     Grid.Row="7"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
+                    <RadioButton
                         GroupName="levelGroup"
                         IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L50}}"
                         Content="L50">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="levelGroup"
                         IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L75}}"
                         Content="L75">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="levelGroup"
                         IsChecked="{Binding LevelEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:LevelEnum.L100}}"
                         Content="L100">
-                        </RadioButton>
-                    </StackPanel>
+                    </RadioButton>
+                </StackPanel>
 
-                    <TextBlock
+                <TextBlock
                     Text="Signal Mode"
                     Grid.Row="8"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="8"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Visual}}"
+                    <CheckBox
+                        IsChecked="{Binding SignalVisualChecked}"
                         Content="Visual">
-                        </RadioButton>
-                        <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Auditory}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding SignalAuditoryChecked}"
                         Content="Auditory">
-                        </RadioButton>
-                        <RadioButton
-                        GroupName="signalModeGroup"
-                        IsChecked="{Binding SignalModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SignalModeEnum.Tactile}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding SignalTactileChecked}"
                         Content="Tactile">
-                        </RadioButton>
+                    </CheckBox>
 
-                    </StackPanel>
+                </StackPanel>
 
-                    <TextBlock
+                <TextBlock
                     Text="PQ Mode"
                     Grid.Row="9"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="9"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Visual}}"
+                    <CheckBox
+                        IsChecked="{Binding PQVisualChecked}"
                         Content="Visual">
-                        </RadioButton>
-                        <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Auditory}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding PQAuditoryChecked}"
                         Content="Auditory">
-                        </RadioButton>
-                        <RadioButton
-                        GroupName="pqModeGroup"
-                        IsChecked="{Binding PQModeEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:PQModeEnum.Tactile}}"
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding PQTactileChecked}"
                         Content="Tactile">
-                        </RadioButton>
-                    </StackPanel>
-                    <TextBlock
+                    </CheckBox>
+                </StackPanel>
+                <TextBlock
                     Text="SOA"
                     Grid.Row="10"
                     Grid.Column="0"></TextBlock>
-                    <StackPanel
+                <StackPanel
                     Grid.Row="10"
                     Grid.Column="1"
                     Orientation="Horizontal">
-                        <RadioButton
+                    <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
                         Content="200">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
                         Content="600">
-                        </RadioButton>
-                        <RadioButton
+                    </RadioButton>
+                    <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa1000}}"
                         Content="1000">
-                        </RadioButton>
-                    </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+                <TabControl  Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource MaterialDesignTabControl}">
+                    <TabItem Header="Auditory Settings">
+                        <StackPanel Grid.IsSharedSizeScope="True">
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTopSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Green"
+                                DescriptionText="PQ Hz"  HzValue="{Binding PQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedPQSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding BottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedBottomSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Tactile Settings">
+                        <StackPanel Grid.IsSharedSizeScope="True">
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Top Speaker Hz"  HzValue="{Binding TactileTopSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileTopSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Green"
+                                DescriptionText="PQ Hz"  HzValue="{Binding TactilePQHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactilePQSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
+                            <dd:SpeakerSelector
+                                ButtonColor="Red"
+                                DescriptionText="Bottom Speaker Hz"  HzValue="{Binding TactileBottomSpeakerHz,Mode=TwoWay}"  SelectedSoundDevice="{Binding SelectedTactileBottomSpeakerSoundDevice,Mode=TwoWay}" ></dd:SpeakerSelector>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
 
 
-                    <TextBlock
-                    Text="Hz"
-                    Grid.Row="11"
-                    Grid.Column="0"></TextBlock>
-                    <Grid
-                    Grid.Row="11"
-                    Grid.Column="1"
-                        >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox
-                            Grid.Column="0"
-                            HorizontalContentAlignment="Stretch"
-                        PreviewTextInput="TextBox_PreviewTextInput"
-                        Text="{Binding Hz, UpdateSourceTrigger=PropertyChanged}"
-                    >
-
-                        </TextBox>
-                        <Button Click="Button_Click" Grid.Column="1" Width="100">
-                            Play
-                        </Button>
-                    </Grid>
 
 
-                    <Button
+
+
+                <Button
                         Margin="0 10 0 0"
                     IsEnabled="{Binding FormValid}"
-                    Grid.Row="12"
+                    Grid.Row="14"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom">
-                        Submit
-                    </Button>
+                    Submit
+                </Button>
 
-                </Grid>
-            </materialDesign:Card>
-        </StackPanel>
+            </Grid>
+        </materialDesign:Card>
 
-        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5" x:Name="versionText">
-            
+        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,5,5" x:Name="versionText" Grid.Column="1">
+
         </TextBlock>
     </Grid>
 </Window>

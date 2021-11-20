@@ -23,18 +23,30 @@
         <converter:ListToStringConverter
             x:Key="listToStringConverter" />
     </Window.Resources>
-    <Grid>
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
 
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition
-                Width="400" />
+                Width="auto" />
             <ColumnDefinition
-                Width="*" />
+                Width="auto" />
 
         </Grid.ColumnDefinitions>
-        <StackPanel   Grid.Column="0">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel  Width="400"  Grid.Column="0">
+            <StackPanel.Resources>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Resources>
             <materialDesign:Card
             Padding="32"
             Margin="16"
@@ -74,9 +86,10 @@
         </StackPanel>
 
         <materialDesign:Card
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
             Margin="16"     
-            Height="19cm"
-                Width="19cm"
+            Padding="16"
             Grid.Column="1">
             <materialDesign:Card.Resources>
                 <Style TargetType="TextBlock"
@@ -90,55 +103,29 @@
                 </Style>
             </materialDesign:Card.Resources>
             <Grid
+                
               >
-                <Grid
+                <Grid                    
                       x:Name="gameBoard"
-                    Background="Gray"
                     >
-                    <Grid
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-                        <local:Circle
-                            x:Name="circle0" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            0</TextBlock>
-                    </Grid>
 
-                    <Grid
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top">
-                        <local:Circle
-                            x:Name="circle1" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">1</TextBlock>
-                    </Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
                     <local:BouncingBall
+                        Grid.Row="1"
+                        Grid.Column="1"
                         x:Name="bouncingBall"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
 
-                    <Grid
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom">
-                        <local:Circle
-                            x:Name="circle2" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">2</TextBlock>
-                    </Grid>
-                    <Grid
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom">
-                        <local:Circle
-                            x:Name="circle3" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">3</TextBlock>
-
-                    </Grid>
 
                     <TextBlock
                         Background="White"
@@ -150,7 +137,17 @@
                     VerticalAlignment="top"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDebugMode}" Value="true">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
 
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock>
                         Game time:
                     </TextBlock>
@@ -158,6 +155,23 @@
                     x:Name="gameCounter"
                      />
                 </StackPanel>
+                
+                <!-- Press any key to start message -->
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,5cm,0,0">
+                    <TextBlock.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="30"/>
+                            <Setter Property="Foreground" Value="Red"/>
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsGameStarted}" Value="true">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Resources>
+                    按下任意鍵開始跟踪任務
+                </TextBlock>
             </Grid>
         </materialDesign:Card>
 

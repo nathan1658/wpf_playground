@@ -8,9 +8,9 @@ namespace wpf_playground
     public abstract class MyBaseUserControl : UserControl, INotifyPropertyChanged
     {
 
-        private bool _triggered;
+        internal bool _triggered;
 
-        public bool Triggered
+        public virtual bool Triggered
         {
             get
             {

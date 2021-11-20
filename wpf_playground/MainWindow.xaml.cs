@@ -30,19 +30,20 @@ namespace wpf_playground
                 return State.UserInfo;
             }
         }
-        List<MyBaseUserControl> circleList = new List<MyBaseUserControl>();
         static Random rnd = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Count the time between red color and click
         /// </summary>
         Stopwatch reactionSw = new Stopwatch();
-        int delayMS;
+        int delayIntervalInMs;
         /// <summary>
         /// The timer of overall game
         /// </summary>
         Stopwatch gameSw = new Stopwatch();
         Random random = new Random();
+        public const double SIGNAL_VISIBLE_TIME = 1000;
+        public const double PQ_VISIBLE_TIME = 200;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void InformPropertyChanged([CallerMemberName] string propName = "")
@@ -65,7 +66,19 @@ namespace wpf_playground
             }
         }
 
-        private MyBaseUserControl leftPQ, rightPQ;
+        List<MyBaseUserControl> signalList = new List<MyBaseUserControl>();
+
+        private List<VisualSignal> visualSignalList = new List<VisualSignal>();
+        private List<AuditorySignal> auditorySignalList = new List<AuditorySignal>();
+        private List<TactileSignal> tactileSignalList = new List<TactileSignal>();
+
+        List<MyBaseUserControl> pqList = new List<MyBaseUserControl>();
+
+        private VisualPQ leftVisualPQ, rightVisualPQ;
+        private AuditoryPQ leftAuditoryPQ, rightAuditoryPQ;
+        private TactilePQ leftTactilePQ, rightTactilePQ;
+
+
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         private string _mappingImageSrc;
@@ -89,156 +102,258 @@ namespace wpf_playground
             }
         }
 
-        //Init settings from app config
-        void initSettingsFromConfig()
+        private bool _isGameStarted = false;
+
+        public bool IsGameStarted
         {
-            //set debug Mode
-            string isDebugString = ConfigurationManager.AppSettings["DebugMode"];
-            State.DebugMode = isDebugString.ToLower() == "true";
-
-            //set number of click required for each button
-            string numOfClickString = ConfigurationManager.AppSettings["ClickForEachButton"];
-            State.ClickCountForEachButton = int.Parse(numOfClickString);
-
-            //set key mapping for each button
-            List<String> keyButtonList = new List<string> { "TopLeftKey", "TopRightKey", "BottomLeftKey", "BottomRightKey" };
-            try
+            get { return _isGameStarted; }
+            set
             {
-                State.TopLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopLeftKey"]);
-                State.TopRightKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["TopRightKey"]);
-                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomLeftKey"]);
-                State.BottomLeftKey = (Key)Enum.Parse(typeof(Key), ConfigurationManager.AppSettings["BottomRightKey"]);
-            }
-            catch (Exception ex)
-            {
-                //in case any of them is empty/ exception, throw and set with default mapping
-
-                ///[7]  [9]
-                ///
-                ///[1]  [3]
-                State.TopLeftKey = Key.NumPad7;
-                State.TopRightKey = Key.NumPad9;
-                State.BottomLeftKey = Key.NumPad1;
-                State.BottomRightKey = Key.NumPad3;
+                _isGameStarted = value;
+                InformPropertyChanged("IsGameStarted");
             }
         }
 
+        bool gameEnd = false;
 
-        public MainWindow()
+        void start()
         {
-            initSettingsFromConfig();
-
-
-            new UserInfoPage().ShowDialog();
-            new MappingSelection().ShowDialog();
-
-
-
-            this.DataContext = this;
-
-
-
-            InitializeComponent();
-
-            //Init the control list here
-            circleList = new List<MyBaseUserControl>
-            {
-                this.circle0,
-                this.circle1,
-                this.circle2,
-                this.circle3,
-            };
-            if (UserInfo.PQMode == PQModeEnum.Visual)
-            {
-                initPqCircle();
-            }
             gameSw.Start();
-
-
-
             Task.Run(() =>
-            {
-                while (true)
-                {
-                    //update game time
-                    Dispatcher.Invoke(() =>
-                    {
-                        gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
-                    });
-                    Thread.Sleep(10);
-                }
-            });
-            initSequenceList();
+               {
+                   while (!gameEnd)
+                   {
+                       try
+                       {
+                           //update game time
+                           Dispatcher.Invoke(() =>
+                              {
+                                  gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
+                              });
+                       }
+                       finally
+                       {
+                           Thread.Sleep(10);
+                       }
+                   }
+               });
 
             Task.Run(async () =>
-            {
-                while (true)
-                {
-                    if (SequenceList.Count <= 0)
-                    {
-                        saveResult();
-                        Dispatcher.Invoke(() =>
-                        {
-                            Application.Current.Shutdown();
-                        });
-                    }
+               {
+                   while (!gameEnd)
+                   {
+                       if (SequenceList.Count <= 0)
+                       {
+                           finishedAllSequence();
+                       }
 
-                    //start the red ball logic here
-                    var task = triggerControl(tokenSource);
-                    try
-                    {
-                        await task;
-                    }
-                    catch { }
-                    finally
-                    {
-                        task.Dispose();
-                        cleanUp();
-                        tokenSource = new CancellationTokenSource();
-                    }
-                }
-            });
+                       //start the red ball logic here
+                       var task = triggerControl();
+                       try
+                       {
+                           await task;
+                       }
+                       catch { }
+                       finally
+                       {
+                           task.Dispose();
+                           tokenSource = new CancellationTokenSource();
+                       }
+                   }
+               });
+
+        }
+        bool practiceMode = false;
+        MappingEnum mapping = MappingEnum.NONE;
+        public MainWindow(bool isPracticeMode, MappingEnum mapping)
+        {
+            this.practiceMode = isPracticeMode;
+            this.mapping = mapping;
+            initSequenceList();
+
+
+            this.WindowState = WindowState.Maximized;
+            this.DataContext = this;
+            InitializeComponent();
+
+
+            if (UserInfo.SignalVisualChecked)
+            {
+                initVisualSignal();
+            }
+
+            if (UserInfo.SignalAuditoryChecked)
+            {
+                initAuditorySignal();
+            }
+
+            if (UserInfo.SignalTactileChecked)
+            {
+                initTactileSignal();
+            }
+
+
+            if (UserInfo.PQVisualChecked)
+            {
+                initVisualPQ();
+            }
+
+            if (UserInfo.PQAuditoryChecked)
+            {
+                initAuditoryPQ();
+            }
+
+            if (UserInfo.PQTactileChecked)
+            {
+                initTactilePQ();
+            }
+
 
             Loaded += MainWindow_Loaded;
 
-
             //update Mapping Image Src
-            MappingImageSrc = $"/Resources/{UserInfo.Mapping}Box.Image.bmp";
+            MappingImageSrc = $"/Resources/{mapping}Box.Image.bmp";
 
+
+            //Init Signal List
+            signalList.AddRange(visualSignalList);
+            signalList.AddRange(auditorySignalList);
+            signalList.AddRange(tactileSignalList);
+
+            //Init PQ List
+            pqList.AddRange(new List<MyBaseUserControl> { leftVisualPQ, rightVisualPQ });
+            pqList.AddRange(new List<MyBaseUserControl> { leftAuditoryPQ, rightAuditoryPQ });
+            pqList.AddRange(new List<MyBaseUserControl> { leftTactilePQ, rightTactilePQ });
         }
 
-        void initPqCircle()
+        #region init signal region
+
+        void initAuditorySignal()
         {
-            Func<HorizontalAlignment, String, PQCircle> genCircleAndAddtoBoard = (alignment, val) =>
-              {
-                  var grid1 = new Grid();
-                  grid1.HorizontalAlignment = alignment;
-                  grid1.VerticalAlignment = VerticalAlignment.Center;
-
-                  PQCircle circle1 = new PQCircle();
-                  TextBlock tb1 = new TextBlock();
-                  tb1.HorizontalAlignment = HorizontalAlignment.Center;
-                  tb1.VerticalAlignment = VerticalAlignment.Center;
-                  tb1.Text = val;
-                  grid1.Children.Add(circle1);
-                  grid1.Children.Add(tb1);
-
-                  gameBoard.Children.Add(grid1);
-                  return circle1;
-              };
-            var leftCircle = genCircleAndAddtoBoard(HorizontalAlignment.Left, "1");
-            var rightCircle = genCircleAndAddtoBoard(HorizontalAlignment.Right, "2");
-            leftPQ = leftCircle;
-            rightPQ = rightCircle;
+            //Init the control list here
+            auditorySignalList = new List<AuditorySignal>
+            {
+                new AuditorySignal(State.TopSpeaker, State.UserInfo.TopSpeakerHz, true),
+                new AuditorySignal(State.TopSpeaker, State.UserInfo.TopSpeakerHz, false),
+                new AuditorySignal(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, true),
+                new AuditorySignal(State.BottomSpeaker, State.UserInfo.BottomSpeakerHz, false),
+            };
         }
+
+        void initTactileSignal()
+        {
+            //Init the control list here
+            tactileSignalList = new List<TactileSignal>
+            {
+                new TactileSignal(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, true),
+                new TactileSignal(State.TactileTopSpeaker, State.UserInfo.TactileTopSpeakerHz, false),
+                new TactileSignal(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, true),
+                new TactileSignal(State.TactileBottomSpeaker, State.UserInfo.TactileBottomSpeakerHz, false),
+            };
+        }
+
+        void initVisualSignal()
+        {
+            Func<int, int, String, VisualSignal> genCircle = (row, column, text) =>
+               {
+                   var grid = new Grid
+                   {
+                   };
+                   Grid.SetRow(grid, row);
+                   Grid.SetColumn(grid, column);
+
+                   var circle = new VisualSignal();
+                   grid.Children.Add(circle);
+
+                   //If its debug mode, add a text letter at center of circle
+                   if (IsDebugMode)
+                   {
+                       grid.Children.Add(new TextBlock
+                       {
+                           HorizontalAlignment = HorizontalAlignment.Center,
+                           VerticalAlignment = VerticalAlignment.Center,
+                           Text = text
+                       });
+                   }
+                   gameBoard.Children.Add(grid);
+                   return circle;
+               };
+
+            //Init the control list here
+            visualSignalList = new List<VisualSignal>
+            {
+                genCircle(0, 0, "0"),
+                genCircle(0, 2, "1"),
+                genCircle(2, 0, "2"),
+                genCircle(2, 2, "3"),
+            };
+        }
+
+        #endregion
+
+        #region  PQ sections
+
+        void initVisualPQ()
+        {
+            Func<int, int, String, VisualPQ> genCircleAndAddtoBoard = (row, column, val) =>
+               {
+                   var grid1 = new Grid();
+                   Grid.SetRow(grid1, row);
+                   Grid.SetColumn(grid1, column);
+                   grid1.VerticalAlignment = VerticalAlignment.Center;
+                   grid1.HorizontalAlignment = HorizontalAlignment.Center;
+
+                   VisualPQ circle1 = new VisualPQ();
+
+                   grid1.Children.Add(circle1);
+
+                   if (IsDebugMode)
+                   {
+                       TextBlock tb1 = new TextBlock();
+                       tb1.HorizontalAlignment = HorizontalAlignment.Center;
+                       tb1.VerticalAlignment = VerticalAlignment.Center;
+                       tb1.Text = val;
+                       grid1.Children.Add(tb1);
+                   }
+
+                   gameBoard.Children.Add(grid1);
+                   return circle1;
+               };
+            leftVisualPQ = genCircleAndAddtoBoard(1, 0, "1");
+            rightVisualPQ = genCircleAndAddtoBoard(1, 2, "2");
+
+        }
+
+        void initAuditoryPQ()
+        {
+            var guid = State.PQSpeaker.Guid;
+            var hz = State.UserInfo.PQHz;
+            leftAuditoryPQ = new AuditoryPQ(true, hz, guid);
+            rightAuditoryPQ = new AuditoryPQ(false, hz, guid);
+        }
+
+        void initTactilePQ()
+        {
+            var guid = State.TactilePQSpeaker.Guid;
+            var hz = State.UserInfo.TactilePQHz;
+            leftTactilePQ = new TactilePQ(true, hz, guid);
+            rightTactilePQ = new TactilePQ(false, hz, guid);
+        }
+
+        #endregion
 
         void initSequenceList()
         {
             //The number of each button required to be pressed
             var pressCount = State.ClickCountForEachButton;
+
+            //If is practice mode, press count = 1;
+            if (practiceMode)
+                pressCount = 1;
+
             for (int i = 0; i < pressCount; i++)
             {
-                for (int j = 0; j < circleList.Count; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     SequenceList.Add(j);
                 }
@@ -249,19 +364,54 @@ namespace wpf_playground
             SequenceList = new ObservableCollection<int>(SequenceList.OrderBy(a => Guid.NewGuid()).ToList());
         }
 
+        void finishedAllSequence()
+        {
+            Dispatcher.Invoke(() =>
+            {
+
+                if (practiceMode)
+                {
+                    MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
+
+                }
+                else
+                {
+                    //Add current mapping to finished state
+                    State.FinishedMappingList.Add(mapping);
+                    saveResult();
+                }
+                gameEnd = true;
+                new MappingSelection().Show();
+                this.Close();
+            });
+        }
+
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
             window.KeyDown += MainWindow_KeyDown;
         }
 
+        bool canClick = false;
+
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
+
+            if (!IsGameStarted)
+            {
+                bouncingBall.start();
+                start();
+                IsGameStarted = true;
+                return;
+            }
+            if (!canClick)
+                return;
             bool isCorrect = false;
             reactionSw.Stop();
 
             int btnIndex = -1;
-            var mapping = UserInfo.Mapping;
+            var mapping = this.mapping;
 
             if (e.Key == State.TopLeftKey)
             {
@@ -326,7 +476,17 @@ namespace wpf_playground
             if (btnIndex == -1)//Do nothing
                 return;
 
-            isCorrect = circleList[btnIndex].Click();
+            Debug.WriteLine($"***Clicked***");
+            Debug.WriteLine($"***{reactionSw.ElapsedMilliseconds}ms");
+
+            tokenSource.Cancel();
+            var targetSignalList = new List<MyBaseUserControl>();
+            if (UserInfo.SignalVisualChecked) targetSignalList.Add(visualSignalList[btnIndex]);
+            if (UserInfo.SignalAuditoryChecked) targetSignalList.Add(auditorySignalList[btnIndex]);
+            if (UserInfo.SignalTactileChecked) targetSignalList.Add(tactileSignalList[btnIndex]);
+
+            //click the first one anyway.
+            isCorrect = targetSignalList[0].Click();
 
             //If its a hit
             if (isCorrect)
@@ -341,11 +501,6 @@ namespace wpf_playground
             {
                 wrong();
             }
-
-            Debug.WriteLine($"***Clicked***");
-            Debug.WriteLine($"***{reactionSw.ElapsedMilliseconds}ms");
-
-            tokenSource.Cancel();
 
         }
 
@@ -372,7 +527,7 @@ namespace wpf_playground
 
             //Write to CSV
 
-            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "SignalMode", "PQMode", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
+            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "VisualSignalEnabled", "AuditorySignalEnabled", "TactileSignalEnabled", "VisualPQEnabled", "AuditoryPQEnabled", "TactilePQEnabled", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
             var csvOutput = String.Join(",", header) + "\n";
             for (int i = 0; i < clickHistoryList.Count; i++)
             {
@@ -385,10 +540,14 @@ namespace wpf_playground
                     UserInfo.Gender.ToString(),
                     UserInfo.DominantHand.ToString(),
                     UserInfo.Level.ToString(),
-                    UserInfo.SignalMode.ToString(),
-                    UserInfo.PQMode.ToString(),
+                    UserInfo.SignalVisualChecked.ToString(),
+                    UserInfo.SignalAuditoryChecked.ToString(),
+                    UserInfo.SignalTactileChecked.ToString(),
+                    UserInfo.PQVisualChecked.ToString(),
+                    UserInfo.PQAuditoryChecked.ToString(),
+                    UserInfo.PQTactileChecked.ToString(),
                     UserInfo.SOA.ToString(),
-                    UserInfo.Mapping.ToString(),
+                    this.mapping.ToString(),
                     element.ClickDate.ToString(),
                     element.ElapsedTime.ToString(),
                     element.ReactionTime.ToString(),
@@ -400,85 +559,118 @@ namespace wpf_playground
             }
             if (!Directory.Exists("./output"))
                 Directory.CreateDirectory("output");
-            File.WriteAllText($"output/{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv", csvOutput);
-            MessageBox.Show("Done");
+            var fileName = $"output/{ DateTime.Now.ToString("yyyyMMddHHmmss") }.csv";
+            File.WriteAllText(fileName, csvOutput);
+            MessageBox.Show($"Saved test result to {fileName}");
+        }
+
+        int getDelayInterval()
+        {
+            var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
+            var delayIndex = random.Next(0, delayIntervalList.Count);
+            return delayIntervalList[delayIndex];
         }
 
         //Randomly pick one and trigger it.
-        Task triggerControl(CancellationTokenSource source)
+        Task triggerControl()
         {
             return Task.Run(async () =>
             {
-                Stopwatch triggerSw = new Stopwatch();
-                triggerSw.Start();
-
-                var delayIntervalList = new List<int> { 1000, 2000, 3000, 4000 };
-                var delayIndex = random.Next(0, delayIntervalList.Count);
-                delayMS = delayIntervalList[delayIndex];
-                //Time 
-                await Task.Delay(delayMS);
-                System.Diagnostics.Debug.WriteLine("After delay: " + triggerSw.ElapsedMilliseconds);
-                int index = random.Next(SequenceList.Count);
-                index = SequenceList[index];
-                var targetControl = circleList[index];
-
-                int delayPQMS = -1;
-                delayPQMS = getSoa();
-
-                if (this.UserInfo.PQMode == PQModeEnum.Auditory)
+                try
                 {
-                    AudioHelper.Instance.play(delayPQMS, index == 0 || index == 2);
-                }
+                    Stopwatch triggerSw = new Stopwatch();
+                    triggerSw.Start();
 
-                var targetPQ = index == 0 || index == 2 ? leftPQ : rightPQ;
-                if (this.UserInfo.PQMode == PQModeEnum.Visual)
-                {
+                    delayIntervalInMs = getDelayInterval();
+                    //Time 
+                    await Task.Delay(delayIntervalInMs);
+
+                    int index = random.Next(SequenceList.Count);
+                    index = SequenceList[index];
+                    var targetControlList = new List<MyBaseUserControl>();
+                    if (UserInfo.SignalVisualChecked)
+                        targetControlList.Add(visualSignalList[index]);
+                    if (UserInfo.SignalAuditoryChecked)
+                        targetControlList.Add(auditorySignalList[index]);
+                    if (UserInfo.SignalTactileChecked)
+                        targetControlList.Add(tactileSignalList[index]);
+
+                    int soa = getSoa();
+
+                    var targetPQList = new List<MyBaseUserControl>();
+
+                    if (UserInfo.PQVisualChecked)
+                        targetPQList.Add(index == 0 || index == 2 ? leftVisualPQ : rightVisualPQ);
+                    if (UserInfo.PQAuditoryChecked)
+                        targetPQList.Add(index == 0 || index == 2 ? leftAuditoryPQ : rightAuditoryPQ);
+                    if (UserInfo.PQTactileChecked)
+                        targetPQList.Add(index == 0 || index == 2 ? leftTactilePQ : rightTactilePQ);
+
                     Dispatcher.Invoke(() =>
-                 {
-                     targetPQ.Enable();
-                 });
-                }
-
-                var pqEnded = false;
-                while (true)
-                {
-                    if (tokenSource.Token.IsCancellationRequested)
                     {
-                        //clicked
-                        return;
-                    }
+                        targetPQList.ForEach(x => x.Enable());
+                    });
 
-                    //pq time  1000 (redball visible time) + (0.2/0.6/0.8) + + delay (1-4s)
-                    if (triggerSw.ElapsedMilliseconds >= (1000 + delayPQMS + delayMS))
+
+                    var pqTriggered = false;
+                    var signalTriggred = false;
+                    while (true)
                     {
-                        //miss
-                        Debug.WriteLine("***Missed***");
-                        Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
-
-                        Dispatcher.Invoke(() =>
+                        if (tokenSource.Token.IsCancellationRequested)
                         {
-                            targetControl.Disable();
-                        });
-                        miss();
-                        return;
-                    }
+                            break;
+                        }
 
-                    if (!pqEnded && triggerSw.ElapsedMilliseconds >= (delayPQMS + delayMS))
-                    {
-                        pqEnded = true;
-                        Dispatcher.Invoke(() =>
+                        if(!pqTriggered)
                         {
-                            if (this.UserInfo.PQMode == PQModeEnum.Visual)
+                            pqTriggered = true;
+
+                            Dispatcher.Invoke(() =>
                             {
-                                targetPQ.Disable();
-                            }
-                            Debug.WriteLine("PQ disable: " + triggerSw.ElapsedMilliseconds);
-                            targetControl.Enable();
+                                targetPQList.ForEach(x => x.Enable());
+                            });
+                        }
+
+                        if(pqTriggered && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs+ PQ_VISIBLE_TIME))
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetPQList.ForEach(x => x.Disable());
+                            });
+                        }
+
+                        if(!signalTriggred && triggerSw.ElapsedMilliseconds >=( delayIntervalInMs + soa))
+                        {
+                            signalTriggred = true;
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetControlList.ForEach(x => x.Enable());
+                            });
+                            canClick = true;
                             reactionSw.Restart();
-                        });
+                        }
+
+
+                        //pq time  1000 (Signal visible time) + SOA (0.2/0.6/0.8) + + delay (1-4s)
+                        if (signalTriggred && triggerSw.ElapsedMilliseconds >= (SIGNAL_VISIBLE_TIME + soa + delayIntervalInMs))
+                        {
+                            //miss
+                            Debug.WriteLine("***Missed***");
+                            Debug.WriteLine("***" + triggerSw.ElapsedMilliseconds + "ms");
+
+                            Dispatcher.Invoke(() =>
+                            {
+                                targetControlList.ForEach(x => x.Disable());
+                            });
+                            miss();
+                            break;
+                        }
+ 
+                        await Task.Delay(10);
                     }
-                    await Task.Delay(10);
+                    cleanUp();
                 }
+                catch { }
             });
         }
 
@@ -491,7 +683,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Miss,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -505,7 +697,7 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Correct,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
@@ -519,32 +711,30 @@ namespace wpf_playground
                 ReactionTime = reactionSw.ElapsedMilliseconds,
                 ElapsedTime = gameSw.ElapsedMilliseconds,
                 ClickState = ClickState.Incorrect,
-                Delay = delayMS,
+                Delay = delayIntervalInMs,
 
             });
         }
+
 
         void cleanUp()
         {
             Dispatcher.Invoke(() =>
             {
+                canClick = false;
 
-                circleList.ForEach((x) =>
+                signalList.ForEach((x) =>
                 {
-                    x.Disable();
+                    x?.Disable();
                 });
-                if (this.UserInfo.PQMode == PQModeEnum.Visual)
+
+                pqList.ForEach((x) =>
                 {
-                    leftPQ.Disable();
-                    rightPQ.Disable();
-                }
+                    x?.Disable();
+                });
+
             });
         }
 
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            saveResult();
-        }
     }
 }
