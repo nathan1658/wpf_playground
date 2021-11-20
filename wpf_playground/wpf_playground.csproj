@@ -104,6 +104,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
@@ -136,17 +137,21 @@
     <Compile Include="CachedSound.cs" />
     <Compile Include="CachedSoundSampleProvider.cs" />
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="Converter\CMConverter.cs" />
     <Compile Include="Converter\ComparisonConverter.cs" />
     <Compile Include="Converter\ListToStringConverter.cs" />
+    <Compile Include="Converter\NotNullConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="MappingSelection.xaml.cs">
       <DependentUpon>MappingSelection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\ClickHistory.cs" />
+    <Compile Include="Model\ExperimentLog.cs" />
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\enums.cs" />
+    <Compile Include="Model\TestMapping.cs" />
     <Compile Include="Model\TestResult.cs" />
     <Compile Include="Model\UserInfo.cs" />
+    <Compile Include="ScreenResolutions.cs" />
     <Compile Include="TactileSignal.cs" />
     <Compile Include="VisualPQ.xaml.cs">
       <DependentUpon>VisualPQ.xaml</DependentUpon>

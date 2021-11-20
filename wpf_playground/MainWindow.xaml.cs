@@ -37,10 +37,7 @@ namespace wpf_playground
         /// </summary>
         Stopwatch reactionSw = new Stopwatch();
         int delayIntervalInMs;
-        /// <summary>
-        /// The timer of overall game
-        /// </summary>
-        Stopwatch gameSw = new Stopwatch();
+
         Random random = new Random();
         public const double SIGNAL_VISIBLE_TIME = 1000;
         public const double PQ_VISIBLE_TIME = 200;
@@ -51,8 +48,7 @@ namespace wpf_playground
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-
-        private List<ClickHistory> clickHistoryList { get; set; } = new List<ClickHistory>();
+        private List<ExperimentLog> clickHistoryList { get; set; } = new List<ExperimentLog>();
 
         private ObservableCollection<int> _sequenceList = new ObservableCollection<int>();
 
@@ -78,9 +74,10 @@ namespace wpf_playground
         private AuditoryPQ leftAuditoryPQ, rightAuditoryPQ;
         private TactilePQ leftTactilePQ, rightTactilePQ;
 
-
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
+        int signalIndex = -1;
+        int pqIndex = -1;
         private string _mappingImageSrc;
 
         public string MappingImageSrc
@@ -118,8 +115,12 @@ namespace wpf_playground
 
         void start()
         {
-            gameSw.Start();
-            Task.Run(() =>
+
+            //Only Start the timer when first time start the game.
+            if (!State.TestStopwatch.IsRunning)
+                State.TestStopwatch.Restart();
+
+            Task.Run(async () =>
                {
                    while (!gameEnd)
                    {
@@ -128,12 +129,12 @@ namespace wpf_playground
                            //update game time
                            Dispatcher.Invoke(() =>
                               {
-                                  gameCounter.Text = gameSw.ElapsedMilliseconds.ToString() + "ms";
+                                  gameCounter.Text = ElapsedTime.ToString() + "ms";
                               });
                        }
                        finally
                        {
-                           Thread.Sleep(10);
+                           await Task.Delay(10);
                        }
                    }
                });
@@ -165,9 +166,11 @@ namespace wpf_playground
         }
         bool practiceMode = false;
         MappingEnum mapping = MappingEnum.NONE;
-        public MainWindow(bool isPracticeMode, MappingEnum mapping)
+        TestMapping testMapping;
+        public MainWindow(bool isPracticeMode, MappingEnum mapping, TestMapping testMapping)
         {
             this.practiceMode = isPracticeMode;
+            this.testMapping = testMapping;
             this.mapping = mapping;
             initSequenceList();
 
@@ -371,13 +374,17 @@ namespace wpf_playground
 
                 if (practiceMode)
                 {
+                    testMapping.PracticeDone = true;
+                    //State.FinishedTestMappingList.Add(mapping);
                     MessageBox.Show("Finished Practice mode! Now back to mapping selection.");
-
                 }
                 else
                 {
+                    testMapping.TestDone = true;
+                    MessageBox.Show("Finished Test! Now back to mapping selection.");
+
                     //Add current mapping to finished state
-                    State.FinishedMappingList.Add(mapping);
+                    //State.FinishedMappingList.Add(mapping);
                     saveResult();
                 }
                 gameEnd = true;
@@ -411,10 +418,12 @@ namespace wpf_playground
             reactionSw.Stop();
 
             int btnIndex = -1;
+            int buttonPositionIndex = -1;
             var mapping = this.mapping;
 
             if (e.Key == State.TopLeftKey)
             {
+                buttonPositionIndex = 0;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 0;
 
@@ -430,6 +439,7 @@ namespace wpf_playground
 
             if (e.Key == State.TopRightKey)
             {
+                buttonPositionIndex = 1;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 1;
 
@@ -445,6 +455,7 @@ namespace wpf_playground
 
             if (e.Key == State.BottomLeftKey)
             {
+                buttonPositionIndex = 2;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 2;
 
@@ -460,6 +471,7 @@ namespace wpf_playground
 
             if (e.Key == State.BottomRightKey)
             {
+                buttonPositionIndex = 3;
                 if (mapping == MappingEnum.BC)
                     btnIndex = 3;
 
@@ -495,14 +507,15 @@ namespace wpf_playground
                 var itemToRemove = SequenceList.FirstOrDefault(r => r == btnIndex);
                 SequenceList.Remove(itemToRemove);
                 SequenceList = new ObservableCollection<int>(SequenceList);
-                hit();
+                hit(buttonPositionIndex);
             }
             else
             {
-                wrong();
+                wrong(buttonPositionIndex);
             }
 
         }
+
 
 
         int getSoa()
@@ -519,49 +532,13 @@ namespace wpf_playground
 
         void saveResult()
         {
-            var output = new TestResult
+            var output = new TestResult(this.mapping)
             {
-                UserInfo = UserInfo,
+                UserInfo = JsonConvert.DeserializeObject<UserInfo>(JsonConvert.SerializeObject(UserInfo)),
                 ClickHistoryList = clickHistoryList
             };
+            State.TestResultList.Add(output);
 
-            //Write to CSV
-
-            var header = new List<String> { "Name", "SID", "Age", "Gender", "DominantHand", "Level", "VisualSignalEnabled", "AuditorySignalEnabled", "TactileSignalEnabled", "VisualPQEnabled", "AuditoryPQEnabled", "TactilePQEnabled", "SOA", "Mapping", "ClickDate", "ElapsedTime", "ReactionTime", "Distance", "ClickState", "Delay" };
-            var csvOutput = String.Join(",", header) + "\n";
-            for (int i = 0; i < clickHistoryList.Count; i++)
-            {
-                var element = clickHistoryList[i];
-                var tmp = new List<String>
-                {
-                    UserInfo.Name,
-                    UserInfo.SID,
-                    UserInfo.Age,
-                    UserInfo.Gender.ToString(),
-                    UserInfo.DominantHand.ToString(),
-                    UserInfo.Level.ToString(),
-                    UserInfo.SignalVisualChecked.ToString(),
-                    UserInfo.SignalAuditoryChecked.ToString(),
-                    UserInfo.SignalTactileChecked.ToString(),
-                    UserInfo.PQVisualChecked.ToString(),
-                    UserInfo.PQAuditoryChecked.ToString(),
-                    UserInfo.PQTactileChecked.ToString(),
-                    UserInfo.SOA.ToString(),
-                    this.mapping.ToString(),
-                    element.ClickDate.ToString(),
-                    element.ElapsedTime.ToString(),
-                    element.ReactionTime.ToString(),
-                    element.Distance.ToString(),
-                    element.ClickState.ToString(),
-                    element.Delay.ToString()
-                };
-                csvOutput += String.Join(",", tmp) + "\n";
-            }
-            if (!Directory.Exists("./output"))
-                Directory.CreateDirectory("output");
-            var fileName = $"output/{ DateTime.Now.ToString("yyyyMMddHHmmss") }.csv";
-            File.WriteAllText(fileName, csvOutput);
-            MessageBox.Show($"Saved test result to {fileName}");
         }
 
         int getDelayInterval()
@@ -578,6 +555,10 @@ namespace wpf_playground
             {
                 try
                 {
+                    pqIndex = -1;
+                    signalIndex = -1;
+                    delayIntervalInMs = -1;
+
                     Stopwatch triggerSw = new Stopwatch();
                     triggerSw.Start();
 
@@ -587,6 +568,9 @@ namespace wpf_playground
 
                     int index = random.Next(SequenceList.Count);
                     index = SequenceList[index];
+
+                    signalIndex = index;
+
                     var targetControlList = new List<MyBaseUserControl>();
                     if (UserInfo.SignalVisualChecked)
                         targetControlList.Add(visualSignalList[index]);
@@ -599,12 +583,15 @@ namespace wpf_playground
 
                     var targetPQList = new List<MyBaseUserControl>();
 
+
+                    bool isLeft = index == 0 || index == 2;
+                    pqIndex = isLeft ? 0 : 1;
                     if (UserInfo.PQVisualChecked)
-                        targetPQList.Add(index == 0 || index == 2 ? leftVisualPQ : rightVisualPQ);
+                        targetPQList.Add(isLeft ? leftVisualPQ : rightVisualPQ);
                     if (UserInfo.PQAuditoryChecked)
-                        targetPQList.Add(index == 0 || index == 2 ? leftAuditoryPQ : rightAuditoryPQ);
+                        targetPQList.Add(isLeft ? leftAuditoryPQ : rightAuditoryPQ);
                     if (UserInfo.PQTactileChecked)
-                        targetPQList.Add(index == 0 || index == 2 ? leftTactilePQ : rightTactilePQ);
+                        targetPQList.Add(isLeft ? leftTactilePQ : rightTactilePQ);
 
                     Dispatcher.Invoke(() =>
                     {
@@ -621,9 +608,10 @@ namespace wpf_playground
                             break;
                         }
 
-                        if(!pqTriggered)
+                        if (!pqTriggered)
                         {
                             pqTriggered = true;
+                            addPQRecord();
 
                             Dispatcher.Invoke(() =>
                             {
@@ -631,7 +619,7 @@ namespace wpf_playground
                             });
                         }
 
-                        if(pqTriggered && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs+ PQ_VISIBLE_TIME))
+                        if (pqTriggered && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + PQ_VISIBLE_TIME))
                         {
                             Dispatcher.Invoke(() =>
                             {
@@ -639,9 +627,10 @@ namespace wpf_playground
                             });
                         }
 
-                        if(!signalTriggred && triggerSw.ElapsedMilliseconds >=( delayIntervalInMs + soa))
+                        if (!signalTriggred && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + soa))
                         {
                             signalTriggred = true;
+                            addSignalRecord();
                             Dispatcher.Invoke(() =>
                             {
                                 targetControlList.ForEach(x => x.Enable());
@@ -665,8 +654,8 @@ namespace wpf_playground
                             miss();
                             break;
                         }
- 
-                        await Task.Delay(10);
+
+                        //await Task.Delay(10);
                     }
                     cleanUp();
                 }
@@ -674,48 +663,52 @@ namespace wpf_playground
             });
         }
 
+        private double BouncingBallDistance
+        {
+            get
+            {
+                return this.bouncingBall.Distance;
+            }
+        }
+
+        private double ElapsedTime
+        {
+            get
+            {
+                return State.TestStopwatch.ElapsedMilliseconds;
+            }
+        }
+
+
+        void addSignalRecord()
+        {
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
+            clickHistoryList.Add(clickHistory);
+        }
+
+        void addPQRecord()
+        {
+            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
+            clickHistoryList.Add(clickHistory);
+        }
+
         void miss()
         {
-            clickHistoryList.Add(new ClickHistory
-            {
-                ClickDate = DateTime.Now,
-                Distance = bouncingBall.Distance,
-                ReactionTime = reactionSw.ElapsedMilliseconds,
-                ElapsedTime = gameSw.ElapsedMilliseconds,
-                ClickState = ClickState.Miss,
-                Delay = delayIntervalInMs,
-
-            });
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex);
+            clickHistoryList.Add(history);
         }
 
-        void hit()
+        void hit(int pressedButtonIndex)
         {
-            clickHistoryList.Add(new ClickHistory
-            {
-                ClickDate = DateTime.Now,
-                Distance = bouncingBall.Distance,
-                ReactionTime = reactionSw.ElapsedMilliseconds,
-                ElapsedTime = gameSw.ElapsedMilliseconds,
-                ClickState = ClickState.Correct,
-                Delay = delayIntervalInMs,
-
-            });
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex: pqIndex);
+            clickHistoryList.Add(history);
         }
 
-        void wrong()
+        void wrong(int pressedButtonIndex)
         {
-            clickHistoryList.Add(new ClickHistory
-            {
-                ClickDate = DateTime.Now,
-                Distance = bouncingBall.Distance,
-                ReactionTime = reactionSw.ElapsedMilliseconds,
-                ElapsedTime = gameSw.ElapsedMilliseconds,
-                ClickState = ClickState.Incorrect,
-                Delay = delayIntervalInMs,
-
-            });
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs, pqPositionIndex: pqIndex);
+            clickHistoryList.Add(history);
         }
-
 
         void cleanUp()
         {
