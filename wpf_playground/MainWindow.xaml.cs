@@ -115,6 +115,11 @@ namespace wpf_playground
 
         void start()
         {
+
+            //Only Start the timer when first time start the game.
+            if (!State.TestStopwatch.IsRunning)
+                State.TestStopwatch.Restart();
+
             Task.Run(async () =>
                {
                    while (!gameEnd)
@@ -511,7 +516,7 @@ namespace wpf_playground
 
         }
 
-        
+
 
         int getSoa()
         {

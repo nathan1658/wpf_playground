@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:wpf_playground"
     xmlns:converter="clr-namespace:wpf_playground.Converter"
     Background="White"
-    mc:Ignorable="d">
+    mc:Ignorable="d" d:DesignWidth="223" d:DesignHeight="259">
     <UserControl.Resources>
         <converter:CMConverter x:Key="cmConverter"/>
     </UserControl.Resources>

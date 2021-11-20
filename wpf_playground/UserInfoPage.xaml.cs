@@ -47,7 +47,7 @@ namespace wpf_playground
 
                 //Reset timer and clean up test history
                 State.TestResultList = new List<TestResult>();
-                State.TestStopwatch.Restart();
+                if (State.TestStopwatch.IsRunning) State.TestStopwatch.Reset();
 
                 new MappingSelection().Show();
                 this.Close();
