@@ -56,8 +56,8 @@ namespace wpf_playground
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            new UserInfoPage().Show();
+            
+            new LandingPage().Show();
         }
     }
 }
