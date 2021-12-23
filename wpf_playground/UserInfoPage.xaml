@@ -306,12 +306,11 @@
                         </TabItem>
                     </TabControl>
 
+                    <StackPanel Grid.Row="14" Grid.ColumnSpan="2" >
 
-
-
-
-
-                    <ListBox Grid.Row="14" Grid.ColumnSpan="2" x:Name="comportList"></ListBox>
+                        <TextBlock>Select COM port here</TextBlock>
+                        <ComboBox SelectedItem="{Binding SelectedCOMPort}"  x:Name="comportList"></ComboBox>
+                    </StackPanel>
 
 
                     <Button

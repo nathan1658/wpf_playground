@@ -54,21 +54,11 @@ namespace wpf_playground
             };
             this.DataContext = vm;
             initList();
-
-
             comportList.ItemsSource = ComHelper.GetComportList();
-            comportList.SelectionChanged += ComportList_SelectionChanged;
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
-
-        private void ComportList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            State.SelectedCOMPort = comportList.SelectedItem as string;
-
-
-        }
-
+ 
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
         private static bool IsTextAllowed(string text)
         {
@@ -174,7 +164,7 @@ namespace wpf_playground
         {
             get
             {
-                var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, };
+                var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, SelectedCOMPort };
                 var speakerList = new List<DirectSoundDeviceInfo> { SelectedTopSpeakerSoundDevice, SelectedPQSoundDevice, SelectedBottomSpeakerSoundDevice, SelectedTactileTopSpeakerSoundDevice, SelectedTactilePQSoundDevice, SelectedTactileBottomSpeakerSoundDevice };
                 if (speakerList.Any(x => x == null || x.Guid == null)) return false;
                 //if (!AtLeastOnePQChecked) return false;
@@ -446,6 +436,19 @@ namespace wpf_playground
             }
         }
 
+        private String _selectedCOMPort;
+
+        public String SelectedCOMPort
+        {
+            get { return _selectedCOMPort; }
+            set
+            {
+                _selectedCOMPort = value;
+                InformPropertyChanged("SelectedCOMPort");
+                InformPropertyChanged("FormValid");
+                State.SelectedCOMPort = value;
+            }
+        }
 
 
         void saveConfig()
