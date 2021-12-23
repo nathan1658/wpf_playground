@@ -167,6 +167,30 @@ namespace wpf_playground
         bool practiceMode = false;
         MappingEnum mapping = MappingEnum.NONE;
         TestMapping testMapping;
+
+        #region comport part
+        ComHelper comHelper;
+        ComSignalConfig comSignalConfig;
+        #endregion
+
+        void initComPort()
+        {
+            comHelper = new ComHelper(State.SelectedCOMPort);
+            SignalModeEnum? signalMode = null;
+            PQModeEnum? pQMode = null;
+
+            if (UserInfo.SignalVisualChecked) signalMode = SignalModeEnum.Visual;
+            if (UserInfo.SignalAuditoryChecked) signalMode = SignalModeEnum.Auditory;
+            if (UserInfo.SignalTactileChecked) signalMode = SignalModeEnum.Tactile;
+
+            if (UserInfo.PQVisualChecked) pQMode = PQModeEnum.Visual;
+            if (UserInfo.PQAuditoryChecked) pQMode = PQModeEnum.Auditory;
+            if (UserInfo.PQTactileChecked) pQMode = PQModeEnum.Tactile;
+
+            comSignalConfig = new ComSignalConfig(signalMode.Value, pQMode.Value, UserInfo.SOA);
+
+        }
+
         public MainWindow(bool isPracticeMode, MappingEnum mapping, TestMapping testMapping)
         {
             this.practiceMode = isPracticeMode;
@@ -174,6 +198,8 @@ namespace wpf_playground
             this.mapping = mapping;
             initSequenceList();
 
+
+            initComPort();
 
             this.WindowState = WindowState.Maximized;
             this.DataContext = this;
@@ -388,7 +414,10 @@ namespace wpf_playground
                     saveResult();
                 }
                 gameEnd = true;
+
                 new MappingSelection().Show();
+                comHelper.closePort();
+                comHelper = null;
                 this.Close();
             });
         }
@@ -630,6 +659,9 @@ namespace wpf_playground
                         if (!signalTriggred && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + soa))
                         {
                             signalTriggred = true;
+                            //Send COM Port
+                            var comVal = ComHelper.MappingDict[comSignalConfig];
+                            comHelper.send(comVal);
                             addSignalRecord();
                             Dispatcher.Invoke(() =>
                             {

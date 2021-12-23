@@ -55,7 +55,17 @@ namespace wpf_playground
             this.DataContext = vm;
             initList();
 
+
+            comportList.ItemsSource = ComHelper.GetComportList();
+            comportList.SelectionChanged += ComportList_SelectionChanged;
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+        }
+
+        private void ComportList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            State.SelectedCOMPort = comportList.SelectedItem as string;
+
 
         }
 

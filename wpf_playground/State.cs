@@ -40,6 +40,7 @@ namespace wpf_playground
         public static List<TestResult> TestResultList { get; set; } = new List<TestResult>();
         public static List<TestMapping> TestMappingList = new List<TestMapping>();
 
+        public static String SelectedCOMPort;
         //public static List<MappingEnum> FinishedTestMappingList = new List<MappingEnum> { };
         //public static List<MappingEnum> FinishedMappingList = new List<MappingEnum> { };
     }

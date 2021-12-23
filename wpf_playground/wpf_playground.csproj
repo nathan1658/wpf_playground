@@ -136,6 +136,7 @@
     <Compile Include="AudoDisposeFileReader.cs" />
     <Compile Include="CachedSound.cs" />
     <Compile Include="CachedSoundSampleProvider.cs" />
+    <Compile Include="ComHelper.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Converter\CMConverter.cs" />
     <Compile Include="Converter\ComparisonConverter.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="MappingSelection.xaml.cs">
       <DependentUpon>MappingSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\ComSignalConfig.cs" />
     <Compile Include="Model\ExperimentLog.cs" />
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\enums.cs" />

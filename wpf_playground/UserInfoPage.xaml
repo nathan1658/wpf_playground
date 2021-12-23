@@ -98,6 +98,8 @@
                         <RowDefinition
                         Height="auto" />
                         <RowDefinition
+                        Height="auto" />
+                        <RowDefinition
                         Height="*" />
 
                     </Grid.RowDefinitions>
@@ -309,17 +311,19 @@
 
 
 
+                    <ListBox Grid.Row="14" Grid.ColumnSpan="2" x:Name="comportList"></ListBox>
+
+
                     <Button
                         Margin="0 10 0 0"
                     IsEnabled="{Binding FormValid}"
-                    Grid.Row="14"
+                    Grid.Row="15"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom">
                         Submit
                     </Button>
-
                 </Grid>
 
             </materialDesign:Card>
