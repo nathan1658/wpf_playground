@@ -8,7 +8,7 @@ using wpf_playground.Model;
 
 namespace wpf_playground
 {
-    public class ComHelper
+    public static class ComHelper
     {
 
         public static Dictionary<ComSignalConfig, int> MappingDict = new Dictionary<ComSignalConfig, int>
@@ -42,34 +42,16 @@ namespace wpf_playground
             [new ComSignalConfig(SignalModeEnum.Visual, PQModeEnum.Tactile, SOAEnum.Soa1000)] = 27,
         };
 
-        SerialPort sendPort;
+        static SerialPort sendPort;
 
-        void createPort(string portName)
+        public static void createPort(string portName)
         {
-            if (sendPort != null)
-            {
-                sendPort.Close();
-            }
+            if (sendPort != null && sendPort.IsOpen) return;
             sendPort = new SerialPort(portName, 57600, Parity.None, 8, StopBits.One) { Encoding = Encoding.ASCII };
             sendPort.WriteTimeout = 1000;
             sendPort.Open();
         }
 
-        public ComHelper(string portName)
-        {
-            createPort(portName);
-        }
-
-        public void closePort()
-        {
-            sendPort.Close();
-            sendPort = null;
-        }
-
-        ~ComHelper()
-        {
-            closePort();
-        }
 
         public static string[] GetComportList()
         {
@@ -77,7 +59,7 @@ namespace wpf_playground
             return portList;
         }
 
-        public void send(int val)
+        public static void send(int val)
         {
             try
             {
@@ -90,7 +72,7 @@ namespace wpf_playground
                 System.Diagnostics.Debug.WriteLine(ex);
             }
         }
-        
+
 
     }
 }

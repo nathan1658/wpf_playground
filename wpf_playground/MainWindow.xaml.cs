@@ -169,13 +169,12 @@ namespace wpf_playground
         TestMapping testMapping;
 
         #region comport part
-        ComHelper comHelper;
         ComSignalConfig comSignalConfig;
         #endregion
 
         void initComPort()
         {
-            comHelper = new ComHelper(State.SelectedCOMPort);
+            ComHelper.createPort(State.SelectedCOMPort);
             SignalModeEnum? signalMode = null;
             PQModeEnum? pQMode = null;
 
@@ -416,8 +415,6 @@ namespace wpf_playground
                 gameEnd = true;
 
                 new MappingSelection().Show();
-                comHelper.closePort();
-                comHelper = null;
                 this.Close();
             });
         }
@@ -661,7 +658,7 @@ namespace wpf_playground
                             signalTriggred = true;
                             //Send COM Port
                             var comVal = ComHelper.MappingDict[comSignalConfig];
-                            comHelper.send(comVal);
+                            ComHelper.send(comVal);
                             addSignalRecord();
                             Dispatcher.Invoke(() =>
                             {
