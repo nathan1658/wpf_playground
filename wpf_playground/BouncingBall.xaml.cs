@@ -177,7 +177,6 @@ namespace wpf_playground
                 {
                     while (true)
                     {
-
                         move();
                         Thread.Sleep(10);
                     }
@@ -307,7 +306,7 @@ namespace wpf_playground
 
             currentPointX = (xValue * movingLevel) + xCenter;
             currentPointY = (yValue * movingLevel) + yCenter;
-
+            
             Dispatcher.Invoke(() =>
             {
                 if (currentPointX < 0) currentPointX = 0;

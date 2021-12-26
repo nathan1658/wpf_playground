@@ -49,6 +49,8 @@ namespace wpf_playground
                 State.TestResultList = new List<TestResult>();
                 if (State.TestStopwatch.IsRunning) State.TestStopwatch.Reset();
 
+                ComHelper.createPort(State.SelectedCOMPort);
+
                 new MappingSelection().Show();
                 this.Close();
             };

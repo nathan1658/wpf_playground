@@ -174,7 +174,7 @@ namespace wpf_playground
 
         void initComPort()
         {
-            ComHelper.createPort(State.SelectedCOMPort);
+
             SignalModeEnum? signalMode = null;
             PQModeEnum? pQMode = null;
 
@@ -658,6 +658,7 @@ namespace wpf_playground
                             signalTriggred = true;
                             //Send COM Port
                             var comVal = ComHelper.MappingDict[comSignalConfig];
+                            System.Diagnostics.Debug.WriteLine("Sending " + comVal);
                             ComHelper.send(comVal);
                             addSignalRecord();
                             Dispatcher.Invoke(() =>

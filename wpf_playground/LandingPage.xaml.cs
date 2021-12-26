@@ -21,6 +21,8 @@ namespace wpf_playground
     {
         public LandingPage()
         {
+            this.WindowState = WindowState.Maximized;
+
             InitializeComponent();
         }
 

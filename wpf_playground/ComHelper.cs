@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using wpf_playground.Model;
 
 namespace wpf_playground
@@ -46,10 +47,28 @@ namespace wpf_playground
 
         public static void createPort(string portName)
         {
-            if (sendPort != null && sendPort.IsOpen) return;
-            sendPort = new SerialPort(portName, 57600, Parity.None, 8, StopBits.One) { Encoding = Encoding.ASCII };
-            sendPort.WriteTimeout = 1000;
-            sendPort.Open();
+            try
+            {
+                if (sendPort != null && sendPort.IsOpen) return;
+                sendPort = new SerialPort(portName, 57600, Parity.None, 8, StopBits.One) { Encoding = Encoding.ASCII };
+                sendPort.WriteTimeout = 1000;
+                sendPort.Open();
+            }catch(Exception ex)
+            {
+                MessageBox.Show("Failed to create com port: " + ex.Message);
+                throw ex;
+            }
+        }
+        public static void closePort()
+        {
+            try
+            {
+                if (sendPort != null && sendPort.IsOpen) sendPort.Close();
+            }catch(Exception ex)
+            {
+                MessageBox.Show("Failed to close com port: " + ex.Message);
+                throw ex;
+            }
         }
 
 
