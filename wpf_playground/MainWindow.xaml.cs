@@ -689,7 +689,10 @@ namespace wpf_playground
                     }
                     cleanUp();
                 }
-                catch { }
+                catch(Exception ex) {
+
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
             });
         }
 

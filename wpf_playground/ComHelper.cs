@@ -40,7 +40,7 @@ namespace wpf_playground
             [new ComSignalConfig(SignalModeEnum.Tactile, PQModeEnum.Auditory, SOAEnum.Soa1000)] = 24,
             [new ComSignalConfig(SignalModeEnum.Visual, PQModeEnum.Tactile, SOAEnum.Soa1000)] = 25,
             [new ComSignalConfig(SignalModeEnum.Auditory, PQModeEnum.Tactile, SOAEnum.Soa1000)] = 26,
-            [new ComSignalConfig(SignalModeEnum.Visual, PQModeEnum.Tactile, SOAEnum.Soa1000)] = 27,
+            [new ComSignalConfig(SignalModeEnum.Tactile, PQModeEnum.Tactile, SOAEnum.Soa1000)] = 27,
         };
 
         static SerialPort sendPort;
