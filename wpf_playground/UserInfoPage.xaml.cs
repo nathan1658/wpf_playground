@@ -24,7 +24,7 @@ namespace wpf_playground
         {
             State.TestMappingList = new List<TestMapping>();
             //Soa200
-            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa600, SOAEnum.Soa1000 };
+            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa400, SOAEnum.Soa600 };
             foreach (var soa in soaList)
             {
                 for (int i = 1; i < 4; i++)
@@ -60,7 +60,7 @@ namespace wpf_playground
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
- 
+
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
         private static bool IsTextAllowed(string text)
         {

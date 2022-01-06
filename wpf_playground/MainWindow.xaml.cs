@@ -406,6 +406,7 @@ namespace wpf_playground
                 else
                 {
                     testMapping.TestDone = true;
+                    ComHelper.send(101);
                     MessageBox.Show("Finished Test! Now back to mapping selection.");
 
                     //Add current mapping to finished state
@@ -433,6 +434,10 @@ namespace wpf_playground
 
             if (!IsGameStarted)
             {
+                if (!practiceMode)
+                {
+                    ComHelper.send(100);
+                }
                 bouncingBall.start();
                 start();
                 IsGameStarted = true;
@@ -551,8 +556,8 @@ namespace wpf_playground
                 ms = 200;
             if (UserInfo.SOA == SOAEnum.Soa600)
                 ms = 600;
-            if (UserInfo.SOA == SOAEnum.Soa1000)
-                ms = 1000;
+            if (UserInfo.SOA == SOAEnum.Soa400)
+                ms = 400;
             return ms;
         }
 
@@ -656,10 +661,14 @@ namespace wpf_playground
                         if (!signalTriggred && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + soa))
                         {
                             signalTriggred = true;
-                            //Send COM Port
-                            var comVal = ComHelper.MappingDict[comSignalConfig];
-                            System.Diagnostics.Debug.WriteLine("Sending " + comVal);
-                            ComHelper.send(comVal);
+
+                            if (!practiceMode)
+                            {
+                                //Send COM Port
+                                var comVal = ComHelper.MappingDict[comSignalConfig];
+                                System.Diagnostics.Debug.WriteLine("Sending " + comVal);
+                                ComHelper.send(comVal);
+                            }
                             addSignalRecord();
                             Dispatcher.Invoke(() =>
                             {
@@ -689,7 +698,8 @@ namespace wpf_playground
                     }
                     cleanUp();
                 }
-                catch(Exception ex) {
+                catch (Exception ex)
+                {
 
                     System.Diagnostics.Debug.WriteLine(ex);
                 }
