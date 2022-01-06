@@ -211,8 +211,6 @@ namespace wpf_playground
                 var joystickGuid = Guid.Empty;
 
 
-
-
                 foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AllDevices))
                 {
                     joystickGuid = deviceInstance.InstanceGuid;

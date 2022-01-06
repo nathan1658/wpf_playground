@@ -85,13 +85,15 @@ namespace wpf_playground
             mappingDict.Add("VisualSignalEnabled", nameof(UserInfo.SignalVisualChecked));
             mappingDict.Add("AuditorySignalEnabled", nameof(UserInfo.SignalAuditoryChecked));
             mappingDict.Add("TactileSignalEnabled", nameof(UserInfo.SignalTactileChecked));
-            mappingDict.Add("VisualPQEnabled", nameof(UserInfo.PQVisualChecked));
-            mappingDict.Add("AuditoryPQEnabled", nameof(UserInfo.PQAuditoryChecked));
-            mappingDict.Add("TactilePQEnabled", nameof(UserInfo.PQTactileChecked));
-            mappingDict.Add("SOA", nameof(UserInfo.SOA));
+        
             mappingDict.Add("Mapping", "");
 
             var historyMappingDict = new Dictionary<string, string>();
+            historyMappingDict.Add("VisualPQEnabled", nameof(ExperimentLog.PQVisualChecked));
+            historyMappingDict.Add("AuditoryPQEnabled", nameof(ExperimentLog.PQAuditoryChecked));
+            historyMappingDict.Add("TactilePQEnabled", nameof(ExperimentLog.PQTactileChecked));
+            historyMappingDict.Add("SOA", nameof(ExperimentLog.SOA));
+            historyMappingDict.Add("RandomMode", nameof(ExperimentLog.RandomMode));
             historyMappingDict.Add("HistoryType", nameof(ExperimentLog.HistoryType));
             historyMappingDict.Add("SignalIndex", nameof(ExperimentLog.SignalIndex));
             historyMappingDict.Add("ButtonPositionIndex", nameof(ExperimentLog.ButtonPositionIndex));
