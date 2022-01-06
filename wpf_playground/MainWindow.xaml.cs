@@ -23,13 +23,7 @@ namespace wpf_playground
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public UserInfo UserInfo
-        {
-            get
-            {
-                return State.UserInfo;
-            }
-        }
+
         static Random rnd = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
@@ -178,19 +172,24 @@ namespace wpf_playground
             SignalModeEnum? signalMode = null;
             PQModeEnum? pQMode = null;
 
-            if (UserInfo.SignalVisualChecked) signalMode = SignalModeEnum.Visual;
-            if (UserInfo.SignalAuditoryChecked) signalMode = SignalModeEnum.Auditory;
-            if (UserInfo.SignalTactileChecked) signalMode = SignalModeEnum.Tactile;
+            if (this.signalVisualChecked) signalMode = SignalModeEnum.Visual;
+            if (this.signalAuditoryChecked) signalMode = SignalModeEnum.Auditory;
+            if (this.signalTactileChecked) signalMode = SignalModeEnum.Tactile;
 
-            if (UserInfo.PQVisualChecked) pQMode = PQModeEnum.Visual;
-            if (UserInfo.PQAuditoryChecked) pQMode = PQModeEnum.Auditory;
-            if (UserInfo.PQTactileChecked) pQMode = PQModeEnum.Tactile;
-
-            comSignalConfig = new ComSignalConfig(signalMode.Value, pQMode.Value, UserInfo.SOA);
+            if (this.pqVisualChecked) pQMode = PQModeEnum.Visual;
+            if (this.pqAuditoryChecked) pQMode = PQModeEnum.Auditory;
+            if (this.pqTactileChecked) pQMode = PQModeEnum.Tactile;
+            //TODO if random mode this will be update every time.
+            comSignalConfig = new ComSignalConfig(signalMode.Value, pQMode.Value, State.UserInfo.SOA);
 
         }
 
-        public MainWindow(bool isPracticeMode, MappingEnum mapping, TestMapping testMapping)
+        SOAEnum soaEnum;
+        bool randomMode;
+        bool signalVisualChecked, signalAuditoryChecked, signalTactileChecked;
+        bool pqVisualChecked, pqAuditoryChecked, pqTactileChecked;
+
+        public MainWindow(bool isPracticeMode, MappingEnum mapping, TestMapping testMapping, SOAEnum soaEnum, bool signalVisualChecked, bool signalAuditoryChecked, bool signalTactileChecked, bool pqVisualChecked, bool pqAuditoryChecked, bool pqTactileChecked, bool randomMode)
         {
             this.practiceMode = isPracticeMode;
             this.testMapping = testMapping;
@@ -204,34 +203,40 @@ namespace wpf_playground
             this.DataContext = this;
             InitializeComponent();
 
+            this.signalVisualChecked = signalVisualChecked;
+            this.signalAuditoryChecked = signalAuditoryChecked;
+            this.signalTactileChecked = signalTactileChecked;
+            this.pqVisualChecked = pqVisualChecked;
+            this.pqAuditoryChecked = pqAuditoryChecked;
+            this.pqTactileChecked = pqTactileChecked;
 
-            if (UserInfo.SignalVisualChecked)
+            if (this.signalVisualChecked)
             {
                 initVisualSignal();
             }
 
-            if (UserInfo.SignalAuditoryChecked)
+            if (this.signalAuditoryChecked)
             {
                 initAuditorySignal();
             }
 
-            if (UserInfo.SignalTactileChecked)
+            if (this.signalTactileChecked)
             {
                 initTactileSignal();
             }
 
 
-            if (UserInfo.PQVisualChecked)
+            if (this.pqVisualChecked)
             {
                 initVisualPQ();
             }
 
-            if (UserInfo.PQAuditoryChecked)
+            if (this.pqAuditoryChecked)
             {
                 initAuditoryPQ();
             }
 
-            if (UserInfo.PQTactileChecked)
+            if (this.pqTactileChecked)
             {
                 initTactilePQ();
             }
@@ -524,9 +529,9 @@ namespace wpf_playground
 
             tokenSource.Cancel();
             var targetSignalList = new List<MyBaseUserControl>();
-            if (UserInfo.SignalVisualChecked) targetSignalList.Add(visualSignalList[btnIndex]);
-            if (UserInfo.SignalAuditoryChecked) targetSignalList.Add(auditorySignalList[btnIndex]);
-            if (UserInfo.SignalTactileChecked) targetSignalList.Add(tactileSignalList[btnIndex]);
+            if (signalVisualChecked) targetSignalList.Add(visualSignalList[btnIndex]);
+            if (signalAuditoryChecked) targetSignalList.Add(auditorySignalList[btnIndex]);
+            if (signalTactileChecked) targetSignalList.Add(tactileSignalList[btnIndex]);
 
             //click the first one anyway.
             isCorrect = targetSignalList[0].Click();
@@ -547,17 +552,42 @@ namespace wpf_playground
 
         }
 
+        List<PQModeEnum> pqEnumList = new List<PQModeEnum> { PQModeEnum.Visual, PQModeEnum.Auditory, PQModeEnum.Tactile };
+        PQModeEnum getPQ()
+        {
+            if (this.randomMode)
+            {
+                int r = random.Next(3);
+                return pqEnumList[r];
+            }
+            else
+            {
+                if (this.pqAuditoryChecked) return PQModeEnum.Auditory;
+                if (this.pqVisualChecked) return PQModeEnum.Visual;
+                if (this.pqTactileChecked) return PQModeEnum.Tactile;
 
+                throw new Exception("invalid getPQ");
+            }
+        }
 
+        List<SOAEnum> soaEnumList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa400, SOAEnum.Soa600 };
         int getSoa()
         {
             int ms = -1;
-            if (UserInfo.SOA == SOAEnum.Soa200)
+            var tmp = soaEnum;
+            if (this.randomMode)
+            {
+                int r = random.Next(3);
+                tmp = soaEnumList[r];
+            }
+
+            if (tmp == SOAEnum.Soa200)
                 ms = 200;
-            if (UserInfo.SOA == SOAEnum.Soa600)
-                ms = 600;
-            if (UserInfo.SOA == SOAEnum.Soa400)
+            if (tmp == SOAEnum.Soa400)
                 ms = 400;
+            if (tmp == SOAEnum.Soa600)
+                ms = 600;
+
             return ms;
         }
 
@@ -565,7 +595,7 @@ namespace wpf_playground
         {
             var output = new TestResult(this.mapping)
             {
-                UserInfo = JsonConvert.DeserializeObject<UserInfo>(JsonConvert.SerializeObject(UserInfo)),
+                UserInfo = JsonConvert.DeserializeObject<UserInfo>(JsonConvert.SerializeObject(State.UserInfo)),
                 ClickHistoryList = clickHistoryList
             };
             State.TestResultList.Add(output);
@@ -603,11 +633,11 @@ namespace wpf_playground
                     signalIndex = index;
 
                     var targetControlList = new List<MyBaseUserControl>();
-                    if (UserInfo.SignalVisualChecked)
+                    if (signalVisualChecked)
                         targetControlList.Add(visualSignalList[index]);
-                    if (UserInfo.SignalAuditoryChecked)
+                    if (signalAuditoryChecked)
                         targetControlList.Add(auditorySignalList[index]);
-                    if (UserInfo.SignalTactileChecked)
+                    if (signalTactileChecked)
                         targetControlList.Add(tactileSignalList[index]);
 
                     int soa = getSoa();
@@ -617,11 +647,12 @@ namespace wpf_playground
 
                     bool isLeft = index == 0 || index == 2;
                     pqIndex = isLeft ? 0 : 1;
-                    if (UserInfo.PQVisualChecked)
+
+                    if (pqVisualChecked)
                         targetPQList.Add(isLeft ? leftVisualPQ : rightVisualPQ);
-                    if (UserInfo.PQAuditoryChecked)
+                    if (pqAuditoryChecked)
                         targetPQList.Add(isLeft ? leftAuditoryPQ : rightAuditoryPQ);
-                    if (UserInfo.PQTactileChecked)
+                    if (pqTactileChecked)
                         targetPQList.Add(isLeft ? leftTactilePQ : rightTactilePQ);
 
                     Dispatcher.Invoke(() =>
@@ -722,34 +753,38 @@ namespace wpf_playground
             }
         }
 
-
+        //TODO handle random mode
         void addSignalRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, soaEnum, pqVisualChecked, pqAuditoryChecked, pqTactileChecked, randomMode, pqPositionIndex: pqIndex);
             clickHistoryList.Add(clickHistory);
         }
 
+        //TODO handle random mode
         void addPQRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, soaEnum, pqVisualChecked, pqAuditoryChecked, pqTactileChecked, randomMode, pqPositionIndex: pqIndex);
             clickHistoryList.Add(clickHistory);
         }
 
+        //TODO handle random mode
         void miss()
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, soaEnum, pqVisualChecked, pqAuditoryChecked, pqTactileChecked, randomMode, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
         }
 
+        //TODO handle random mode
         void hit(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, soaEnum, pqVisualChecked, pqAuditoryChecked, pqTactileChecked, randomMode, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
         }
 
+        //TODO handle random mode
         void wrong(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs, soaEnum, pqVisualChecked, pqAuditoryChecked, pqTactileChecked, randomMode, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
         }
 
