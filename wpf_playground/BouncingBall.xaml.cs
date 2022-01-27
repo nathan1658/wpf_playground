@@ -82,6 +82,7 @@ namespace wpf_playground
         double currentPointY;
         double xCenter;
         double yCenter;
+        bool stopped = false;
         bool started = false;
         int movingLevel;
 
@@ -136,18 +137,15 @@ namespace wpf_playground
             }
         }
 
+        public void stop()
+        {
+            this.stopped = true;
+        }
 
         public BouncingBall()
         {
             InitializeComponent();
             this.DataContext = this;
-
-
-
-
-   
-
-
 
             var diffLevel = State.UserInfo.Level;
             if (diffLevel == Model.LevelEnum.L50)
@@ -175,7 +173,7 @@ namespace wpf_playground
                 started = true;
                 Task.Run(() =>
                 {
-                    while (true)
+                    while (!stopped)
                     {
                         move();
                         Thread.Sleep(10);

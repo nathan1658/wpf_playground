@@ -416,6 +416,7 @@ namespace wpf_playground
                 gameEnd = true;
 
                 new MappingSelection().Show();
+                bouncingBall.stop();
                 this.Close();
             });
         }
@@ -739,6 +740,15 @@ namespace wpf_playground
         {
             var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            gameEnd = true;
+
+            new MappingSelection().Show();
+            bouncingBall.stop();
+            this.Close();
         }
 
         void hit(int pressedButtonIndex)
