@@ -167,6 +167,29 @@ namespace wpf_playground
         bool practiceMode = false;
         MappingEnum mapping = MappingEnum.NONE;
         TestMapping testMapping;
+
+        #region comport part
+        ComSignalConfig comSignalConfig;
+        #endregion
+
+        void initComPort()
+        {
+
+            SignalModeEnum? signalMode = null;
+            PQModeEnum? pQMode = null;
+
+            if (UserInfo.SignalVisualChecked) signalMode = SignalModeEnum.Visual;
+            if (UserInfo.SignalAuditoryChecked) signalMode = SignalModeEnum.Auditory;
+            if (UserInfo.SignalTactileChecked) signalMode = SignalModeEnum.Tactile;
+
+            if (UserInfo.PQVisualChecked) pQMode = PQModeEnum.Visual;
+            if (UserInfo.PQAuditoryChecked) pQMode = PQModeEnum.Auditory;
+            if (UserInfo.PQTactileChecked) pQMode = PQModeEnum.Tactile;
+
+            comSignalConfig = new ComSignalConfig(signalMode.Value, pQMode.Value, UserInfo.SOA);
+
+        }
+
         public MainWindow(bool isPracticeMode, MappingEnum mapping, TestMapping testMapping)
         {
             this.practiceMode = isPracticeMode;
@@ -174,6 +197,8 @@ namespace wpf_playground
             this.mapping = mapping;
             initSequenceList();
 
+
+            initComPort();
 
             this.WindowState = WindowState.Maximized;
             this.DataContext = this;
@@ -381,6 +406,7 @@ namespace wpf_playground
                 else
                 {
                     testMapping.TestDone = true;
+                    ComHelper.send(101);
                     MessageBox.Show("Finished Test! Now back to mapping selection.");
 
                     //Add current mapping to finished state
@@ -388,7 +414,9 @@ namespace wpf_playground
                     saveResult();
                 }
                 gameEnd = true;
+
                 new MappingSelection().Show();
+                bouncingBall.stop();
                 this.Close();
             });
         }
@@ -407,6 +435,10 @@ namespace wpf_playground
 
             if (!IsGameStarted)
             {
+                if (!practiceMode)
+                {
+                    ComHelper.send(100);
+                }
                 bouncingBall.start();
                 start();
                 IsGameStarted = true;
@@ -525,8 +557,8 @@ namespace wpf_playground
                 ms = 200;
             if (UserInfo.SOA == SOAEnum.Soa600)
                 ms = 600;
-            if (UserInfo.SOA == SOAEnum.Soa1000)
-                ms = 1000;
+            if (UserInfo.SOA == SOAEnum.Soa400)
+                ms = 400;
             return ms;
         }
 
@@ -630,6 +662,14 @@ namespace wpf_playground
                         if (!signalTriggred && triggerSw.ElapsedMilliseconds >= (delayIntervalInMs + soa))
                         {
                             signalTriggred = true;
+
+                            if (!practiceMode)
+                            {
+                                //Send COM Port
+                                var comVal = ComHelper.MappingDict[comSignalConfig];
+                                System.Diagnostics.Debug.WriteLine("Sending " + comVal);
+                                ComHelper.send(comVal);
+                            }
                             addSignalRecord();
                             Dispatcher.Invoke(() =>
                             {
@@ -659,7 +699,11 @@ namespace wpf_playground
                     }
                     cleanUp();
                 }
-                catch { }
+                catch (Exception ex)
+                {
+
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
             });
         }
 
@@ -696,6 +740,15 @@ namespace wpf_playground
         {
             var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex);
             clickHistoryList.Add(history);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            gameEnd = true;
+
+            new MappingSelection().Show();
+            bouncingBall.stop();
+            this.Close();
         }
 
         void hit(int pressedButtonIndex)

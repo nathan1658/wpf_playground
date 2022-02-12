@@ -59,5 +59,11 @@ namespace wpf_playground
             
             new LandingPage().Show();
         }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            ComHelper.closePort();
+            base.OnExit(e);
+        }
     }
 }

@@ -41,30 +41,31 @@ namespace wpf_playground.Model
         L100
     }
 
-    //public enum SignalModeEnum
-    //{
-    //    Visual,
-    //    Auditory,
-    //    Tactile
-    //}
 
-    //public enum PQModeEnum
-    //{
-    //    Visual,
-    //    Auditory,
-    //    Tactile
-    //}
+    public enum SignalModeEnum
+    {
+        Visual,
+        Auditory,
+        Tactile
+    }
+
+    public enum PQModeEnum
+    {
+        Visual,
+        Auditory,
+        Tactile
+    }
 
     public enum SOAEnum
     {
         Soa200,
+        Soa400,
         Soa600,
-        Soa1000
     }
 
     public enum MappingEnum
     {
-      NONE,BC,TC,LC,BI
+        NONE, BC, TC, LC, BI
     }
 
 }

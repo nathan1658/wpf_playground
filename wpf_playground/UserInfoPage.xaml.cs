@@ -24,7 +24,7 @@ namespace wpf_playground
         {
             State.TestMappingList = new List<TestMapping>();
             //Soa200
-            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa600, SOAEnum.Soa1000 };
+            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa400, SOAEnum.Soa600 };
             foreach (var soa in soaList)
             {
                 for (int i = 1; i < 4; i++)
@@ -49,12 +49,14 @@ namespace wpf_playground
                 State.TestResultList = new List<TestResult>();
                 if (State.TestStopwatch.IsRunning) State.TestStopwatch.Reset();
 
+                ComHelper.createPort(State.SelectedCOMPort);
+
                 new MappingSelection().Show();
                 this.Close();
             };
             this.DataContext = vm;
             initList();
-
+            comportList.ItemsSource = ComHelper.GetComportList();
             versionText.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
@@ -108,6 +110,8 @@ namespace wpf_playground
                 updateProperty(config.TopTactileSpeaker, nameof(TactileTopSpeakerHz), nameof(SelectedTactileTopSpeakerSoundDevice));
                 updateProperty(config.PQTactileSpeaker, nameof(TactilePQHz), nameof(SelectedTactilePQSoundDevice));
                 updateProperty(config.BottomTactileSpeaker, nameof(TactileBottomSpeakerHz), nameof(SelectedTactileBottomSpeakerSoundDevice));
+
+                SelectedCOMPort = config.COMPortValue;
 
             }
             catch (Exception ex)
@@ -164,7 +168,7 @@ namespace wpf_playground
         {
             get
             {
-                var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, };
+                var list = new List<string>() { UserInfo.Name, UserInfo.SID, UserInfo.Age, SelectedCOMPort };
                 var speakerList = new List<DirectSoundDeviceInfo> { SelectedTopSpeakerSoundDevice, SelectedPQSoundDevice, SelectedBottomSpeakerSoundDevice, SelectedTactileTopSpeakerSoundDevice, SelectedTactilePQSoundDevice, SelectedTactileBottomSpeakerSoundDevice };
                 if (speakerList.Any(x => x == null || x.Guid == null)) return false;
                 //if (!AtLeastOnePQChecked) return false;
@@ -436,6 +440,19 @@ namespace wpf_playground
             }
         }
 
+        private String _selectedCOMPort;
+
+        public String SelectedCOMPort
+        {
+            get { return _selectedCOMPort; }
+            set
+            {
+                _selectedCOMPort = value;
+                InformPropertyChanged("SelectedCOMPort");
+                InformPropertyChanged("FormValid");
+                State.SelectedCOMPort = value;
+            }
+        }
 
 
         void saveConfig()
@@ -461,6 +478,8 @@ namespace wpf_playground
                 updateConfig(nameof(Config.TopTactileSpeaker), TactileTopSpeakerHz, SelectedTactileTopSpeakerSoundDevice);
                 updateConfig(nameof(Config.PQTactileSpeaker), TactilePQHz, SelectedTactilePQSoundDevice);
                 updateConfig(nameof(Config.BottomTactileSpeaker), TactileBottomSpeakerHz, SelectedTactileBottomSpeakerSoundDevice);
+
+                config.COMPortValue = SelectedCOMPort;
 
                 //Write it to file
                 var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(config);

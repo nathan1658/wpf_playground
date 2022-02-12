@@ -52,6 +52,7 @@
             Margin="16"
           >
                 <StackPanel>
+                    <Button Click="Button_Click"> leave</Button>
                     <TextBlock
                     Text="{Binding UserInfo}"/>
                     <TextBlock
