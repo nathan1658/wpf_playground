@@ -24,7 +24,8 @@ namespace wpf_playground
         {
             State.TestMappingList = new List<TestMapping>();
             //Soa200
-            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa400, SOAEnum.Soa600 };
+            //List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa400, SOAEnum.Soa600 };
+            List<SOAEnum> soaList = new List<SOAEnum> { SOAEnum.Soa200, SOAEnum.Soa600 };
             foreach (var soa in soaList)
             {
                 for (int i = 1; i < 4; i++)

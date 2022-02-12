@@ -59,7 +59,7 @@ namespace wpf_playground.Model
     public enum SOAEnum
     {
         Soa200,
-        Soa400,
+        //Soa400,
         Soa600,
     }
 

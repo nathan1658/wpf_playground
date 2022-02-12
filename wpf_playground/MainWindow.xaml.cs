@@ -557,8 +557,8 @@ namespace wpf_playground
                 ms = 200;
             if (UserInfo.SOA == SOAEnum.Soa600)
                 ms = 600;
-            if (UserInfo.SOA == SOAEnum.Soa400)
-                ms = 400;
+            //if (UserInfo.SOA == SOAEnum.Soa400)
+            //    ms = 400;
             return ms;
         }
 
