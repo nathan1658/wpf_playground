@@ -15,6 +15,8 @@ namespace wpf_playground.Model
         public SpeakerConfig TopTactileSpeaker { get; set; }
         public SpeakerConfig PQTactileSpeaker { get; set; }
         public SpeakerConfig BottomTactileSpeaker { get; set; }
+
+        public string COMPortValue { get; set; }
     }
 
     public class SpeakerConfig

@@ -111,6 +111,8 @@ namespace wpf_playground
                 updateProperty(config.PQTactileSpeaker, nameof(TactilePQHz), nameof(SelectedTactilePQSoundDevice));
                 updateProperty(config.BottomTactileSpeaker, nameof(TactileBottomSpeakerHz), nameof(SelectedTactileBottomSpeakerSoundDevice));
 
+                SelectedCOMPort = config.COMPortValue;
+
             }
             catch (Exception ex)
             {
@@ -476,6 +478,8 @@ namespace wpf_playground
                 updateConfig(nameof(Config.TopTactileSpeaker), TactileTopSpeakerHz, SelectedTactileTopSpeakerSoundDevice);
                 updateConfig(nameof(Config.PQTactileSpeaker), TactilePQHz, SelectedTactilePQSoundDevice);
                 updateConfig(nameof(Config.BottomTactileSpeaker), TactileBottomSpeakerHz, SelectedTactileBottomSpeakerSoundDevice);
+
+                config.COMPortValue = SelectedCOMPort;
 
                 //Write it to file
                 var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(config);

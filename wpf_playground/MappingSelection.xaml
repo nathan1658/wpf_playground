@@ -151,11 +151,11 @@
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa200}}"
                         Content="200">
                     </RadioButton>
-                    <RadioButton
+                    <!--<RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa400}}"
                         Content="400">
-                    </RadioButton>
+                    </RadioButton>-->
                     <RadioButton
                         GroupName="soaGroup"
                         IsChecked="{Binding SOAEnum, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:SOAEnum.Soa600}}"
