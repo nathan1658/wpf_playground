@@ -84,6 +84,8 @@ namespace wpf_playground
         double yCenter;
         bool stopped = false;
         bool started = false;
+        private int randomizeCounter = 0;
+        Random random = new Random();
         int movingLevel;
 
         private string _xVal;
@@ -186,7 +188,6 @@ namespace wpf_playground
         {
 
 
-          
 
 
             xCenter = board.Width / 2 - (ball.Width / 2);
@@ -198,7 +199,7 @@ namespace wpf_playground
                 Canvas.SetTop(tmpBall, yCenter);
                 Canvas.SetLeft(tmpBall, xCenter);
             }
-            
+
             //Accquire controller
             new Thread(() =>
             {
@@ -293,8 +294,40 @@ namespace wpf_playground
             }).Start();
         }
 
+
+
+        private void randomize()
+        {
+            var testInt = (8 - 2 + 1) * random.NextDouble() + 2;
+            if (xi > testInt)
+            {
+                System.Diagnostics.Debug.WriteLine("yoyo");
+                phiTranslation();
+                xi = 0;
+                xCenter = currentPointX;
+                yCenter = currentPointY;
+            }
+        }
+
+        private void phiTranslation()
+        {
+            var Xp = this.ActualWidth - 50 + 1 * random.NextDouble() - this.ActualWidth / 2;
+            var Yp = this.ActualHeight - 50 + 1 * random.NextDouble() - this.ActualHeight / 2;
+            if (random.NextDouble()>0.5)
+            {
+                phi = Math.Atan(Yp / Xp) + 3.1415926;
+            }
+            else
+            {
+                phi = Math.Atan(Yp / Xp);
+            }
+
+        }
+
         void move()
         {
+
+
             xi = xi + 0.01;
             yi = curve(xi);
             theta = Math.Atan(yi / xi) + phi;
@@ -304,9 +337,17 @@ namespace wpf_playground
 
             currentPointX = (xValue * movingLevel) + xCenter;
             currentPointY = (yValue * movingLevel) + yCenter;
-            
+
             Dispatcher.Invoke(() =>
             {
+                //2sec as move() will be delay every 10ms
+                if (randomizeCounter++ >= 200)
+                {
+                    randomize();
+                    randomizeCounter = 0;
+                }
+
+
                 if (currentPointX < 0) currentPointX = 0;
                 if (currentPointY < 0) currentPointY = 0;
                 if (currentPointY > (board.Height - ball.Height)) currentPointY = board.Height - ball.Height;
