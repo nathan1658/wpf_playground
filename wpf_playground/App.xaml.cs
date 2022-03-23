@@ -55,9 +55,16 @@ namespace wpf_playground
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-            
-            new LandingPage().Show();
+            try
+            {
+                base.OnStartup(e);
+
+                new LandingPage().Show();
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                throw ex;
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)
