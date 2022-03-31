@@ -301,7 +301,6 @@ namespace wpf_playground
             var testInt = (8 - 2 + 1) * random.NextDouble() + 2;
             if (xi > testInt)
             {
-                System.Diagnostics.Debug.WriteLine("yoyo");
                 phiTranslation();
                 xi = 0;
                 xCenter = currentPointX;

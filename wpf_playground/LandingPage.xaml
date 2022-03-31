@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:local="clr-namespace:wpf_playground"
         mc:Ignorable="d"
         Title="LandingPage" Height="450" Width="800">
@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel VerticalAlignment="Center">
-
+            <!--<local:FootTracking x:Name="footTracking"/>-->
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,0,0,80" FontSize="48"  FontFamily="Microsoft JhengHei" >欢迎进入多模态刺激-响应实验</TextBlock>
             <Button Grid.Row="1" HorizontalAlignment="Center" Click="Button_Click" FontSize="48" Height="auto" Width="auto" FontFamily="Microsoft JhengHei" >进入实验</Button>
         </StackPanel>

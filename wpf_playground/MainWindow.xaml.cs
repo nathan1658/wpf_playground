@@ -417,6 +417,7 @@ namespace wpf_playground
 
                 new MappingSelection().Show();
                 bouncingBall.stop();
+                footTracking.stop();
                 this.Close();
             });
         }
@@ -441,6 +442,7 @@ namespace wpf_playground
                 }
                 bouncingBall.start();
                 start();
+                footTracking.start();
                 IsGameStarted = true;
                 return;
             }

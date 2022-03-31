@@ -21,18 +21,17 @@ namespace wpf_playground
     public partial class FootTracking : UserControl
     {
 
-        const int MAX_WIDTH = 800;
-        const int INC_VALUE = 10;
+        double mainGridWidth = -1;
+        double incrementalValue = -1;
 
 
         public FootTracking()
         {
             InitializeComponent();
+
             redBar.Width = 0;
             blueBar.Width = 0;
 
-
-            this.KeyDown += FootTracking_KeyDown;
             this.Loaded += FootTracking_Loaded;
         }
 
@@ -41,6 +40,9 @@ namespace wpf_playground
             var window = Window.GetWindow(this);
             window.KeyDown += FootTracking_KeyDown;
             window.KeyUp += FootTracking_KeyUp;
+
+            mainGridWidth = mainGrid.ActualWidth;
+            incrementalValue = mainGridWidth / 100;
         }
 
         private void FootTracking_KeyUp(object sender, KeyEventArgs e)
@@ -48,6 +50,8 @@ namespace wpf_playground
             if (e.Key == Key.Space)
             {
                 isPressed = false;
+
+                holdVal = 0;
             }
         }
 
@@ -55,19 +59,33 @@ namespace wpf_playground
         {
             if (e.Key == Key.Space)
             {
+                if (!isPressed)
+                    holdVal = 0;
+
                 isPressed = true;
             }
         }
 
+        public void stop()
+        {
+            this.stopped = true;
+        }
+
+        bool stopped = false;
         bool isPressed = false;
         bool inc = true;
+        int holdVal = 0;
         int i = 0;
         Random r = new Random();
+
+        int f;
+        double fsumm;
+
         public void start()
         {
             Task.Run(async () =>
             {
-                while (true)
+                while (true && !stopped)
                 {
 
                     if (i++ == 5)
@@ -82,31 +100,38 @@ namespace wpf_playground
                         var currentWidth = redBar.Width;
                         if (inc)
                         {
-                            if (currentWidth + INC_VALUE <= MAX_WIDTH)
-                                redBar.Width += INC_VALUE;
+                            if (currentWidth + incrementalValue <= mainGridWidth)
+                                redBar.Width += incrementalValue;
                         }
                         else
                         {
-                            if (currentWidth - INC_VALUE >= 0)
-                                redBar.Width -= INC_VALUE;
+                            if (currentWidth - incrementalValue >= 0)
+                                redBar.Width -= incrementalValue;
                         }
 
                         if (isPressed)
                         {
-                            if (blueBar.Width + INC_VALUE <= MAX_WIDTH)
+                            ++holdVal;
+                            if (blueBar.Width + holdVal <= mainGridWidth)
                             {
-                                blueBar.Width += INC_VALUE;
+                                blueBar.Width += holdVal;
                             }
                         }
                         else
                         {
-                            if (blueBar.Width - INC_VALUE >= 0)
+                            ++holdVal;
+                            if (blueBar.Width - holdVal >= 0)
                             {
-                                blueBar.Width -= INC_VALUE;
+                                blueBar.Width -= holdVal;
                             }
                         }
+                        double fDist = Math.Pow(blueBar.Width - redBar.Width,2);
+                        fsumm += fDist;
+                        double fdivide = fsumm / f++;
+                        double fRMS = Math.Sqrt(fdivide);
 
-                        debugVal.Text = (blueBar.Width - redBar.Width).ToString();
+
+                        debugVal.Text = fRMS.ToString();
                     });
                     await Task.Delay(100);
                 }
