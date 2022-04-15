@@ -14,6 +14,7 @@ namespace wpf_playground.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = double.Parse(parameter.ToString());
+            //return (double)new LengthConverter().ConvertFrom(CmToPx(val));
             //Get current screen raw dpi
             var dpi = ScreenInformations.RawDpi;
             var result = (Math.Sqrt(dpi) * 2.54 * val) + "px";

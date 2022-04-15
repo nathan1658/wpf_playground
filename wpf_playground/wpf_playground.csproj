@@ -143,6 +143,9 @@
     <Compile Include="Converter\ListToStringConverter.cs" />
     <Compile Include="Converter\NotNullConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="FootTracking.xaml.cs">
+      <DependentUpon>FootTracking.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LandingPage.xaml.cs">
       <DependentUpon>LandingPage.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,10 @@
     </Compile>
     <Compile Include="WaveProvider32.cs" />
     <Page Include="BouncingBall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FootTracking.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

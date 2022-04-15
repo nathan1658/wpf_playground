@@ -52,7 +52,7 @@
             Margin="16"
           >
                 <StackPanel>
-                    <Button Click="Button_Click"> leave</Button>
+                    <Button Click="Button_Click">leave</Button>
                     <TextBlock
                     Text="{Binding UserInfo}"/>
                     <TextBlock
@@ -120,13 +120,15 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:BouncingBall
-                        Grid.Row="1"
-                        Grid.Column="1"
+                    <StackPanel Grid.Row="1" Grid.Column="1">
+
+                        <local:BouncingBall
                         x:Name="bouncingBall"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
+                        <local:FootTracking x:Name="footTracking"/>
 
+                    </StackPanel>
 
                     <TextBlock
                         Background="White"
@@ -156,7 +158,7 @@
                     x:Name="gameCounter"
                      />
                 </StackPanel>
-                
+
                 <!-- Press any key to start message -->
                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,5cm,0,0">
                     <TextBlock.Resources>
