@@ -14,7 +14,7 @@ namespace wpf_playground.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = double.Parse(parameter.ToString());
-            return (double)new LengthConverter().ConvertFrom(CmToPx(val));
+            //return (double)new LengthConverter().ConvertFrom(CmToPx(val));
             //Get current screen raw dpi
             var dpi = ScreenInformations.RawDpi;
             var result = (Math.Sqrt(dpi) * 2.54 * val) + "px";
@@ -24,24 +24,6 @@ namespace wpf_playground.Converter
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-        }
-
-
-        private struct PixelUnitFactor
-        {
-            public const double Px = 1.0;
-            public const double Inch = 96.0;
-            public const double Cm = 37.7952755905512;
-            public const double Pt = 1.33333333333333;
-        }
-        public double CmToPx(double cm)
-        {
-            return cm * PixelUnitFactor.Cm;
-        }
-
-        public double PxToCm(double px)
-        {
-            return px / PixelUnitFactor.Cm;
         }
     }
 }

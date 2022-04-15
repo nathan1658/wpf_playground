@@ -24,7 +24,6 @@ namespace wpf_playground
             this.WindowState = WindowState.Maximized;
 
             InitializeComponent();
-            //footTracking.start();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
