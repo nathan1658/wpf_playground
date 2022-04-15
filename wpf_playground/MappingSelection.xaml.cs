@@ -99,6 +99,8 @@ namespace wpf_playground
             historyMappingDict.Add("ElapsedTime", nameof(ExperimentLog.ElapsedTime));
             historyMappingDict.Add("ReactionTime", nameof(ExperimentLog.ReactionTime));
             historyMappingDict.Add("Distance", nameof(ExperimentLog.Distance));
+            historyMappingDict.Add("FDistance", nameof(ExperimentLog.FDistance));
+            historyMappingDict.Add("FRMS", nameof(ExperimentLog.FRms));
             historyMappingDict.Add("ClickState", nameof(ExperimentLog.ClickState));
             historyMappingDict.Add("Delay", nameof(ExperimentLog.Delay));
 

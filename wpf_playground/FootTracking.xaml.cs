@@ -24,6 +24,10 @@ namespace wpf_playground
         double mainGridWidth = -1;
         double incrementalValue = -1;
 
+        public double fRMS = 0;
+        double f = 1;
+        double fSumm = 0;
+
 
         public FootTracking()
         {
@@ -38,32 +42,31 @@ namespace wpf_playground
         private void FootTracking_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
-            window.KeyDown += FootTracking_KeyDown;
-            window.KeyUp += FootTracking_KeyUp;
+
+            window.MouseLeftButtonDown += FootTracking_KeyDown;
+            window.MouseLeftButtonUp += FootTracking_KeyUp;
 
             mainGridWidth = mainGrid.ActualWidth;
             incrementalValue = mainGridWidth / 100;
         }
 
-        private void FootTracking_KeyUp(object sender, KeyEventArgs e)
+        private void FootTracking_KeyUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.Key == Key.Space)
-            {
-                isPressed = false;
 
-                holdVal = 0;
-            }
+            isPressed = false;
+
+            holdVal = 0;
+
         }
 
-        private void FootTracking_KeyDown(object sender, KeyEventArgs e)
+        private void FootTracking_KeyDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Key == Key.Space)
-            {
-                if (!isPressed)
-                    holdVal = 0;
 
-                isPressed = true;
-            }
+            if (!isPressed)
+                holdVal = 0;
+
+            isPressed = true;
+
         }
 
         public void stop()
@@ -78,8 +81,6 @@ namespace wpf_playground
         int i = 0;
         Random r = new Random();
 
-        int f;
-        double fsumm;
 
         public void start()
         {
@@ -125,18 +126,30 @@ namespace wpf_playground
                                 blueBar.Width -= holdVal;
                             }
                         }
-                        double fDist = Math.Pow(blueBar.Width - redBar.Width,2);
-                        fsumm += fDist;
-                        double fdivide = fsumm / f++;
-                        double fRMS = Math.Sqrt(fdivide);
+                        double fDist = 0;
+                        double fDivide = 0;
+                        fDist = getfDistance();
+                        fSumm += fDist;
+                        fDivide = fSumm / f;
+                        fRMS = Math.Round(Math.Sqrt(fDivide), 5);
 
+                        f++;
 
-                        debugVal.Text = fRMS.ToString();
+                        debugVal.Text = getfDistance() + ":" + fRMS.ToString();
                     });
                     await Task.Delay(100);
                 }
             });
         }
 
+
+        public double getfDistance()
+        {
+            return Dispatcher.Invoke<double>(() =>
+              {
+                  var tmp = blueBar.Width - redBar.Width;
+                  return Math.Round(Math.Pow(tmp, 2), 2);
+              });
+        }
     }
 }

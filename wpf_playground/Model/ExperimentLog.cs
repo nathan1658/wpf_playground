@@ -8,7 +8,7 @@ namespace wpf_playground.Model
 {
     public class ExperimentLog
     {
-        public ExperimentLog(HistoryType historyType, int signalIndex, int buttonPositionIndex, double elapsedTime, double reactionTime, double distance, ClickState clickState, int delay, int pqPositionIndex = -1)
+        public ExperimentLog(HistoryType historyType, int signalIndex, int buttonPositionIndex, double elapsedTime, double reactionTime, double distance, ClickState clickState, int delay, int pqPositionIndex = -1, double fDistance = -1, double fRms = -1)
         {
 
             HistoryType = historyType;
@@ -21,6 +21,9 @@ namespace wpf_playground.Model
             Delay = delay;
 
             PQPositionIndex = pqPositionIndex;
+
+            FDistance = fDistance;
+            FRms = fRms;
         }
 
         /// <summary>
@@ -79,5 +82,14 @@ namespace wpf_playground.Model
         /// </summary>
         public int Delay { get; set; }
 
+        /// <summary>
+        /// (width1 - width2) ^2
+        /// </summary>
+        public double FDistance { get; set; }
+
+        /// <summary>
+        /// Average amount of deviation between the cursor and the following target
+        /// </summary>
+        public double FRms { get; set; }
     }
 }

@@ -703,7 +703,7 @@ namespace wpf_playground
                 }
                 catch (Exception ex)
                 {
-
+                    //TODO handle this
                     System.Diagnostics.Debug.WriteLine(ex);
                 }
             });
@@ -728,19 +728,29 @@ namespace wpf_playground
 
         void addSignalRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var fD = footTracking.getfDistance();
+            var fRMS = footTracking.fRMS;
+
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance:fD, fRms: fRMS);
             clickHistoryList.Add(clickHistory);
         }
 
         void addPQRecord()
         {
-            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex);
+
+            var fD = footTracking.getfDistance();
+            var fRMS = footTracking.fRMS;
+
+            var clickHistory = new ExperimentLog(HistoryType.PQ, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance: fD, fRms: fRMS);
             clickHistoryList.Add(clickHistory);
         }
 
         void miss()
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex);
+            var fD = footTracking.getfDistance();
+            var fRMS = footTracking.fRMS;
+
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, -1, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Miss, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance: fD, fRms: fRMS);
             clickHistoryList.Add(history);
         }
 
@@ -755,13 +765,21 @@ namespace wpf_playground
 
         void hit(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex: pqIndex);
+
+            var fD = footTracking.getfDistance();
+            var fRMS = footTracking.fRMS;
+
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Correct, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance: fD, fRms: fRMS);
             clickHistoryList.Add(history);
         }
 
         void wrong(int pressedButtonIndex)
         {
-            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs, pqPositionIndex: pqIndex);
+
+            var fD = footTracking.getfDistance();
+            var fRMS = footTracking.fRMS;
+
+            var history = new ExperimentLog(HistoryType.Click, signalIndex, pressedButtonIndex, ElapsedTime, reactionSw.ElapsedMilliseconds, BouncingBallDistance, ClickState.Incorrect, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance: fD, fRms: fRMS);
             clickHistoryList.Add(history);
         }
 
