@@ -42,31 +42,32 @@ namespace wpf_playground
         private void FootTracking_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
-
-            window.MouseLeftButtonDown += FootTracking_KeyDown;
-            window.MouseLeftButtonUp += FootTracking_KeyUp;
+            window.KeyDown += FootTracking_KeyDown;
+            window.KeyUp += FootTracking_KeyUp;
 
             mainGridWidth = mainGrid.ActualWidth;
             incrementalValue = mainGridWidth / 100;
         }
 
-        private void FootTracking_KeyUp(object sender, MouseButtonEventArgs e)
+        private void FootTracking_KeyUp(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.NumPad2 || e.Key == Key.D2)
+            {
+                isPressed = false;
 
-            isPressed = false;
-
-            holdVal = 0;
-
+                holdVal = 0;
+            }
         }
 
-        private void FootTracking_KeyDown(object sender, MouseButtonEventArgs e)
+        private void FootTracking_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.NumPad2 || e.Key == Key.D2)
+            {
+                if (!isPressed)
+                    holdVal = 0;
 
-            if (!isPressed)
-                holdVal = 0;
-
-            isPressed = true;
-
+                isPressed = true;
+            }
         }
 
         public void stop()
