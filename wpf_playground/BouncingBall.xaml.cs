@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -184,12 +185,14 @@ namespace wpf_playground
             }
         }
 
+
+        string getLog(DeviceInstance di)
+        {
+            return $"{di.InstanceName}:{di.InstanceGuid}:{di.ProductName}:{di.ProductGuid}:{di.Type}";
+        }
+
         private void BouncingBall_Loaded(object sender, RoutedEventArgs e)
         {
-
-
-
-
             xCenter = board.Width / 2 - (ball.Width / 2);
             yCenter = board.Height / 2 - (ball.Height / 2);
 
@@ -209,11 +212,11 @@ namespace wpf_playground
                 // Find a Joystick Guid
                 var joystickGuid = Guid.Empty;
 
-
-
-
+                string log = "";
+                log += "GameControl count: " + directInput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AllDevices).Count + "\n";
                 foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AllDevices))
                 {
+                    log += getLog(deviceInstance) + "\n";
                     joystickGuid = deviceInstance.InstanceGuid;
                     Dispatcher.Invoke(() =>
                     {
@@ -222,11 +225,16 @@ namespace wpf_playground
                     });
                 }
 
+
+                log += "Joystick count: " + directInput.GetDevices(SharpDX.DirectInput.DeviceType.Joystick,
+                            DeviceEnumerationFlags.AllDevices).Count + "\n";
+
                 // If Gamepad not found, look for a Joystick
                 if (joystickGuid == Guid.Empty)
                     foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Joystick,
                             DeviceEnumerationFlags.AllDevices))
                     {
+                        log += getLog(deviceInstance) + "\n";
                         joystickGuid = deviceInstance.InstanceGuid;
                         Dispatcher.Invoke(() =>
                         {
@@ -234,6 +242,9 @@ namespace wpf_playground
 
                         });
                     }
+
+                var fileName = $"output/log_{ DateTime.Now.ToString("yyyyMMddHHmmss") }.txt";
+                File.WriteAllText(fileName, log);
 
                 // If Joystick not found, throws an error
                 if (joystickGuid == Guid.Empty)
@@ -312,7 +323,7 @@ namespace wpf_playground
         {
             var Xp = this.ActualWidth - 50 + 1 * random.NextDouble() - this.ActualWidth / 2;
             var Yp = this.ActualHeight - 50 + 1 * random.NextDouble() - this.ActualHeight / 2;
-            if (random.NextDouble()>0.5)
+            if (random.NextDouble() > 0.5)
             {
                 phi = Math.Atan(Yp / Xp) + 3.1415926;
             }
