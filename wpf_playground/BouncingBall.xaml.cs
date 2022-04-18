@@ -262,7 +262,7 @@ namespace wpf_playground
                 joystick.Acquire();
 
                 // Poll events from joystick
-                while (true)
+                while (true && !stopped)
                 {
                     joystick.Poll();
                     var datas = joystick.GetBufferedData();
