@@ -120,7 +120,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Row="1" Grid.Column="1">
+                    <StackPanel Grid.Row="1" Grid.Column="1" x:Name="stackPanel">
 
                         <local:BouncingBall
                         x:Name="bouncingBall"

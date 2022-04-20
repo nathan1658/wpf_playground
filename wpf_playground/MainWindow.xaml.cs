@@ -237,6 +237,12 @@ namespace wpf_playground
             }
 
 
+            if (!State.EnableFootTracking)
+            {
+                stackPanel.Children.Remove(footTracking);
+                //footTracking.Visibility = Visibility.Collapsed;
+            }
+
             Loaded += MainWindow_Loaded;
 
             //update Mapping Image Src
@@ -449,7 +455,7 @@ namespace wpf_playground
                 }
                 bouncingBall.start();
                 start();
-                footTracking.start();
+                if (State.EnableFootTracking) footTracking.start();
                 IsGameStarted = true;
                 return;
             }

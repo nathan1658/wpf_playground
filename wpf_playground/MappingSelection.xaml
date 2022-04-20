@@ -71,6 +71,8 @@
                         Height="auto" />
                     <RowDefinition
                         Height="auto" />
+                    <RowDefinition
+                        Height="auto" />
 
                     <RowDefinition
                         Height="*" />
@@ -163,8 +165,20 @@
                     </RadioButton>
                 </StackPanel>
 
+                <TextBlock
+                    Text="Foot Tracking"
+                    Grid.Row="3"
+                    Grid.Column="0"></TextBlock>
                 <StackPanel
                     Grid.Row="3"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding FootTrackingEnabled}"/>
+                </StackPanel>
+
+
+                <StackPanel
+                    Grid.Row="4"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     >
