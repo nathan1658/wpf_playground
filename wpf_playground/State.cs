@@ -41,6 +41,8 @@ namespace wpf_playground
         public static List<TestMapping> TestMappingList = new List<TestMapping>();
 
         public static String SelectedCOMPort;
+
+        public static bool EnableFootTracking = true;
         //public static List<MappingEnum> FinishedTestMappingList = new List<MappingEnum> { };
         //public static List<MappingEnum> FinishedMappingList = new List<MappingEnum> { };
     }

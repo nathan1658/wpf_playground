@@ -321,6 +321,25 @@ namespace wpf_playground
         }
 
 
+        private Boolean _footTrackingEnabled = State.EnableFootTracking;
+
+        public Boolean FootTrackingEnabled
+        {
+            get
+            {
+                return _footTrackingEnabled;
+            }
+            set
+            {
+                _footTrackingEnabled = value;
+                State.EnableFootTracking = value;
+                InformPropertyChanged("FootTrackingEnabled");
+
+            }
+        }
+
+
+
         public static UserInfo UserInfo
         {
             get
