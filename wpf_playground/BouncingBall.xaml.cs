@@ -139,11 +139,6 @@ namespace wpf_playground
             }
         }
 
-        public void stop()
-        {
-            this.stopped = true;
-        }
-
         public BouncingBall()
         {
             InitializeComponent();
@@ -166,6 +161,12 @@ namespace wpf_playground
             }
 
             this.Loaded += BouncingBall_Loaded;
+            this.Unloaded += BouncingBall_Unloaded;
+        }
+
+        private void BouncingBall_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.stopped = true;
         }
 
         public void start()
@@ -201,7 +202,7 @@ namespace wpf_playground
             }
 
             //Accquire controller
-            new Thread(() =>
+            Task.Run(async () =>
             {
                 // Initialize DirectInput
                 var directInput = new DirectInput();
@@ -214,12 +215,16 @@ namespace wpf_playground
 
                 foreach (var deviceInstance in directInput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AllDevices))
                 {
-                    joystickGuid = deviceInstance.InstanceGuid;
-                    Dispatcher.Invoke(() =>
+                    //First person only
+                    if (deviceInstance.Type == SharpDX.DirectInput.DeviceType.FirstPerson)
                     {
-                        DeviceType = deviceInstance.Type.ToString();
+                        joystickGuid = deviceInstance.InstanceGuid;
+                        Dispatcher.Invoke(() =>
+                        {
+                            DeviceType = deviceInstance.Type.ToString();
 
-                    });
+                        });
+                    }
                 }
 
                 // If Gamepad not found, look for a Joystick
@@ -262,7 +267,7 @@ namespace wpf_playground
                 joystick.Acquire();
 
                 // Poll events from joystick
-                while (true && !stopped)
+                while (!stopped)
                 {
                     joystick.Poll();
                     var datas = joystick.GetBufferedData();
@@ -288,10 +293,10 @@ namespace wpf_playground
                             });
                         }
                     }
-                    Thread.Sleep(10);
+                    await Task.Delay(10);
                 }
 
-            }).Start();
+            });
         }
 
 
@@ -312,7 +317,7 @@ namespace wpf_playground
         {
             var Xp = this.ActualWidth - 50 + 1 * random.NextDouble() - this.ActualWidth / 2;
             var Yp = this.ActualHeight - 50 + 1 * random.NextDouble() - this.ActualHeight / 2;
-            if (random.NextDouble()>0.5)
+            if (random.NextDouble() > 0.5)
             {
                 phi = Math.Atan(Yp / Xp) + 3.1415926;
             }
@@ -432,5 +437,7 @@ namespace wpf_playground
         {
             return Math.Sin(0.44 * x) + Math.Sin(0.94 * x) + Math.Sin(1.45 * x);
         }
+
+
     }
 }

@@ -252,7 +252,16 @@ namespace wpf_playground
             pqList.AddRange(new List<MyBaseUserControl> { leftVisualPQ, rightVisualPQ });
             pqList.AddRange(new List<MyBaseUserControl> { leftAuditoryPQ, rightAuditoryPQ });
             pqList.AddRange(new List<MyBaseUserControl> { leftTactilePQ, rightTactilePQ });
+            this.Unloaded += MainWindow_Unloaded;
         }
+
+        private void MainWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.gameEnd = true;
+        }
+
+
+
 
         #region init signal region
 
@@ -416,8 +425,6 @@ namespace wpf_playground
                 gameEnd = true;
 
                 new MappingSelection().Show();
-                bouncingBall.stop();
-                footTracking.stop();
                 this.Close();
             });
         }
@@ -635,6 +642,7 @@ namespace wpf_playground
 
                     var pqTriggered = false;
                     var signalTriggred = false;
+
                     while (true)
                     {
                         if (tokenSource.Token.IsCancellationRequested)
@@ -731,7 +739,7 @@ namespace wpf_playground
             var fD = footTracking.getfDistance();
             var fRMS = footTracking.fRMS;
 
-            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance:fD, fRms: fRMS);
+            var clickHistory = new ExperimentLog(HistoryType.Signal, signalIndex, -1, ElapsedTime, -1, BouncingBallDistance, ClickState.NA, delayIntervalInMs, pqPositionIndex: pqIndex, fDistance: fD, fRms: fRMS);
             clickHistoryList.Add(clickHistory);
         }
 
@@ -757,9 +765,7 @@ namespace wpf_playground
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             gameEnd = true;
-
             new MappingSelection().Show();
-            bouncingBall.stop();
             this.Close();
         }
 

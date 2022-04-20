@@ -37,6 +37,12 @@ namespace wpf_playground
             blueBar.Width = 0;
 
             this.Loaded += FootTracking_Loaded;
+            this.Unloaded += FootTracking_Unloaded;
+        }
+
+        private void FootTracking_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.stopped = true;
         }
 
         private void FootTracking_Loaded(object sender, RoutedEventArgs e)
@@ -70,11 +76,6 @@ namespace wpf_playground
             }
         }
 
-        public void stop()
-        {
-            this.stopped = true;
-        }
-
         bool stopped = false;
         bool isPressed = false;
         bool inc = true;
@@ -87,7 +88,7 @@ namespace wpf_playground
         {
             Task.Run(async () =>
             {
-                while (true && !stopped)
+                while (!stopped)
                 {
 
                     if (i++ == 5)
@@ -152,5 +153,6 @@ namespace wpf_playground
                   return Math.Round(Math.Pow(tmp, 2), 2);
               });
         }
+
     }
 }
