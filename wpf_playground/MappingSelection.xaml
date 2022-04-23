@@ -219,7 +219,6 @@
                     <Button
                     Background="Orange"
                     BorderBrush="Orange"
-                    Command="{Binding ClickCommand}"
                     VerticalAlignment="Bottom"
                     Click="Button_Click">
                         <Button.Resources
